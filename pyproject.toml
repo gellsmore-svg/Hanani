@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hanani"
+version = "0.1.0"
+description = "Hanani — the Intelligence Synthesis Engine: multi-source geopolitical evidence synthesis with inspectable reasoning."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+keywords = ["geopolitics", "news", "evidence", "synthesis", "intelligence", "reasoning", "llm", "debate"]
+
+dependencies = [
+    "keturah>=0.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+hoglah = ["hoglah>=0.8.0"]
+milcah = ["milcah>=0.2.0"]
+tirzah = ["tirzah>=1.3.0", "pymongo>=4.6"]
+galeed = ["galeed>=0.1", "pymongo>=4.6"]
+family = [
+    "hoglah>=0.8.0",
+    "milcah>=0.2.0",
+    "tirzah>=1.3.0",
+    "galeed>=0.1",
+    "pymongo>=4.6",
+]
+
+[project.scripts]
+hanani = "hanani.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/gellsmore-svg/Hanani"
+Repository = "https://github.com/gellsmore-svg/Hanani"
+Issues = "https://github.com/gellsmore-svg/Hanani/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

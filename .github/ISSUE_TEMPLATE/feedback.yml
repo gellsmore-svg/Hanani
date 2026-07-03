@@ -1,0 +1,15 @@
+name: Feedback
+description: Feedback on Hanani's philosophy, requirements, architecture, or factor taxonomy.
+labels: ["feedback"]
+body:
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What's your feedback?
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where?
+      description: Which doc/area (philosophy.md, factor taxonomy, evidence graph, Valhalla, …).
