@@ -1,93 +1,49 @@
-# Hanani — the Intelligence Synthesis Engine
+# Hanani — Geopolitical News Reasoning
 
-**Hanani** is a geopolitical news *reasoning* platform. It synthesises evidence
-from multiple reports, extracts underlying factors, generates competing
-hypotheses, and preserves the full reasoning trace — asking not *"What happened?"*
-but *"What do all available reports imply when combined?"*
+**Hanani** is the **geopolitical news instance** of
+[Valhalla](https://github.com/gellsmore-svg/Valhalla) — an evidence synthesis
+and reasoning engine, not a news reader.
 
-> Named for Hanani, who brought Nehemiah intelligence from Judah about conditions
-> at the wall (Nehemiah 1:2) — a witness who travelled from the conflict zone to
-> report what the scattered accounts meant taken together.
+It asks not *"What happened?"* but *"What do all available reports imply when
+combined?"* — applying every extractable factor from multiple reports across
+the theatres you follow (Russia–Ukraine, Hormuz Strait / US–Iran–Gulf states).
 
-The guiding question:
-
-> **What do all available reports imply when combined?**
-
-## Status
-
-**v0.1 — design stage.** Philosophy, requirements, and architecture are set.
-Factor taxonomy and orchestration scaffold are in place.
+See [`docs/vision.md`](docs/vision.md) for the full design intent.
 
 ```bash
-hanani --help              # project purpose + pointers
-hanani factors             # factor taxonomy (scaffold)
-hanani valhalla status     # orchestration layer (scaffold)
+hanani --help
+hanani factors             # factor taxonomy
 ```
 
-## Core principle
+Orchestration: `valhalla status` | `valhalla instances`
 
-> Every report is a witness, not a verdict. Combined reports imply factors;
-> factors support hypotheses; hypotheses compete under equal scrutiny.
+## Core capabilities
 
-## What Hanani does
+- Multi-source ingestion and claim extraction
+- Evidence graph (corroboration / conflict edges)
+- Factor identification as explicit variables
+- Competing hypotheses with multi-LLM debate (via Milcah through Valhalla)
+- Structural confidence estimates — not popularity-based
+- Inspectable reasoning traces
 
-An evidence-synthesis engine, not a news reader.
+## Family
 
-- **Multi-source ingestion:** news feeds, documents, structured data, OSINT metadata.
-- **Claim extraction:** entities, events, assertions with provenance.
-- **Evidence graph:** corroboration and conflict edges between reports.
-- **Factor identification:** troop movements, logistics, sanctions, diplomatic
-  signalling, satellite imagery, industrial production, doctrine, propaganda
-  signals, … as explicit variables.
-- **Competing hypotheses:** generated from factor combinations; debated under
-  equal scrutiny.
-- **Multi-LLM debate:** which reports corroborate, which conflict, which appear
-  propagandistic, which assumptions drive disagreement.
-- **Confidence estimates:** structural, not popularity-based; permitted uncertainty.
-- **Reasoning trace:** every synthesis decision inspectable.
-
-### Initial focus areas
-
-- Russia–Ukraine
-- Hormuz Strait / US–Iran–Gulf states
-
-## Pipeline (target)
-
-```
-News feeds → semantic extraction → claim extraction → evidence graph
-  → factor identification → competing hypotheses → multi-LLM debate
-  → confidence estimates → predictions / scenario analysis
-```
-
-## Place in the family
-
-| Sibling | Role in Hanani |
+| Component | Role |
 |---|---|
-| [Milcah](https://github.com/gellsmore-svg/Milcah) | argument evaluation, multi-LLM debate |
-| [Tirzah](https://github.com/gellsmore-svg/tirzah) | memory / retrieval over ingested reports |
-| [Mahalath](https://github.com/gellsmore-svg/mahalath) | ontology / factor definitions |
-| [Hoglah](https://github.com/gellsmore-svg/hoglah) | local-first LLM execution queue |
-| [Galeed](https://github.com/gellsmore-svg/galeed) | process trace / reasoning telemetry |
-| [Cairn](https://github.com/gellsmore-svg/Cairn) | process meta-language |
-| [Keturah](https://github.com/gellsmore-svg/keturah) | LLM-consumable capability manifest |
-| [Ed](https://github.com/gellsmore-svg/Ed) | scripture translation reasoning (separate project, private) |
-
-**Valhalla** (internal orchestration codename) coordinates the multi-agent
-workflow. It composes the siblings; it does not replace them.
+| [Valhalla](https://github.com/gellsmore-svg/Valhalla) | reasoning orchestration platform |
+| Milcah | argument evaluation, multi-LLM debate |
+| Tirzah | memory over ingested reports |
+| Hoglah | LLM execution queue |
+| Galeed | process trace |
+| [Ed](https://github.com/gellsmore-svg/Ed) | scripture translation instance (separate) |
 
 ## Develop
 
 ```bash
-git clone git@github.com:gellsmore-svg/Hanani.git   # private
-cd Hanani
-python -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest
+pip install -e "../Keturah" -e "../Valhalla"
+pip install -e ".[dev]"
+pytest
 ```
-
-## Feedback
-
-This is early. See [CONTRIBUTING.md](CONTRIBUTING.md). Security: [SECURITY.md](SECURITY.md).
 
 ## License
 

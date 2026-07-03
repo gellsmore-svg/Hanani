@@ -11,7 +11,9 @@ translation project. Need a biblical name consistent with the family.
 about conditions in the conflict zone (Nehemiah 1:2).
 
 **Rationale:** The project's purpose is to travel across scattered reports and
-return with synthesised intelligence about what they imply together.
+return with synthesised intelligence about what they imply together. The name is
+provisional — the user did not specify a product name for the news app in the
+original dictation.
 
 ---
 

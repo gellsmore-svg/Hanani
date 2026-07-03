@@ -68,8 +68,10 @@ discipline to geopolitical hypotheses:
 
 ---
 
-## Valhalla (Orchestration)
+## Valhalla (platform)
 
-**Valhalla** is the internal codename for Hanani's multi-agent orchestration
-layer: scheduling ingestion, factor extraction, debate rounds, and trace emission.
-It composes the family siblings; it does not replace them.
+Hanani is a specialised **instance** of
+[Valhalla](https://github.com/gellsmore-svg/Valhalla). Milcah provides the
+argument-evaluation and debate layer; Valhalla orchestrates the full workflow.
+
+See [`vision.md`](vision.md).

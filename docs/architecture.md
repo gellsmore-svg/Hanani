@@ -3,21 +3,9 @@
 ## Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                      Hanani                             │
-│  ┌────────────────────┐  ┌─────────────────────────┐  │
-│  │  factors / claims    │  │  evidence graph         │  │
-│  └──────────┬───────────┘  └────────────┬────────────┘  │
-│             └──────────────┬─────────────┘              │
-│                            ▼                            │
-│                     ┌─────────────┐                     │
-│                     │  Valhalla   │                     │
-│                     └──────┬──────┘                     │
-└────────────────────────────┼────────────────────────────┘
-                             ▼
-        ┌───────────────────────────────────────────┐
-        │  Milcah  Tirzah  Hoglah  Galeed  Mahalath │
-        └───────────────────────────────────────────┘
+Valhalla (platform) ──composes── Milcah, Tirzah, Hoglah, Galeed
+       │
+       └── Hanani (this repo) — news corpus + factor taxonomy + synthesis policies
 ```
 
 ## Pipeline (target)

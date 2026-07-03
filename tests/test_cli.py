@@ -14,7 +14,7 @@ def test_cli_no_args_prints_purpose():
         check=False,
     )
     assert result.returncode == 0
-    assert "Intelligence Synthesis Engine" in result.stdout
+    assert "Geopolitical News Reasoning" in result.stdout
 
 
 def test_factors_non_empty():
@@ -23,7 +23,8 @@ def test_factors_non_empty():
     assert len(list_factors()) >= 10
 
 
-def test_valhalla_status_scaffold():
-    from hanani.valhalla import valhalla_status
+def test_factors_include_propaganda():
+    from hanani.factors import list_factors
 
-    assert "scaffold" in valhalla_status()
+    ids = {f["id"] for f in list_factors()}
+    assert "propaganda-signals" in ids

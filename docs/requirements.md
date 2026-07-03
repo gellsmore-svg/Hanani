@@ -20,10 +20,10 @@ Status: **specified, not yet implemented** unless marked otherwise.
 
 ## FR3 — Valhalla Orchestration
 
-- Coordinate ingestion → extraction → graph → debate → synthesis → trace.
-- Emit telemetry via Galeed.
+- Delegate workflow orchestration to the **Valhalla** platform package.
+- Schedule Milcah for multi-LLM debate; emit telemetry via Galeed.
 
-**Status:** scaffold (`hanani.valhalla`).
+**Status:** platform scaffold ([Valhalla](https://github.com/gellsmore-svg/Valhalla)).
 
 ## FR4 — Claim Extraction
 
