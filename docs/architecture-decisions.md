@@ -21,11 +21,10 @@ original dictation.
 
 **Date:** 2026-07-03 (revised)
 
-**Context:** A shared Valhalla repository incorrectly linked Hanani to Ed as
-"instances" of one platform.
+**Context:** An interim shared-platform repo incorrectly linked Hanani to Ed.
 
 **Decision:** Hanani is fully standalone. Internal orchestration is
-`hanani.workflow`. No dependency on Ed, Valhalla, or scripture translation.
+`hanani.workflow`. No dependency on Ed or scripture translation.
 
 **Rationale:** Different corpora, witness types, schemas, and user goals.
 
