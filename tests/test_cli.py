@@ -17,6 +17,12 @@ def test_cli_no_args_prints_purpose():
     assert "Geopolitical News Reasoning" in result.stdout
 
 
+def test_workflow_status_scaffold():
+    from hanani.workflow import workflow_status
+
+    assert "scaffold" in workflow_status()
+
+
 def test_factors_non_empty():
     from hanani.factors import list_factors
 

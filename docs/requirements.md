@@ -18,12 +18,12 @@ Status: **specified, not yet implemented** unless marked otherwise.
 
 **Status:** scaffold (`hanani.factors`).
 
-## FR3 — Valhalla Orchestration
+## FR3 — Workflow Orchestration
 
-- Delegate workflow orchestration to the **Valhalla** platform package.
+- Coordinate ingestion → graph → debate → synthesis via `hanani.workflow`.
 - Schedule Milcah for multi-LLM debate; emit telemetry via Galeed.
 
-**Status:** platform scaffold ([Valhalla](https://github.com/gellsmore-svg/Valhalla)).
+**Status:** scaffold (`hanani.workflow`).
 
 ## FR4 — Claim Extraction
 

@@ -7,17 +7,23 @@ import sys
 
 from hanani import __version__
 from hanani.factors import list_factors
+from hanani.workflow import workflow_status
 
 PURPOSE = (
     "Hanani — Geopolitical News Reasoning.\n"
-    "News synthesis instance of Valhalla. Asks: 'What do all available reports\n"
-    "imply when combined?' Orchestration: valhalla (separate package/repo).\n"
+    "Evidence synthesis from multiple reports. Guiding question:\n"
+    "  'What do all available reports imply when combined?'\n"
 )
 
 
 def _cmd_factors(_: argparse.Namespace) -> int:
     for factor in list_factors():
         print(f"  {factor['id']:30s}  {factor['label']}")
+    return 0
+
+
+def _cmd_workflow_status(_: argparse.Namespace) -> int:
+    print(workflow_status())
     return 0
 
 
@@ -28,11 +34,22 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("factors", help="List factor taxonomy").set_defaults(func=_cmd_factors)
 
+    workflow = sub.add_parser("workflow", help="Workflow orchestration")
+    workflow_sub = workflow.add_subparsers(dest="workflow_command")
+    workflow_sub.add_parser("status", help="Workflow status").set_defaults(
+        func=_cmd_workflow_status
+    )
+
     args = parser.parse_args(argv)
     if not args.command:
         print(PURPOSE)
-        print("Try: hanani factors  |  valhalla status  |  valhalla instances")
+        print("Try: hanani factors | hanani workflow status")
         return 0
+
+    if args.command == "workflow" and not getattr(args, "workflow_command", None):
+        print(workflow_status())
+        return 0
+
     return args.func(args)
 
 

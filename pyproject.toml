@@ -13,7 +13,6 @@ keywords = ["geopolitics", "news", "evidence", "synthesis", "intelligence", "rea
 
 dependencies = [
     "keturah>=0.1",
-    "valhalla>=0.1",
 ]
 
 [project.optional-dependencies]

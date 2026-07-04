@@ -4,8 +4,8 @@
 
 **Date:** 2026-07-03
 
-**Context:** Geopolitical news evidence synthesis, separated from the Ed scripture
-translation project. Need a biblical name consistent with the family.
+**Context:** Geopolitical news evidence synthesis — a standalone project, not linked
+to scripture translation or any shared platform repo.
 
 **Decision:** **Hanani** — the one who brought Nehemiah intelligence from Judah
 about conditions in the conflict zone (Nehemiah 1:2).
@@ -17,13 +17,15 @@ original dictation.
 
 ---
 
-## ADR-002 — Separate repository from Ed
+## ADR-002 — Fully independent from Ed and any shared platform
 
-**Date:** 2026-07-03
+**Date:** 2026-07-03 (revised)
 
-**Context:** Bible translation and news synthesis were incorrectly combined in Ed.
+**Context:** A shared Valhalla repository incorrectly linked Hanani to Ed as
+"instances" of one platform.
 
-**Decision:** Hanani is an independent sibling repository. Ed is scripture only.
+**Decision:** Hanani is fully standalone. Internal orchestration is
+`hanani.workflow`. No dependency on Ed, Valhalla, or scripture translation.
 
 **Rationale:** Different corpora, witness types, schemas, and user goals.
 

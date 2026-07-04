@@ -11,4 +11,4 @@ type: product
 |---|---|---|
 | `hanani/witness` | Reports as witnesses | [philosophy.md](../docs/philosophy.md) |
 | `hanani/factors` | Factor taxonomy | [requirements.md FR2](../docs/requirements.md) |
-| `hanani/valhalla` | Orchestration | [architecture.md](../docs/architecture.md) |
+| `hanani/workflow` | Orchestration | [architecture.md](../docs/architecture.md) |
