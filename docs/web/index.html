@@ -17,7 +17,7 @@
   <main class="wrap content">
     <h1 id="hanani-system-requirements">Hanani — System Requirements<a class="headerlink" href="#hanani-system-requirements" title="Permanent link">&para;</a></h1>
 <p><strong>Document:</strong> REQ-HANANI-001<br />
-<strong>Version:</strong> 0.3
+<strong>Version:</strong> 0.4
 <strong>Status:</strong> Normative — implementation shall trace to these requirements<br />
 <strong>Product:</strong> Reusable geopolitical <strong>reasoning system</strong> (not a one-off crisis analysis tool)</p>
 <hr />
@@ -137,6 +137,18 @@
 <td><strong>Speed differential</strong></td>
 <td>Relative processing speed/precision/coherence between actors on a probe or signal</td>
 </tr>
+<tr>
+<td><strong>Coherence speed profile</strong></td>
+<td>Per-party trajectory of reaction speed and internal/coordination coherence inferred from source history</td>
+</tr>
+<tr>
+<td><strong>LCD (lowest common denominator)</strong></td>
+<td>Collective party constraint — effective speed/coherence bounded by slowest or least coherent member</td>
+</tr>
+<tr>
+<td><strong>Source corpus</strong></td>
+<td>Temporal article history per registered analytical source</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -210,6 +222,8 @@ step-by-step justification per tag (not default 1–2 tags).</p>
 <p>For <strong>every</strong> logic atom Layer 2 <strong>shall</strong> include a <code>speed_differential</code> assessment:</p>
 <ul>
 <li>Processing speed implied for each side (<code>fast</code> / <code>slow</code> / <code>unknown</code>).</li>
+<li>Coherence implied for each side (<code>high</code> / <code>medium</code> / <code>low</code> / <code>fragmented</code> / <code>unknown</code>).</li>
+<li>Optional <code>side_a_party_id</code> / <code>side_b_party_id</code> links to coherence profiles.</li>
 <li>Whether a differential is exploited; probe intent (<code>measure_reaction_speed</code>,
   <code>measure_model_precision</code>, <code>deliberate_ambiguity</code>, or <code>none_evident</code>).</li>
 <li>If no speed signal in text — <strong><code>none_evident</code> required explicitly</strong> (gap signal).</li>
@@ -217,7 +231,14 @@ step-by-step justification per tag (not default 1–2 tags).</p>
 <p><strong>Acceptance:</strong> <code>SpeedDifferentialAssessment</code> on assessment record; graph edges
 <code>processes_faster_than</code>, <code>probes_sensemaking_speed</code>, <code>creates_ambiguity_to_slow</code>,
 <code>exploits_speed_differential</code> supported.</p>
-<p><strong>Status:</strong> Schema + scaffold (<code>hanani.reasoning.SpeedDifferentialAssessment</code>).</p>
+<p><strong>Status:</strong> Schema + scaffold (<code>hanani.reasoning.SpeedDifferentialAssessment</code> v0.3).</p>
+<h4 id="fr-reason-03c-coherence-profile-linkage">FR-REASON-03c Coherence profile linkage<a class="headerlink" href="#fr-reason-03c-coherence-profile-linkage" title="Permanent link">&para;</a></h4>
+<p>When party ids are supplied on <code>speed_differential</code>, the system <strong>shall</strong> update
+individual coherence-speed profiles from the assessment and recompute affected
+collective LCD profiles.</p>
+<p><strong>Acceptance:</strong> <code>CoherenceRegistry.ingest_assessment()</code> updates trajectories;
+collective <code>lcd_*</code> fields refresh after member observation.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.coherence</code>).</p>
 <h4 id="fr-reason-04-admissibility-gate">FR-REASON-04 Admissibility gate<a class="headerlink" href="#fr-reason-04-admissibility-gate" title="Permanent link">&para;</a></h4>
 <p>Atoms with Layer 1 robustness <strong>Weak</strong> <strong>shall not</strong> propagate to mechanism inference,
 hypothesis generation, or collective narrative unless operator override with audit trail.</p>
@@ -249,6 +270,41 @@ assertion, causal_claim, analogy, intent_assessment, counterfactual, warrant, pr
 <p>The system <strong>may</strong> run a source-level Layer 1 audit before atom extraction; weak sources
 <strong>shall</strong> be set aside with documented reasons.</p>
 <p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-source-04-source-article-history">FR-SOURCE-04 Source article history<a class="headerlink" href="#fr-source-04-source-article-history" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> maintain a <strong>temporal article history</strong> per registered source:
+opaque <code>source_id</code>, per-article <code>article_id</code>, <code>ingested_at</code>, provenance, content hash,
+and linked <code>atom_ids</code>.</p>
+<p>Operators <strong>shall</strong> be able to inspect the chronological sequence of articles from each
+source to assess how sensemaking-speed and coherence claims evolve over time.</p>
+<p><strong>Acceptance:</strong> <code>SourceCorpus.history(source_id)</code> returns articles in time order;
+<code>hanani sources</code> reports corpus summary.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.sources</code>).</p>
+<hr />
+<h3 id="fr-coherence-coherence-speed-profiles">FR-COHERENCE — Coherence speed profiles<a class="headerlink" href="#fr-coherence-coherence-speed-profiles" title="Permanent link">&para;</a></h3>
+<h4 id="fr-coherence-01-individual-party-profiles">FR-COHERENCE-01 Individual party profiles<a class="headerlink" href="#fr-coherence-01-individual-party-profiles" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> maintain <strong>coherence speed profiles</strong> for individual parties
+(states, leaders, agencies) with:</p>
+<ul>
+<li><code>reaction_speed</code> (<code>fast</code> / <code>slow</code> / <code>unknown</code>)</li>
+<li><code>coherence</code> (<code>high</code> / <code>medium</code> / <code>low</code> / <code>fragmented</code> / <code>unknown</code>)</li>
+<li>Observation trajectory keyed to <code>source_id</code>, <code>article_id</code>, and optional <code>atom_id</code></li>
+</ul>
+<p>Profiles <strong>shall</strong> be updatable from assessed atoms without outlet prestige weighting.</p>
+<p><strong>Acceptance:</strong> <code>CoherenceSpeedProfile.trajectory()</code>; <code>CoherenceRegistry.record_observation()</code>.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.coherence</code>).</p>
+<h4 id="fr-coherence-02-collective-lcd-constraint">FR-COHERENCE-02 Collective LCD constraint<a class="headerlink" href="#fr-coherence-02-collective-lcd-constraint" title="Permanent link">&para;</a></h4>
+<p>For collective parties (alliances, unions, coalitions) the system <strong>shall</strong> compute
+<strong>lowest-common-denominator (LCD)</strong> effective profiles:</p>
+<ul>
+<li><code>lcd_reaction_speed</code> — no faster than the slowest member</li>
+<li><code>lcd_coherence</code> — no higher than the least coherent member</li>
+<li>Explicit <code>lcd_speed_member</code> and <code>lcd_coherence_member</code> binding identifiers</li>
+</ul>
+<p>Collective move interpretation <strong>shall</strong> use LCD profiles when assessing ASSSIB probes
+against alliance/coalition responses.</p>
+<p><strong>Acceptance:</strong> <code>compute_lcd_speed()</code>, <code>compute_lcd_coherence()</code>;
+<code>CoherenceRegistry.move_context()</code>; <code>hanani coherence</code> CLI.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.coherence</code>).</p>
 <hr />
 <h3 id="fr-analysis-analysis-graph-gaps">FR-ANALYSIS — Analysis graph &amp; gaps<a class="headerlink" href="#fr-analysis-analysis-graph-gaps" title="Permanent link">&para;</a></h3>
 <h4 id="fr-analysis-01-atom-graph-merge">FR-ANALYSIS-01 Atom graph merge<a class="headerlink" href="#fr-analysis-01-atom-graph-merge" title="Permanent link">&para;</a></h4>
@@ -260,7 +316,10 @@ contradiction, complementarity, implication, and gap.</p>
 and report prioritized gaps with stated information needs.</p>
 <p>The system <strong>shall</strong> routinely ask: <em>What do current atoms imply about relative processing
 speeds or sensemaking quality between key actors? Where are differentials created or exploited?</em></p>
-<p><strong>Status:</strong> Design only.</p>
+<p>Gap analysis <strong>shall</strong> cross-check per-source article histories and party coherence
+trajectories when ASSSIB tags appear — especially whether collective LCD binding members
+explain observed coordination lag on current moves.</p>
+<p><strong>Status:</strong> Design only (LCD scaffold available).</p>
 <h4 id="fr-analysis-03-active-retrieval">FR-ANALYSIS-03 Active retrieval<a class="headerlink" href="#fr-analysis-03-active-retrieval" title="Permanent link">&para;</a></h4>
 <p>When gaps are identified, the system <strong>shall</strong> recommend or retrieve additional sources
 subject to the <strong>same</strong> Layer 1 filter (no reputation bypass).</p>
@@ -370,8 +429,8 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 </tr>
 <tr>
 <td><strong>2</strong></td>
-<td>FR-SOURCE-*, FR-ANALYSIS-01</td>
-<td>Ingestion + atom extraction</td>
+<td>FR-SOURCE-<em>, FR-COHERENCE-</em>, FR-ANALYSIS-01</td>
+<td>Ingestion + coherence profiles + atom extraction</td>
 </tr>
 <tr>
 <td><strong>3</strong></td>
@@ -423,8 +482,14 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <tr>
 <td>Sources / atoms</td>
 <td>—</td>
+<td>history scaffold</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Coherence profiles</td>
 <td>—</td>
 <td>✓</td>
+<td>LCD + moves</td>
 </tr>
 <tr>
 <td>Synthesis</td>
@@ -474,6 +539,11 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <td>0.3</td>
 <td>2026-07-05</td>
 <td>ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules</td>
+</tr>
+<tr>
+<td>0.4</td>
+<td>2026-07-10</td>
+<td>Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks</td>
 </tr>
 </tbody>
 </table>

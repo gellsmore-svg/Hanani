@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-ONTOLOGY_VERSION = "0.2"
+ONTOLOGY_VERSION = "0.3"
 ONTOLOGY_DOC = "docs/ontology/living-semantic-model.md"
 
 # Cross-cutting dynamics (primary layer noted; all cross-cut multiple layers).
@@ -36,6 +36,30 @@ PROBE_INTENTS: tuple[str, ...] = (
 )
 
 PROCESSING_SPEED: tuple[str, ...] = ("fast", "slow", "unknown")
+
+COHERENCE_LEVELS: tuple[str, ...] = (
+    "high",
+    "medium",
+    "low",
+    "fragmented",
+    "unknown",
+)
+
+PARTY_TYPES: tuple[str, ...] = (
+    "individual_state",
+    "individual_leader",
+    "individual_agency",
+    "collective_alliance",
+    "collective_union",
+)
+
+COHERENCE_GRAPH_EDGES: tuple[str, ...] = (
+    "constrains_collective_speed",
+    "constrains_collective_coherence",
+    "lcd_binding_member",
+    "observed_in_article",
+    "profile_trajectory",
+)
 
 SPEED_GRAPH_EDGES: tuple[str, ...] = (
     "processes_faster_than",
@@ -121,6 +145,7 @@ GRAPH_EDGE_TYPES: tuple[str, ...] = (
     "supports",
     "weakens",
     *SPEED_GRAPH_EDGES,
+    *COHERENCE_GRAPH_EDGES,
 )
 
 
@@ -130,12 +155,15 @@ def list_layers() -> dict[str, list[str]]:
 
 __all__ = [
     "ATOM_TYPES",
+    "COHERENCE_GRAPH_EDGES",
+    "COHERENCE_LEVELS",
     "CROSS_CUTTING_DYNAMICS",
     "GRAPH_EDGE_TYPES",
     "HISTORICAL_ANCHORS",
     "LAYERS",
     "ONTOLOGY_DOC",
     "ONTOLOGY_VERSION",
+    "PARTY_TYPES",
     "PROBE_INTENTS",
     "PROCESSING_SPEED",
     "ROBUSTNESS_LEVELS",

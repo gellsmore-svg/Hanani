@@ -1,7 +1,7 @@
 # Hanani — System Requirements
 
 **Document:** REQ-HANANI-001  
-**Version:** 0.3
+**Version:** 0.4
 **Status:** Normative — implementation shall trace to these requirements  
 **Product:** Reusable geopolitical **reasoning system** (not a one-off crisis analysis tool)
 
@@ -67,6 +67,9 @@ Hanani shall provide a **living, expandable reasoning engine** that:
 | **Assessment record** | Structured output per atom after Layer 1 + Layer 2 |
 | **ASSSIB** | Asymmetric Sensemaking Speed & Informational Brinkmanship — cross-cutting dynamic (ontology §8.9) |
 | **Speed differential** | Relative processing speed/precision/coherence between actors on a probe or signal |
+| **Coherence speed profile** | Per-party trajectory of reaction speed and internal/coordination coherence inferred from source history |
+| **LCD (lowest common denominator)** | Collective party constraint — effective speed/coherence bounded by slowest or least coherent member |
+| **Source corpus** | Temporal article history per registered analytical source |
 
 ---
 
@@ -175,6 +178,8 @@ step-by-step justification per tag (not default 1–2 tags).
 For **every** logic atom Layer 2 **shall** include a `speed_differential` assessment:
 
 - Processing speed implied for each side (`fast` / `slow` / `unknown`).
+- Coherence implied for each side (`high` / `medium` / `low` / `fragmented` / `unknown`).
+- Optional `side_a_party_id` / `side_b_party_id` links to coherence profiles.
 - Whether a differential is exploited; probe intent (`measure_reaction_speed`,
   `measure_model_precision`, `deliberate_ambiguity`, or `none_evident`).
 - If no speed signal in text — **`none_evident` required explicitly** (gap signal).
@@ -183,7 +188,18 @@ For **every** logic atom Layer 2 **shall** include a `speed_differential` assess
 `processes_faster_than`, `probes_sensemaking_speed`, `creates_ambiguity_to_slow`,
 `exploits_speed_differential` supported.
 
-**Status:** Schema + scaffold (`hanani.reasoning.SpeedDifferentialAssessment`).
+**Status:** Schema + scaffold (`hanani.reasoning.SpeedDifferentialAssessment` v0.3).
+
+#### FR-REASON-03c Coherence profile linkage
+
+When party ids are supplied on `speed_differential`, the system **shall** update
+individual coherence-speed profiles from the assessment and recompute affected
+collective LCD profiles.
+
+**Acceptance:** `CoherenceRegistry.ingest_assessment()` updates trajectories;
+collective `lcd_*` fields refresh after member observation.
+
+**Status:** Scaffold (`hanani.coherence`).
 
 #### FR-REASON-04 Admissibility gate
 
@@ -240,6 +256,56 @@ The system **may** run a source-level Layer 1 audit before atom extraction; weak
 
 **Status:** Design only.
 
+#### FR-SOURCE-04 Source article history
+
+The system **shall** maintain a **temporal article history** per registered source:
+opaque `source_id`, per-article `article_id`, `ingested_at`, provenance, content hash,
+and linked `atom_ids`.
+
+Operators **shall** be able to inspect the chronological sequence of articles from each
+source to assess how sensemaking-speed and coherence claims evolve over time.
+
+**Acceptance:** `SourceCorpus.history(source_id)` returns articles in time order;
+`hanani sources` reports corpus summary.
+
+**Status:** Scaffold (`hanani.sources`).
+
+---
+
+### FR-COHERENCE — Coherence speed profiles
+
+#### FR-COHERENCE-01 Individual party profiles
+
+The system **shall** maintain **coherence speed profiles** for individual parties
+(states, leaders, agencies) with:
+
+- `reaction_speed` (`fast` / `slow` / `unknown`)
+- `coherence` (`high` / `medium` / `low` / `fragmented` / `unknown`)
+- Observation trajectory keyed to `source_id`, `article_id`, and optional `atom_id`
+
+Profiles **shall** be updatable from assessed atoms without outlet prestige weighting.
+
+**Acceptance:** `CoherenceSpeedProfile.trajectory()`; `CoherenceRegistry.record_observation()`.
+
+**Status:** Scaffold (`hanani.coherence`).
+
+#### FR-COHERENCE-02 Collective LCD constraint
+
+For collective parties (alliances, unions, coalitions) the system **shall** compute
+**lowest-common-denominator (LCD)** effective profiles:
+
+- `lcd_reaction_speed` — no faster than the slowest member
+- `lcd_coherence` — no higher than the least coherent member
+- Explicit `lcd_speed_member` and `lcd_coherence_member` binding identifiers
+
+Collective move interpretation **shall** use LCD profiles when assessing ASSSIB probes
+against alliance/coalition responses.
+
+**Acceptance:** `compute_lcd_speed()`, `compute_lcd_coherence()`;
+`CoherenceRegistry.move_context()`; `hanani coherence` CLI.
+
+**Status:** Scaffold (`hanani.coherence`).
+
 ---
 
 ### FR-ANALYSIS — Analysis graph & gaps
@@ -259,7 +325,11 @@ and report prioritized gaps with stated information needs.
 The system **shall** routinely ask: *What do current atoms imply about relative processing
 speeds or sensemaking quality between key actors? Where are differentials created or exploited?*
 
-**Status:** Design only.
+Gap analysis **shall** cross-check per-source article histories and party coherence
+trajectories when ASSSIB tags appear — especially whether collective LCD binding members
+explain observed coordination lag on current moves.
+
+**Status:** Design only (LCD scaffold available).
 
 #### FR-ANALYSIS-03 Active retrieval
 
@@ -363,7 +433,7 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 |---|---|---|
 | **0** | FR-DOCS-*, FR-GRAPH-01/02, P1–P6 | Requirements + graph seeds + docs site |
 | **1** | FR-REASON-01–04, FR-GRAPH-03 | Real Layer 1/2 matchers |
-| **2** | FR-SOURCE-*, FR-ANALYSIS-01 | Ingestion + atom extraction |
+| **2** | FR-SOURCE-*, FR-COHERENCE-*, FR-ANALYSIS-01 | Ingestion + coherence profiles + atom extraction |
 | **3** | FR-REASON-05, FR-ANALYSIS-02 | Per-atom summaries + gaps |
 | **4** | FR-REASON-06, FR-WORK-02 | Collective narrative + Milcah |
 | **5** | FR-ANALYSIS-03, FR-GRAPH-04 | Retrieval loop + ontology automation |
@@ -377,7 +447,8 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 | Mechanism graph | — | ✓ | expand |
 | Rhetoric graph | — | ✓ | expand |
 | Reasoning engine | gate | ✓ | matchers |
-| Sources / atoms | — | — | ✓ |
+| Sources / atoms | — | history scaffold | ✓ |
+| Coherence profiles | — | ✓ | LCD + moves |
 | Synthesis | — | — | ✓ |
 | Web requirements | — | in progress | ✓ |
 
@@ -400,3 +471,4 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 | 0.1 | 2026-07-05 | Initial FR1–FR9 scaffold |
 | 0.2 | 2026-07-05 | Full reasoning-system requirements; dual graphs; layered engine; web docs FR |
 | 0.3 | 2026-07-05 | ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules |
+| 0.4 | 2026-07-10 | Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks |

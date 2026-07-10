@@ -10,6 +10,8 @@ from hanani.factors import list_factors
 from hanani.ontology import ONTOLOGY_DOC, ONTOLOGY_VERSION, list_layers
 from hanani.reasoning import REASONING_VERSION, default_engine
 from hanani.rhetoric import RHETORIC_GRAPH_VERSION, list_fallacies
+from hanani.coherence import default_registry
+from hanani.sources import default_corpus
 from hanani.workflow import workflow_status
 
 PURPOSE = (
@@ -58,6 +60,29 @@ def _cmd_workflow_status(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_sources(_: argparse.Namespace) -> int:
+    corpus = default_corpus()
+    summary = corpus.summary()
+    print(f"source corpus: {summary['source_count']} sources, {summary['article_count']} articles")
+    for sid, info in summary["sources"].items():
+        print(f"  {sid}: {info['article_count']} articles")
+    return 0
+
+
+def _cmd_coherence(_: argparse.Namespace) -> int:
+    registry = default_registry()
+    summary = registry.summary()
+    print(f"coherence registry: {summary['individual_count']} parties, {summary['collective_count']} collectives")
+    for cid, info in summary["collectives"].items():
+        print(
+            f"  {cid}: lcd_speed={info['lcd_reaction_speed']} "
+            f"(member={info['lcd_speed_member']}), "
+            f"lcd_coherence={info['lcd_coherence']} "
+            f"(member={info['lcd_coherence_member']})"
+        )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="hanani", description=PURPOSE)
     parser.add_argument("--version", action="version", version=f"hanani {__version__}")
@@ -71,6 +96,10 @@ def main(argv: list[str] | None = None) -> int:
         func=_cmd_rhetoric
     )
     sub.add_parser("reasoning", help="Reasoning engine status").set_defaults(func=_cmd_reasoning)
+    sub.add_parser("sources", help="Source corpus status (article history)").set_defaults(func=_cmd_sources)
+    sub.add_parser("coherence", help="Coherence speed profiles (individual + collective LCD)").set_defaults(
+        func=_cmd_coherence
+    )
 
     docs = sub.add_parser("docs", help="Documentation site (build / serve)")
     docs_sub = docs.add_subparsers(dest="docs_command")
@@ -86,7 +115,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.command:
         print(PURPOSE)
-        print("Try: hanani reasoning | hanani ontology | hanani rhetoric | hanani factors")
+        print(
+            "Try: hanani reasoning | hanani ontology | hanani sources | hanani coherence | hanani factors"
+        )
         return 0
 
     if args.command == "workflow" and not getattr(args, "workflow_command", None):

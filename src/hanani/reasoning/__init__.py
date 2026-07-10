@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from hanani.ontology import (
+    COHERENCE_LEVELS,
     CROSS_CUTTING_DYNAMICS,
     LAYERS,
     PROBE_INTENTS,
@@ -19,7 +20,7 @@ from hanani.rhetoric import (
     admissible_for_inference,
 )
 
-REASONING_VERSION = "0.2"
+REASONING_VERSION = "0.3"
 REASONING_DOC = "docs/reasoning-system.md"
 
 
@@ -45,6 +46,10 @@ class SpeedDifferentialAssessment:
 
     side_a_processing: str = "unknown"
     side_b_processing: str = "unknown"
+    side_a_coherence: str = "unknown"
+    side_b_coherence: str = "unknown"
+    side_a_party_id: str | None = None
+    side_b_party_id: str | None = None
     differential_exploited: str = "none_evident"
     probe_intent: str = "none_evident"
     notes: str = "none evident — explicit gap"
@@ -54,6 +59,10 @@ class SpeedDifferentialAssessment:
             raise ValueError(f"side_a_processing must be one of {PROCESSING_SPEED}")
         if self.side_b_processing not in PROCESSING_SPEED:
             raise ValueError(f"side_b_processing must be one of {PROCESSING_SPEED}")
+        if self.side_a_coherence not in COHERENCE_LEVELS:
+            raise ValueError(f"side_a_coherence must be one of {COHERENCE_LEVELS}")
+        if self.side_b_coherence not in COHERENCE_LEVELS:
+            raise ValueError(f"side_b_coherence must be one of {COHERENCE_LEVELS}")
         if self.probe_intent not in PROBE_INTENTS:
             raise ValueError(f"probe_intent must be one of {PROBE_INTENTS}")
 

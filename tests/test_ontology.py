@@ -1,13 +1,22 @@
 from hanani.ontology import (
+    COHERENCE_GRAPH_EDGES,
+    COHERENCE_LEVELS,
     HISTORICAL_ANCHORS,
     LAYERS,
     ONTOLOGY_VERSION,
+    PARTY_TYPES,
     list_layers,
 )
 
 
 def test_ontology_version_is_semver_like() -> None:
-    assert ONTOLOGY_VERSION == "0.2"
+    assert ONTOLOGY_VERSION == "0.3"
+
+
+def test_coherence_constants() -> None:
+    assert "fragmented" in COHERENCE_LEVELS
+    assert "collective_alliance" in PARTY_TYPES
+    assert "lcd_binding_member" in COHERENCE_GRAPH_EDGES
 
 
 def test_all_five_layers_present() -> None:

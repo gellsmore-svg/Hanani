@@ -109,11 +109,15 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.
 4. Cross-link historical anchors as **templates**, not proof.
 5. Record supporting/contradicting atoms in graph.
 6. **Mandatory ASSSIB block:** `speed_differential` on every atom — processing speeds per
-   side, probe intent, differential exploited, or `none_evident` explicitly.
+   side, coherence per side, optional party ids, probe intent, differential exploited, or
+   `none_evident` explicitly.
 7. Emit graph edges: `processes_faster_than`, `probes_sensemaking_speed`,
    `creates_ambiguity_to_slow`, `exploits_speed_differential` when applicable.
+8. **Coherence profile linkage (v0.3):** When party ids are set, update
+   `CoherenceRegistry` trajectories from per-source article history; recompute collective
+   LCD profiles for alliance/coalition move interpretation.
 
-**Cross-cutting dynamic:** [Asymmetric Sensemaking Speed & Informational Brinkmanship](ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib) (ontology v0.2).
+**Cross-cutting dynamic:** [Asymmetric Sensemaking Speed & Informational Brinkmanship](ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib) (ontology v0.3).
 
 ### Atom assessment record (per atom)
 
@@ -134,6 +138,10 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.
     "speed_differential": {
       "side_a_processing": "slow",
       "side_b_processing": "fast",
+      "side_a_coherence": "fragmented",
+      "side_b_coherence": "high",
+      "side_a_party_id": "nato-capitals",
+      "side_b_party_id": "prober-state",
       "differential_exploited": "B_faster",
       "probe_intent": "measure_reaction_speed",
       "notes": "…"

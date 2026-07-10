@@ -1,6 +1,6 @@
 # Hanani Living Semantic Model / Ontology
 
-**Version:** 0.2  
+**Version:** 0.3
 **Graph ID:** `mechanism`
 **Status:** Seed graph — expandable from scholarly mechanisms, not from news cycles  
 **Project:** Hanani **reasoning system** (see [`reasoning-system.md`](../reasoning-system.md))  
@@ -360,6 +360,48 @@ Apply to **every** source before atom extraction. Output audit block first.
 - `creates_ambiguity_to_slow` (signal → target processing)
 - `exploits_speed_differential` (actor → actor)
 
+### 8.9b Coherence speed vs. raw reaction speed
+
+**Distinction:** Reaction speed alone is insufficient for collective actors. A fast but
+**fragmented** alliance may still present a **slow, incoherent** effective response to a
+probe. Hanani tracks both dimensions per party:
+
+| Dimension | Values | Meaning |
+|---|---|---|
+| `reaction_speed` | `fast` / `slow` / `unknown` | How quickly the party detects, models, and initiates response |
+| `coherence` | `high` / `medium` / `low` / `fragmented` / `unknown` | Internal model alignment and cross-unit coordination quality |
+
+**Source history linkage:** Profiles **shall** be grounded in per-source **article history**
+(`SourceCorpus`) — a temporal sequence of witnesses, not a single headline snapshot.
+Trajectory shifts (e.g. alliance coherence degrading across three articles from one source)
+are first-class signals for interpreting **current moves**.
+
+**Individual parties:** states, leaders, agencies — each maintains a `CoherenceSpeedProfile`
+with an observation trajectory keyed to `source_id`, `article_id`, optional `atom_id`.
+
+**Collective parties — LCD constraint:** Alliances, unions, and coalitions **shall** expose
+a `CollectiveCoherenceProfile` where effective capability is bounded by the
+**lowest common denominator (LCD)** member:
+
+| LCD field | Rule |
+|---|---|
+| `lcd_reaction_speed` | No faster than the **slowest** member |
+| `lcd_coherence` | No higher than the **least coherent** member |
+| `lcd_speed_member` / `lcd_coherence_member` | Explicit binding member ids |
+
+**ASSSIB move interpretation:** When a probe targets a collective, assess whether the prober
+exploits the **LCD binding member** (coordination lag, national narrative fragmentation)
+rather than assuming unitary-actor speed. `move_context()` ties atom-level
+`speed_differential` blocks to collective LCD profiles.
+
+**Graph edges (coherence):**
+
+- `constrains_collective_speed` (member → collective)
+- `constrains_collective_coherence` (member → collective)
+- `lcd_binding_member` (member → collective LCD field)
+- `observed_in_article` (observation → article in source history)
+- `profile_trajectory` (party → time-ordered observations)
+
 ---
 
 ## 8.10 Integration summary — ASSSIB (v0.2)
@@ -369,6 +411,9 @@ ASSSIB makes **sensemaking speed** a first-class analytical object. The core ris
 **Why Hanani value increases:** Applying the full layered ontology systematically and faster than an opponent (or than one's own prior cycle) is a **strategic capability** — it reduces vulnerability to informational brinkmanship and improves probe interpretation (distinguishing cheap talk + stress from costly commitment).
 
 **Workflow hooks:** Rhetoric audits flag speed/ambiguity language; Layer 2 tags ASSSIB + linked layers; gap analysis asks about actor processing differentials; retrieval prioritizes reaction-time and sensemaking-quality evidence.
+
+**v0.3 addition:** Per-source article histories feed individual coherence trajectories;
+collective LCD profiles constrain interpretation of alliance/coalition responses to probes.
 
 ---
 
@@ -485,10 +530,20 @@ graph LR
 | Medium | Bureaucratic politics (L2.3) thin | ExComm-style organizational accounts |
 | Low | Dark Triad tags | Only if behavioral evidence in text — avoid seeding from reputation |
 | **High** | ASSSIB speed-differential tags on live atoms | Sources on alliance coordination lag, probe/leak dynamics |
+| **High** | Per-party coherence trajectories from source histories | Multi-article sequences per source; collective LCD binding members |
 
 ---
 
 ## 12. Changelog
+
+### v0.3 — 2026-07-10 (coherence speed profiles + LCD)
+
+- Added §8.9b: coherence vs. raw reaction speed; source-history trajectories; collective LCD constraint.
+- New registry constants: `COHERENCE_LEVELS`, `PARTY_TYPES`, `COHERENCE_GRAPH_EDGES`.
+- `SpeedDifferentialAssessment` extended with per-side coherence and optional party ids.
+- Scaffold modules: `hanani.sources.SourceCorpus`, `hanani.coherence.CoherenceRegistry`.
+- **Stability:** ASSSIB §8.9 unchanged; L1–L4 seeds unchanged.
+- **Next:** Wire profile updates into ingestion workflow; populate live trajectories from atoms.
 
 ### v0.2 — 2026-07-05 (ASSSIB integration)
 
@@ -535,4 +590,4 @@ Hanani's operational factor list (`hanani factors`) captures **observable variab
 
 ---
 
-*End of Living Semantic Model v0.2*
+*End of Living Semantic Model v0.3*

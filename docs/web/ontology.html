@@ -16,7 +16,7 @@
   </header>
   <main class="wrap content">
     <h1 id="hanani-living-semantic-model-ontology">Hanani Living Semantic Model / Ontology<a class="headerlink" href="#hanani-living-semantic-model-ontology" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 0.2<br />
+<p><strong>Version:</strong> 0.3
 <strong>Graph ID:</strong> <code>mechanism</code>
 <strong>Status:</strong> Seed graph — expandable from scholarly mechanisms, not from news cycles<br />
 <strong>Project:</strong> Hanani <strong>reasoning system</strong> (see <a href="../reasoning-system.md"><code>reasoning-system.md</code></a>)<br />
@@ -497,11 +497,81 @@ backbone that logic atoms attach to after passing <strong>Layer 1</strong> rheto
 <li><code>creates_ambiguity_to_slow</code> (signal → target processing)</li>
 <li><code>exploits_speed_differential</code> (actor → actor)</li>
 </ul>
+<h3 id="89b-coherence-speed-vs-raw-reaction-speed">8.9b Coherence speed vs. raw reaction speed<a class="headerlink" href="#89b-coherence-speed-vs-raw-reaction-speed" title="Permanent link">&para;</a></h3>
+<p><strong>Distinction:</strong> Reaction speed alone is insufficient for collective actors. A fast but
+<strong>fragmented</strong> alliance may still present a <strong>slow, incoherent</strong> effective response to a
+probe. Hanani tracks both dimensions per party:</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Values</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reaction_speed</code></td>
+<td><code>fast</code> / <code>slow</code> / <code>unknown</code></td>
+<td>How quickly the party detects, models, and initiates response</td>
+</tr>
+<tr>
+<td><code>coherence</code></td>
+<td><code>high</code> / <code>medium</code> / <code>low</code> / <code>fragmented</code> / <code>unknown</code></td>
+<td>Internal model alignment and cross-unit coordination quality</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Source history linkage:</strong> Profiles <strong>shall</strong> be grounded in per-source <strong>article history</strong>
+(<code>SourceCorpus</code>) — a temporal sequence of witnesses, not a single headline snapshot.
+Trajectory shifts (e.g. alliance coherence degrading across three articles from one source)
+are first-class signals for interpreting <strong>current moves</strong>.</p>
+<p><strong>Individual parties:</strong> states, leaders, agencies — each maintains a <code>CoherenceSpeedProfile</code>
+with an observation trajectory keyed to <code>source_id</code>, <code>article_id</code>, optional <code>atom_id</code>.</p>
+<p><strong>Collective parties — LCD constraint:</strong> Alliances, unions, and coalitions <strong>shall</strong> expose
+a <code>CollectiveCoherenceProfile</code> where effective capability is bounded by the
+<strong>lowest common denominator (LCD)</strong> member:</p>
+<table>
+<thead>
+<tr>
+<th>LCD field</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lcd_reaction_speed</code></td>
+<td>No faster than the <strong>slowest</strong> member</td>
+</tr>
+<tr>
+<td><code>lcd_coherence</code></td>
+<td>No higher than the <strong>least coherent</strong> member</td>
+</tr>
+<tr>
+<td><code>lcd_speed_member</code> / <code>lcd_coherence_member</code></td>
+<td>Explicit binding member ids</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ASSSIB move interpretation:</strong> When a probe targets a collective, assess whether the prober
+exploits the <strong>LCD binding member</strong> (coordination lag, national narrative fragmentation)
+rather than assuming unitary-actor speed. <code>move_context()</code> ties atom-level
+<code>speed_differential</code> blocks to collective LCD profiles.</p>
+<p><strong>Graph edges (coherence):</strong></p>
+<ul>
+<li><code>constrains_collective_speed</code> (member → collective)</li>
+<li><code>constrains_collective_coherence</code> (member → collective)</li>
+<li><code>lcd_binding_member</code> (member → collective LCD field)</li>
+<li><code>observed_in_article</code> (observation → article in source history)</li>
+<li><code>profile_trajectory</code> (party → time-ordered observations)</li>
+</ul>
 <hr />
 <h2 id="810-integration-summary-asssib-v02">8.10 Integration summary — ASSSIB (v0.2)<a class="headerlink" href="#810-integration-summary-asssib-v02" title="Permanent link">&para;</a></h2>
 <p>ASSSIB makes <strong>sensemaking speed</strong> a first-class analytical object. The core risk is often not the threatened action itself but a <strong>dangerous mismatch</strong> in how quickly and coherently each side interprets probes.</p>
 <p><strong>Why Hanani value increases:</strong> Applying the full layered ontology systematically and faster than an opponent (or than one's own prior cycle) is a <strong>strategic capability</strong> — it reduces vulnerability to informational brinkmanship and improves probe interpretation (distinguishing cheap talk + stress from costly commitment).</p>
 <p><strong>Workflow hooks:</strong> Rhetoric audits flag speed/ambiguity language; Layer 2 tags ASSSIB + linked layers; gap analysis asks about actor processing differentials; retrieval prioritizes reaction-time and sensemaking-quality evidence.</p>
+<p><strong>v0.3 addition:</strong> Per-source article histories feed individual coherence trajectories;
+collective LCD profiles constrain interpretation of alliance/coalition responses to probes.</p>
 <hr />
 <h2 id="811-tagging-examples-hypothetical-logic-atoms">8.11 Tagging examples (hypothetical logic atoms)<a class="headerlink" href="#811-tagging-examples-hypothetical-logic-atoms" title="Permanent link">&para;</a></h2>
 <p><strong>Example A — Atom-HYP-001</strong><br />
@@ -780,10 +850,24 @@ backbone that logic atoms attach to after passing <strong>Layer 1</strong> rheto
 <td>ASSSIB speed-differential tags on live atoms</td>
 <td>Sources on alliance coordination lag, probe/leak dynamics</td>
 </tr>
+<tr>
+<td><strong>High</strong></td>
+<td>Per-party coherence trajectories from source histories</td>
+<td>Multi-article sequences per source; collective LCD binding members</td>
+</tr>
 </tbody>
 </table>
 <hr />
 <h2 id="12-changelog">12. Changelog<a class="headerlink" href="#12-changelog" title="Permanent link">&para;</a></h2>
+<h3 id="v03-2026-07-10-coherence-speed-profiles-lcd">v0.3 — 2026-07-10 (coherence speed profiles + LCD)<a class="headerlink" href="#v03-2026-07-10-coherence-speed-profiles-lcd" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added §8.9b: coherence vs. raw reaction speed; source-history trajectories; collective LCD constraint.</li>
+<li>New registry constants: <code>COHERENCE_LEVELS</code>, <code>PARTY_TYPES</code>, <code>COHERENCE_GRAPH_EDGES</code>.</li>
+<li><code>SpeedDifferentialAssessment</code> extended with per-side coherence and optional party ids.</li>
+<li>Scaffold modules: <code>hanani.sources.SourceCorpus</code>, <code>hanani.coherence.CoherenceRegistry</code>.</li>
+<li><strong>Stability:</strong> ASSSIB §8.9 unchanged; L1–L4 seeds unchanged.</li>
+<li><strong>Next:</strong> Wire profile updates into ingestion workflow; populate live trajectories from atoms.</li>
+</ul>
 <h3 id="v02-2026-07-05-asssib-integration">v0.2 — 2026-07-05 (ASSSIB integration)<a class="headerlink" href="#v02-2026-07-05-asssib-integration" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Added <strong>Asymmetric Sensemaking Speed &amp; Informational Brinkmanship</strong> as prominent L5 cross-cutting dynamic (§8.9).</li>
@@ -860,7 +944,7 @@ backbone that logic atoms attach to after passing <strong>Layer 1</strong> rheto
 </tbody>
 </table>
 <hr />
-<p><em>End of Living Semantic Model v0.2</em></p>
+<p><em>End of Living Semantic Model v0.3</em></p>
   </main>
   <footer class="site-footer wrap">
     <p>REQ-HANANI-001 · Built from <code>docs/</code> via <code>scripts/build_docs.py</code></p>

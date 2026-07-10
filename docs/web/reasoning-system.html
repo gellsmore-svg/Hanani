@@ -122,10 +122,14 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.</
 4. Cross-link historical anchors as <strong>templates</strong>, not proof.
 5. Record supporting/contradicting atoms in graph.
 6. <strong>Mandatory ASSSIB block:</strong> <code>speed_differential</code> on every atom — processing speeds per
-   side, probe intent, differential exploited, or <code>none_evident</code> explicitly.
+   side, coherence per side, optional party ids, probe intent, differential exploited, or
+   <code>none_evident</code> explicitly.
 7. Emit graph edges: <code>processes_faster_than</code>, <code>probes_sensemaking_speed</code>,
-   <code>creates_ambiguity_to_slow</code>, <code>exploits_speed_differential</code> when applicable.</p>
-<p><strong>Cross-cutting dynamic:</strong> <a href="ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib">Asymmetric Sensemaking Speed &amp; Informational Brinkmanship</a> (ontology v0.2).</p>
+   <code>creates_ambiguity_to_slow</code>, <code>exploits_speed_differential</code> when applicable.
+8. <strong>Coherence profile linkage (v0.3):</strong> When party ids are set, update
+   <code>CoherenceRegistry</code> trajectories from per-source article history; recompute collective
+   LCD profiles for alliance/coalition move interpretation.</p>
+<p><strong>Cross-cutting dynamic:</strong> <a href="ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib">Asymmetric Sensemaking Speed &amp; Informational Brinkmanship</a> (ontology v0.3).</p>
 <h3 id="atom-assessment-record-per-atom">Atom assessment record (per atom)<a class="headerlink" href="#atom-assessment-record-per-atom" title="Permanent link">&para;</a></h3>
 <pre><code class="language-json">{
   &quot;atom_id&quot;: &quot;Atom-001&quot;,
@@ -143,6 +147,10 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.</
     &quot;speed_differential&quot;: {
       &quot;side_a_processing&quot;: &quot;slow&quot;,
       &quot;side_b_processing&quot;: &quot;fast&quot;,
+      &quot;side_a_coherence&quot;: &quot;fragmented&quot;,
+      &quot;side_b_coherence&quot;: &quot;high&quot;,
+      &quot;side_a_party_id&quot;: &quot;nato-capitals&quot;,
+      &quot;side_b_party_id&quot;: &quot;prober-state&quot;,
       &quot;differential_exploited&quot;: &quot;B_faster&quot;,
       &quot;probe_intent&quot;: &quot;measure_reaction_speed&quot;,
       &quot;notes&quot;: &quot;…&quot;

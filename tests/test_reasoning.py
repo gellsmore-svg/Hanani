@@ -74,6 +74,18 @@ def test_asssib_in_ontology_and_speed_assessment() -> None:
     assert record.layer2.speed_differential.probe_intent == "measure_reaction_speed"
 
 
+def test_speed_differential_coherence_fields() -> None:
+    from hanani.reasoning import SpeedDifferentialAssessment
+
+    speed = SpeedDifferentialAssessment(
+        side_a_coherence="fragmented",
+        side_b_coherence="high",
+        side_a_party_id="party-a",
+    )
+    assert speed.side_a_coherence == "fragmented"
+    assert speed.side_a_party_id == "party-a"
+
+
 def test_semantic_graph_neighbors() -> None:
     g = SemanticGraph()
     from hanani.graph import GraphEdge, GraphNode

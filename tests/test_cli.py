@@ -32,7 +32,7 @@ def test_factors_non_empty():
 def test_ontology_cli_lists_layers():
     from hanani.ontology import ONTOLOGY_VERSION, list_layers
 
-    assert ONTOLOGY_VERSION == "0.2"
+    assert ONTOLOGY_VERSION == "0.3"
     assert len(list_layers()) == 5
 
 
