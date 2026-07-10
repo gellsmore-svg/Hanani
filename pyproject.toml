@@ -12,7 +12,7 @@ license = { text = "Apache-2.0" }
 keywords = ["geopolitics", "news", "evidence", "synthesis", "intelligence", "reasoning", "llm", "debate"]
 
 dependencies = [
-    "keturah>=0.1",
+    "keturah @ git+https://github.com/gellsmore-svg/keturah.git@v0.3.0",
 ]
 
 [project.optional-dependencies]
