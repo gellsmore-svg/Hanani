@@ -363,7 +363,7 @@ members, and per-source coherence trajectories.
 
 **Acceptance:** `hanani.assib.GAP_ANALYSIS_QUESTIONS` exported; referenced in FR-ANALYSIS-02.
 
-**Status:** Constants implemented; automated gap runner pending.
+**Status:** Implemented — `hanani.gaps.analyze_gaps` / `hanani gaps` sweep the persisted corpus for explicit `none_evident` gap signals and pair findings with the normative questions.
 
 #### FR-ASSSIB-05 Retrieval prioritization
 
@@ -373,7 +373,7 @@ how sides model each other's sensemaking speed — subject to Layer 1 filter (no
 
 **Acceptance:** `hanani.assib.RETRIEVAL_PRIORITIES`.
 
-**Status:** Constants implemented; retrieval loop pending.
+**Status:** Priorities surfaced automatically when gaps exist (`analyze_gaps.retrieval_priorities`); the active retrieval loop itself is pending.
 
 #### FR-ASSSIB-06 Analysis-graph speed edges
 

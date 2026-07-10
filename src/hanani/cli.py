@@ -178,6 +178,25 @@ def _cmd_debate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_gaps(args: argparse.Namespace) -> int:
+    from hanani.gaps import analyze_gaps
+    from hanani.store import SliceStore
+
+    report = analyze_gaps(SliceStore(args.store))
+    print(f"gap analysis: {report['assessed']} assessed atoms "
+          f"({report['gated']} rhetoric-gated) — speed gaps: {report['speed_gaps']} "
+          f"(rate {report['gap_rate']:.0%})")
+    for finding in report["findings"]:
+        print(f"  [{finding['kind']}] {finding['note']}")
+    if not report["findings"]:
+        print("  no ASSSIB gaps above threshold")
+    if report["retrieval_priorities"]:
+        print("  retrieve next (FR-ASSSIB-05, Layer-1 filter applies):")
+        for priority in report["retrieval_priorities"][:5]:
+            print(f"    - {priority}")
+    return 0
+
+
 def _cmd_corpus(args: argparse.Namespace) -> int:
     from hanani.store import SliceStore
 
@@ -239,6 +258,10 @@ def main(argv: list[str] | None = None) -> int:
     debate_p.add_argument("--extractor", choices=("rule", "hoglah"), default="rule",
                           help="Milcah unit extraction: deterministic rule floor or the hoglah LLM tier")
     debate_p.set_defaults(func=_cmd_debate)
+
+    gaps_p = sub.add_parser("gaps", help="ASSSIB gap analysis over the persisted corpus (FR-ASSSIB-04)")
+    gaps_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    gaps_p.set_defaults(func=_cmd_gaps)
 
     push_p = sub.add_parser(
         "push-tirzah", help="Push stored articles+assessments into Tirzah memory (tirzah extra)"

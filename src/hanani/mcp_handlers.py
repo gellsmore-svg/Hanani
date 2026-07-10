@@ -71,6 +71,14 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         except Exception as exc:  # noqa: BLE001 - surface cleanly to the agent
             return {"error": f"debate failed: {type(exc).__name__}: {exc}"}
 
+    def analyze_gaps(**_kw: Any) -> dict[str, Any]:
+        from hanani.gaps import analyze_gaps as run_gaps
+
+        try:
+            return run_gaps(_store())
+        except Exception as exc:  # noqa: BLE001
+            return {"error": f"gap analysis failed: {type(exc).__name__}: {exc}"}
+
     def factors(**_kw: Any) -> dict[str, Any]:
         from hanani.factors import list_factors
 
@@ -83,6 +91,8 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         "corpus_summary": corpus_summary,
         "hanani.debate_corpus": debate_corpus,
         "debate_corpus": debate_corpus,
+        "hanani.analyze_gaps": analyze_gaps,
+        "analyze_gaps": analyze_gaps,
         "hanani.factors": factors,
         "factors": factors,
     }

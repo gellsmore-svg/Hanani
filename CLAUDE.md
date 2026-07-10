@@ -131,6 +131,7 @@ hanani workflow status # includes ASSSIB gap-question count
 
 hanani ingest article.txt --source-id SRC --title "..."
 hanani corpus          # ~/.hanani summary
+hanani gaps            # ASSSIB gap analysis (FR-ASSSIB-04/05)
 hanani push-tirzah     # optional [tirzah] extra
 hanani debate          # optional [milcah] extra
 hanani docs serve      # http://127.0.0.1:8805
@@ -149,12 +150,12 @@ hanani docs serve      # http://127.0.0.1:8805
 | Speed edges in pipeline | **Implemented** (FR-ASSSIB-06 wired in `pipeline.py`) |
 | Coherence profiles + LCD | Scaffold (`coherence.py`; not auto-wired in ingest yet) |
 | Source article history | Scaffold in `sources.py`; wired in `pipeline.ingest_article()` |
-| Gap analysis runner | Constants only (`GAP_ANALYSIS_QUESTIONS`) |
+| Gap analysis runner | **Implemented** (`hanani gaps`, `gaps.analyze_gaps`, MCP `hanani.analyze_gaps`) |
 | Active retrieval loop | Constants only (`RETRIEVAL_PRIORITIES`) |
 | Per-atom summaries (Phase 2) | Planned |
 | Collective narrative (Phase 3) | Planned |
 
-**58 tests passing** (`pytest`). CI: ruff + pytest.
+**63 tests passing** (`pytest`). CI: ruff + pytest.
 
 ---
 
@@ -162,7 +163,6 @@ hanani docs serve      # http://127.0.0.1:8805
 
 1. **Wire coherence into ingest** — call `CoherenceRegistry.ingest_assessment()` when `speed_differential` has party ids.
 2. **Auto-infer speed/coherence** from probe/leak/coordination-lag language in atoms (extend deterministic floor or Hoglah prompt).
-3. **Gap analysis command** — `hanani gaps` running `GAP_ANALYSIS_QUESTIONS` over `~/.hanani` assessments.
 4. **First live source cycle** — ingest real analytical text; review ASSSIB tags + LCD on a collective (NATO/EU).
 5. **Phase 2** — populate `assessment_summary` per atom.
 

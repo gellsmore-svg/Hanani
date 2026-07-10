@@ -159,3 +159,58 @@ def test_no_speed_edges_without_evidence(tmp_path) -> None:
     store = SliceStore(tmp_path)
     summary = ingest_and_assess(_ARTICLE, source_id="r", title="t", store=store)
     assert summary["speed_edges"] == 0 and store.graph_edges() == []
+
+
+def test_gap_analysis_over_stored_corpus(tmp_path, capsys) -> None:
+    """FR-ASSSIB-04: the runner consumes the explicit none_evident gap signals."""
+    from hanani.gaps import analyze_gaps
+
+    store = SliceStore(tmp_path)
+    ingest_and_assess(_ARTICLE, source_id="reuters", title="Odesa", store=store)
+    report = analyze_gaps(store)
+
+    assert report["assessed"] > 0 and report["gated"] > 0
+    # default engine records none_evident blocks → every assessed atom is a gap
+    assert report["speed_gaps"] == report["assessed"]
+    assert report["gap_rate"] == 1.0
+    kinds = {f["kind"] for f in report["findings"]}
+    assert "speed_gap" in kinds and "no_party_linkage" in kinds
+    # FR-ASSSIB-05: gaps exist → retrieval priorities surface
+    assert report["retrieval_priorities"]
+    assert len(report["questions"]) >= 5
+
+    # CLI renders it
+    from hanani.cli import main
+    assert main(["gaps", "--store", str(tmp_path)]) == 0
+    out = capsys.readouterr().out
+    assert "speed gaps:" in out and "retrieve next" in out
+
+
+def test_gap_analysis_empty_store(tmp_path) -> None:
+    from hanani.gaps import analyze_gaps
+
+    report = analyze_gaps(SliceStore(tmp_path))
+    assert report["assessed"] == 0 and report["findings"] == []
+    assert report["retrieval_priorities"] == []  # no gaps → no retrieval push
+
+
+def test_gap_analysis_no_gaps_when_speed_evidence_present(tmp_path) -> None:
+    from hanani.gaps import analyze_gaps
+    from hanani.reasoning import ReasoningEngine, SpeedDifferentialAssessment
+
+    class SpeedAwareEngine(ReasoningEngine):
+        def assess_atom(self, atom, **kwargs):
+            kwargs["speed"] = SpeedDifferentialAssessment(
+                side_a_processing="fast", side_b_processing="slow",
+                side_a_party_id="ru", side_b_party_id="nato",
+                probe_intent="measure_reaction_speed",
+                differential_exploited="side_a_exploits", notes="observed",
+            )
+            return super().assess_atom(atom, **kwargs)
+
+    store = SliceStore(tmp_path)
+    ingest_and_assess(_ARTICLE, source_id="r", title="t", store=store,
+                      engine=SpeedAwareEngine())
+    report = analyze_gaps(store)
+    assert report["speed_gaps"] == 0 and report["gap_rate"] == 0.0
+    assert not any(f["kind"] == "no_party_linkage" for f in report["findings"])

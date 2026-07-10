@@ -93,6 +93,26 @@ def build_manifest():
                 tags=["reasoning", "debate", "milcah"],
             ),
             capability(
+                "analyze_gaps",
+                "ASSSIB gap analysis over the persisted corpus: which assessed "
+                "atoms carry explicit none_evident speed blocks, which flagged "
+                "sensemaking signals without speed evidence, party-linkage "
+                "coverage — with the normative gap questions and, when gaps "
+                "exist, the retrieval priorities (FR-ASSSIB-04/05).",
+                input_schema={"type": "object", "properties": {}},
+                output_schema={
+                    "type": "object",
+                    "properties": {
+                        "assessed": {"type": "integer"},
+                        "speed_gaps": {"type": "integer"},
+                        "gap_rate": {"type": "number"},
+                        "findings": {"type": "array", "items": {"type": "object"}},
+                        "retrieval_priorities": {"type": "array", "items": {"type": "string"}},
+                    },
+                },
+                tags=["reasoning", "gaps", "asssib"],
+            ),
+            capability(
                 "factors",
                 "List the geopolitical factor taxonomy.",
                 input_schema={"type": "object", "properties": {}},
