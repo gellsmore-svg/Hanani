@@ -72,6 +72,13 @@ def test_debate_normalises_object_results(tmp_path) -> None:
     record = debate_corpus(store, run=lambda _r: ObjResult())
     assert record["verdict"]["claims"] == ["c"]
     assert record["verdict"]["terminal_reason"] == "no_objections"
+    # blocked verdicts keep their reason auditable
+    blocked = debate_corpus(
+        store, run=lambda _r: {"terminal_reason": "blocked", "error": "job timeout",
+                               "error_type": "TimeoutError"},
+    )
+    assert blocked["verdict"]["error"] == "job timeout"
+    assert blocked["verdict"]["error_type"] == "TimeoutError"
 
 
 def test_debate_single_article_and_errors(tmp_path) -> None:

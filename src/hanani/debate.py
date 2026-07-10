@@ -70,6 +70,8 @@ def _verdict_dict(result: Any) -> dict[str, Any]:
         "citations": list(get("citations", []) or []),
         "confidence": float(get("confidence", 0.0) or 0.0),
         "terminal_reason": str(get("terminal_reason", "") or ""),
+        "error": get("error", None),
+        "error_type": get("error_type", None),
     }
 
 
