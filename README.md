@@ -27,6 +27,7 @@ hanani docs serve          # requirements + architecture as web pages
 hanani ingest article.txt --source-id reuters --title "Odesa depot strike"
 hanani ingest article.txt --source-id reuters --hoglah-model llama3   # + model tier
 hanani corpus              # summarise the persisted store (~/.hanani)
+hanani push-tirzah         # push stored records into Tirzah memory (tirzah extra)
 ```
 
 Graphs: [`living-semantic-model.md`](docs/ontology/living-semantic-model.md) ·

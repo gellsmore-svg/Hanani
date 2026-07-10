@@ -116,6 +116,29 @@ def _cmd_ingest(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_push_tirzah(args: argparse.Namespace) -> int:
+    from hanani.store import SliceStore
+    from hanani.tirzah_push import push_to_tirzah
+
+    try:
+        summary = push_to_tirzah(
+            SliceStore(args.store),
+            article_id=args.article_id,
+            config_path=args.config,
+        )
+    except (RuntimeError, ValueError) as error:
+        print(f"hanani push-tirzah: {error}", file=sys.stderr)
+        return 2
+    print(
+        f"tirzah push: {summary['pushed']} pushed, "
+        f"{summary['duplicates']} duplicates, {summary['failed']} failed"
+    )
+    for result in summary["results"]:
+        marker = "ok " if result["ok"] else ("dup" if result.get("reason") == "duplicate_checksum" else "ERR")
+        print(f"  [{marker}] {result['article_id']} -> {result.get('document_id') or result.get('reason') or result.get('error')}")
+    return 0 if summary["failed"] == 0 else 1
+
+
 def _cmd_corpus(args: argparse.Namespace) -> int:
     from hanani.store import SliceStore
 
@@ -164,6 +187,14 @@ def main(argv: list[str] | None = None) -> int:
     corpus_p = sub.add_parser("corpus", help="Summarise the persisted slice store")
     corpus_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
     corpus_p.set_defaults(func=_cmd_corpus)
+
+    push_p = sub.add_parser(
+        "push-tirzah", help="Push stored articles+assessments into Tirzah memory (tirzah extra)"
+    )
+    push_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    push_p.add_argument("--article-id", default=None, help="Push one article (default: all)")
+    push_p.add_argument("--config", default=None, help="Tirzah config.yaml path")
+    push_p.set_defaults(func=_cmd_push_tirzah)
 
     docs = sub.add_parser("docs", help="Documentation site (build / serve)")
     docs_sub = docs.add_subparsers(dest="docs_command")
