@@ -92,7 +92,8 @@ Source → [optional source-level rhetoric gate] → Atom extraction
 1. Map argument structure (premises, warrants, conclusion).
 2. Traverse rhetorical graph: match fallacy patterns, enthymemes, closure signals.
 3. Score chain completeness, falsifiability, update signals.
-4. Emit `rhetoric_assessment`: pass / qualified / fail with explicit hits on Graph B nodes.
+4. Flag **sensemaking-speed signals** (reaction time, ambiguity, probes, sensationalism).
+5. Emit `rhetoric_assessment`: pass / qualified / fail with explicit hits on Graph B nodes.
 
 **Gate:** Atoms with `fail` may be stored but marked **inadmissible for mechanism inference**
 unless user overrides. Weak sources do not propagate to hypothesis generation.
@@ -107,6 +108,12 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.
 3. Link to operational factors where observable (`troop-movements` ↔ costly signal).
 4. Cross-link historical anchors as **templates**, not proof.
 5. Record supporting/contradicting atoms in graph.
+6. **Mandatory ASSSIB block:** `speed_differential` on every atom — processing speeds per
+   side, probe intent, differential exploited, or `none_evident` explicitly.
+7. Emit graph edges: `processes_faster_than`, `probes_sensemaking_speed`,
+   `creates_ambiguity_to_slow`, `exploits_speed_differential` when applicable.
+
+**Cross-cutting dynamic:** [Asymmetric Sensemaking Speed & Informational Brinkmanship](ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib) (ontology v0.2).
 
 ### Atom assessment record (per atom)
 
@@ -121,9 +128,16 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.
     "admissible_for_inference": true
   },
   "layer2_mechanisms": {
-    "tags": ["L1.security_dilemma", "L4.cheap_talk"],
+    "tags": ["L1.security_dilemma", "L4.cheap_talk", "asymmetric_sensemaking_speed_informational_brinkmanship"],
     "justifications": {"L1.security_dilemma": "…"},
-    "factor_links": ["diplomatic-signalling"]
+    "factor_links": ["diplomatic-signalling"],
+    "speed_differential": {
+      "side_a_processing": "slow",
+      "side_b_processing": "fast",
+      "differential_exploited": "B_faster",
+      "probe_intent": "measure_reaction_speed",
+      "notes": "…"
+    }
   },
   "assessment_summary": null,
   "version": "0.2"

@@ -11,13 +11,13 @@
     <div class="wrap">
       <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
       <h1>Requirements</h1>
-      <nav class="nav"><a href="index.html" class="active">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html">Reasoning system</a><a href="vision.html">Vision</a></nav>
+      <nav class="nav"><a href="index.html" class="active">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html">Reasoning system</a><a href="vision.html">Vision</a><a href="ontology.html">Ontology</a></nav>
     </div>
   </header>
   <main class="wrap content">
     <h1 id="hanani-system-requirements">Hanani — System Requirements<a class="headerlink" href="#hanani-system-requirements" title="Permanent link">&para;</a></h1>
 <p><strong>Document:</strong> REQ-HANANI-001<br />
-<strong>Version:</strong> 0.2<br />
+<strong>Version:</strong> 0.3
 <strong>Status:</strong> Normative — implementation shall trace to these requirements<br />
 <strong>Product:</strong> Reusable geopolitical <strong>reasoning system</strong> (not a one-off crisis analysis tool)</p>
 <hr />
@@ -129,6 +129,14 @@
 <td><strong>Assessment record</strong></td>
 <td>Structured output per atom after Layer 1 + Layer 2</td>
 </tr>
+<tr>
+<td><strong>ASSSIB</strong></td>
+<td>Asymmetric Sensemaking Speed &amp; Informational Brinkmanship — cross-cutting dynamic (ontology §8.9)</td>
+</tr>
+<tr>
+<td><strong>Speed differential</strong></td>
+<td>Relative processing speed/precision/coherence between actors on a probe or signal</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -144,7 +152,13 @@
 <li>Edges: <code>part_of</code>, <code>implies</code>, <code>enables</code>, <code>contradicts</code>, <code>correlates_with</code>, <code>exemplified_by</code>, <code>observed_via</code>.</li>
 </ul>
 <p><strong>Acceptance:</strong> <code>hanani ontology</code> lists ≥30 mechanism concepts; graph serialisable; version in registry.</p>
-<p><strong>Status:</strong> Seed (<code>hanani.ontology</code>, <code>docs/ontology/living-semantic-model.md</code> v0.1).</p>
+<p><strong>Status:</strong> Seed (<code>hanani.ontology</code>, <code>docs/ontology/living-semantic-model.md</code> v0.2).</p>
+<h4 id="fr-graph-01b-asssib-cross-cutting-dynamic">FR-GRAPH-01b ASSSIB cross-cutting dynamic<a class="headerlink" href="#fr-graph-01b-asssib-cross-cutting-dynamic" title="Permanent link">&para;</a></h4>
+<p>The mechanism graph <strong>shall</strong> include <strong>Asymmetric Sensemaking Speed &amp; Informational
+Brinkmanship</strong> (<code>asymmetric_sensemaking_speed_informational_brinkmanship</code>) as a prominent
+L5 cross-cutting node with documented linkages to L2–L4 and Jervis, prospect theory, Schelling.</p>
+<p><strong>Acceptance:</strong> Ontology §8.9 present; <code>hanani.ontology.CROSS_CUTTING_DYNAMICS</code> includes ASSSIB.</p>
+<p><strong>Status:</strong> Documented v0.2.</p>
 <h4 id="fr-graph-02-rhetoric-graph">FR-GRAPH-02 Rhetoric graph<a class="headerlink" href="#fr-graph-02-rhetoric-graph" title="Permanent link">&para;</a></h4>
 <p>The system <strong>shall</strong> maintain a <strong>rhetoric graph</strong> containing:</p>
 <ul>
@@ -182,13 +196,28 @@ analysis edges in one <strong>typed graph</strong> with query API (neighbors, by
 <h4 id="fr-reason-02-layer-1-exhaustiveness">FR-REASON-02 Layer 1 exhaustiveness<a class="headerlink" href="#fr-reason-02-layer-1-exhaustiveness" title="Permanent link">&para;</a></h4>
 <p>Layer 1 <strong>shall</strong> evaluate each atom against <strong>all applicable</strong> rhetoric patterns and audit
 criteria; hits <strong>shall</strong> be listed explicitly (no silent drops).</p>
-<p><strong>Acceptance:</strong> Assessment record includes <code>fallacy_hits</code>, <code>enthymeme_hits</code>, <code>audit_scores</code>, <code>robustness</code> tier.</p>
+<p>Layer 1 <strong>shall</strong> flag content discussing or implying: sensemaking/reaction speed,
+over/under-reaction to sensationalism, deliberate ambiguity, or probe-to-test-coordination.</p>
+<p><strong>Acceptance:</strong> Assessment record includes <code>fallacy_hits</code>, <code>enthymeme_hits</code>, <code>audit_scores</code>,
+<code>robustness</code> tier, <code>sensemaking_signals</code> when present.</p>
 <p><strong>Status:</strong> Interface defined; matcher not implemented.</p>
 <h4 id="fr-reason-03-layer-2-exhaustiveness">FR-REASON-03 Layer 2 exhaustiveness<a class="headerlink" href="#fr-reason-03-layer-2-exhaustiveness" title="Permanent link">&para;</a></h4>
 <p>Layer 2 <strong>shall</strong> tag each admissible atom against <strong>all applicable</strong> mechanism nodes with
 step-by-step justification per tag (not default 1–2 tags).</p>
 <p><strong>Acceptance:</strong> <code>justifications</code> dict keyed by tag id; empty tag set requires explicit "no mechanism match" note.</p>
 <p><strong>Status:</strong> Interface defined; tagger not implemented.</p>
+<h4 id="fr-reason-03b-speed-differential-assessment-mandatory">FR-REASON-03b Speed differential assessment (mandatory)<a class="headerlink" href="#fr-reason-03b-speed-differential-assessment-mandatory" title="Permanent link">&para;</a></h4>
+<p>For <strong>every</strong> logic atom Layer 2 <strong>shall</strong> include a <code>speed_differential</code> assessment:</p>
+<ul>
+<li>Processing speed implied for each side (<code>fast</code> / <code>slow</code> / <code>unknown</code>).</li>
+<li>Whether a differential is exploited; probe intent (<code>measure_reaction_speed</code>,
+  <code>measure_model_precision</code>, <code>deliberate_ambiguity</code>, or <code>none_evident</code>).</li>
+<li>If no speed signal in text — <strong><code>none_evident</code> required explicitly</strong> (gap signal).</li>
+</ul>
+<p><strong>Acceptance:</strong> <code>SpeedDifferentialAssessment</code> on assessment record; graph edges
+<code>processes_faster_than</code>, <code>probes_sensemaking_speed</code>, <code>creates_ambiguity_to_slow</code>,
+<code>exploits_speed_differential</code> supported.</p>
+<p><strong>Status:</strong> Schema + scaffold (<code>hanani.reasoning.SpeedDifferentialAssessment</code>).</p>
 <h4 id="fr-reason-04-admissibility-gate">FR-REASON-04 Admissibility gate<a class="headerlink" href="#fr-reason-04-admissibility-gate" title="Permanent link">&para;</a></h4>
 <p>Atoms with Layer 1 robustness <strong>Weak</strong> <strong>shall not</strong> propagate to mechanism inference,
 hypothesis generation, or collective narrative unless operator override with audit trail.</p>
@@ -229,10 +258,14 @@ contradiction, complementarity, implication, and gap.</p>
 <h4 id="fr-analysis-02-gap-analysis">FR-ANALYSIS-02 Gap analysis<a class="headerlink" href="#fr-analysis-02-gap-analysis" title="Permanent link">&para;</a></h4>
 <p>The system <strong>shall</strong> compare covered mechanism and rhetoric nodes against the full registries
 and report prioritized gaps with stated information needs.</p>
+<p>The system <strong>shall</strong> routinely ask: <em>What do current atoms imply about relative processing
+speeds or sensemaking quality between key actors? Where are differentials created or exploited?</em></p>
 <p><strong>Status:</strong> Design only.</p>
 <h4 id="fr-analysis-03-active-retrieval">FR-ANALYSIS-03 Active retrieval<a class="headerlink" href="#fr-analysis-03-active-retrieval" title="Permanent link">&para;</a></h4>
 <p>When gaps are identified, the system <strong>shall</strong> recommend or retrieve additional sources
 subject to the <strong>same</strong> Layer 1 filter (no reputation bypass).</p>
+<p>Retrieval <strong>shall</strong> prioritize sources illuminating processing-speed dynamics, reaction times,
+and how sides model each other's sensemaking speed when ASSSIB gaps exist.</p>
 <p><strong>Status:</strong> Design only.</p>
 <hr />
 <h3 id="fr-ops-operational-factors">FR-OPS — Operational factors<a class="headerlink" href="#fr-ops-operational-factors" title="Permanent link">&para;</a></h3>
@@ -436,6 +469,11 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <td>0.2</td>
 <td>2026-07-05</td>
 <td>Full reasoning-system requirements; dual graphs; layered engine; web docs FR</td>
+</tr>
+<tr>
+<td>0.3</td>
+<td>2026-07-05</td>
+<td>ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules</td>
 </tr>
 </tbody>
 </table>

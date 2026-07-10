@@ -16,6 +16,7 @@ PAGES: list[tuple[str, Path, str]] = [
     ("Architecture", DOCS / "architecture.md", "architecture.html"),
     ("Reasoning system", DOCS / "reasoning-system.md", "reasoning-system.html"),
     ("Vision", DOCS / "vision.md", "vision.html"),
+    ("Ontology", DOCS / "ontology" / "living-semantic-model.md", "ontology.html"),
 ]
 
 

@@ -35,7 +35,7 @@ def serve(port: int = 8765, *, rebuild: bool = True) -> int:
     server = http.server.ThreadingHTTPServer(("127.0.0.1", port), _Handler)
     url = f"http://127.0.0.1:{port}/"
     print(f"Serving Hanani docs at {url}")
-    print("  Requirements: /  ·  Architecture: /architecture.html")
+    print("  Requirements: /  ·  Ontology: /ontology.html  ·  Architecture: /architecture.html")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

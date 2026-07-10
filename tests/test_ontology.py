@@ -7,7 +7,7 @@ from hanani.ontology import (
 
 
 def test_ontology_version_is_semver_like() -> None:
-    assert ONTOLOGY_VERSION == "0.1"
+    assert ONTOLOGY_VERSION == "0.2"
 
 
 def test_all_five_layers_present() -> None:

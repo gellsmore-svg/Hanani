@@ -45,6 +45,35 @@ def test_seed_graphs() -> None:
     assert len(rg.nodes_by_kind("rhetoric")) >= 20
 
 
+def test_asssib_in_ontology_and_speed_assessment() -> None:
+    from hanani.ontology import CROSS_CUTTING_DYNAMICS, LAYERS
+    from hanani.reasoning import LogicAtom, SpeedDifferentialAssessment, default_engine
+
+    assert "asymmetric_sensemaking_speed_informational_brinkmanship" in CROSS_CUTTING_DYNAMICS
+    assert "asymmetric_sensemaking_speed_informational_brinkmanship" in LAYERS["L5_emergent_dynamic"]
+
+    atom = LogicAtom(
+        atom_id="a1",
+        source_id="s1",
+        text="A leaked memo probes whether the alliance can coordinate a precise reaction within 48 hours.",
+    )
+    record = default_engine().assess_atom(
+        atom,
+        speed=SpeedDifferentialAssessment(
+            side_a_processing="slow",
+            side_b_processing="fast",
+            differential_exploited="B_faster",
+            probe_intent="measure_reaction_speed",
+            notes="alliance coordination lag implied",
+        ),
+    )
+    assert record.layer1 is not None
+    assert record.layer1.sensemaking_signals
+    assert record.layer2 is not None
+    assert "asymmetric_sensemaking_speed_informational_brinkmanship" in record.layer2.tags
+    assert record.layer2.speed_differential.probe_intent == "measure_reaction_speed"
+
+
 def test_semantic_graph_neighbors() -> None:
     g = SemanticGraph()
     from hanani.graph import GraphEdge, GraphNode

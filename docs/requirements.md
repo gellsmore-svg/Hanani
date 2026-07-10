@@ -1,7 +1,7 @@
 # Hanani — System Requirements
 
 **Document:** REQ-HANANI-001  
-**Version:** 0.2  
+**Version:** 0.3
 **Status:** Normative — implementation shall trace to these requirements  
 **Product:** Reusable geopolitical **reasoning system** (not a one-off crisis analysis tool)
 
@@ -65,6 +65,8 @@ Hanani shall provide a **living, expandable reasoning engine** that:
 | **Admissible atom** | Atom passing Layer 1 at Strong or qualified Moderate |
 | **Operational factor** | Observable variable (`troop-movements`, `sanctions`, …) linked from mechanism tags |
 | **Assessment record** | Structured output per atom after Layer 1 + Layer 2 |
+| **ASSSIB** | Asymmetric Sensemaking Speed & Informational Brinkmanship — cross-cutting dynamic (ontology §8.9) |
+| **Speed differential** | Relative processing speed/precision/coherence between actors on a probe or signal |
 
 ---
 
@@ -84,7 +86,17 @@ The system **shall** maintain an expandable **mechanism graph** containing:
 
 **Acceptance:** `hanani ontology` lists ≥30 mechanism concepts; graph serialisable; version in registry.
 
-**Status:** Seed (`hanani.ontology`, `docs/ontology/living-semantic-model.md` v0.1).
+**Status:** Seed (`hanani.ontology`, `docs/ontology/living-semantic-model.md` v0.2).
+
+#### FR-GRAPH-01b ASSSIB cross-cutting dynamic
+
+The mechanism graph **shall** include **Asymmetric Sensemaking Speed & Informational
+Brinkmanship** (`asymmetric_sensemaking_speed_informational_brinkmanship`) as a prominent
+L5 cross-cutting node with documented linkages to L2–L4 and Jervis, prospect theory, Schelling.
+
+**Acceptance:** Ontology §8.9 present; `hanani.ontology.CROSS_CUTTING_DYNAMICS` includes ASSSIB.
+
+**Status:** Documented v0.2.
 
 #### FR-GRAPH-02 Rhetoric graph
 
@@ -141,7 +153,11 @@ For every logic atom the engine **shall** execute in order:
 Layer 1 **shall** evaluate each atom against **all applicable** rhetoric patterns and audit
 criteria; hits **shall** be listed explicitly (no silent drops).
 
-**Acceptance:** Assessment record includes `fallacy_hits`, `enthymeme_hits`, `audit_scores`, `robustness` tier.
+Layer 1 **shall** flag content discussing or implying: sensemaking/reaction speed,
+over/under-reaction to sensationalism, deliberate ambiguity, or probe-to-test-coordination.
+
+**Acceptance:** Assessment record includes `fallacy_hits`, `enthymeme_hits`, `audit_scores`,
+`robustness` tier, `sensemaking_signals` when present.
 
 **Status:** Interface defined; matcher not implemented.
 
@@ -153,6 +169,21 @@ step-by-step justification per tag (not default 1–2 tags).
 **Acceptance:** `justifications` dict keyed by tag id; empty tag set requires explicit "no mechanism match" note.
 
 **Status:** Interface defined; tagger not implemented.
+
+#### FR-REASON-03b Speed differential assessment (mandatory)
+
+For **every** logic atom Layer 2 **shall** include a `speed_differential` assessment:
+
+- Processing speed implied for each side (`fast` / `slow` / `unknown`).
+- Whether a differential is exploited; probe intent (`measure_reaction_speed`,
+  `measure_model_precision`, `deliberate_ambiguity`, or `none_evident`).
+- If no speed signal in text — **`none_evident` required explicitly** (gap signal).
+
+**Acceptance:** `SpeedDifferentialAssessment` on assessment record; graph edges
+`processes_faster_than`, `probes_sensemaking_speed`, `creates_ambiguity_to_slow`,
+`exploits_speed_differential` supported.
+
+**Status:** Schema + scaffold (`hanani.reasoning.SpeedDifferentialAssessment`).
 
 #### FR-REASON-04 Admissibility gate
 
@@ -225,12 +256,18 @@ contradiction, complementarity, implication, and gap.
 The system **shall** compare covered mechanism and rhetoric nodes against the full registries
 and report prioritized gaps with stated information needs.
 
+The system **shall** routinely ask: *What do current atoms imply about relative processing
+speeds or sensemaking quality between key actors? Where are differentials created or exploited?*
+
 **Status:** Design only.
 
 #### FR-ANALYSIS-03 Active retrieval
 
 When gaps are identified, the system **shall** recommend or retrieve additional sources
 subject to the **same** Layer 1 filter (no reputation bypass).
+
+Retrieval **shall** prioritize sources illuminating processing-speed dynamics, reaction times,
+and how sides model each other's sensemaking speed when ASSSIB gaps exist.
 
 **Status:** Design only.
 
@@ -362,3 +399,4 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 |---|---|---|
 | 0.1 | 2026-07-05 | Initial FR1–FR9 scaffold |
 | 0.2 | 2026-07-05 | Full reasoning-system requirements; dual graphs; layered engine; web docs FR |
+| 0.3 | 2026-07-05 | ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules |

@@ -5,7 +5,13 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from hanani.ontology import LAYERS, list_layers
+from hanani.ontology import (
+    CROSS_CUTTING_DYNAMICS,
+    LAYERS,
+    PROBE_INTENTS,
+    PROCESSING_SPEED,
+    list_layers,
+)
 from hanani.rhetoric import (
     AUDIT_CRITERIA,
     FALLACIES,
@@ -13,7 +19,7 @@ from hanani.rhetoric import (
     admissible_for_inference,
 )
 
-REASONING_VERSION = "0.1"
+REASONING_VERSION = "0.2"
 REASONING_DOC = "docs/reasoning-system.md"
 
 
@@ -25,11 +31,31 @@ class RhetoricAssessment:
     fallacy_hits: list[str] = field(default_factory=list)
     enthymeme_hits: list[str] = field(default_factory=list)
     audit_scores: dict[str, bool] = field(default_factory=dict)
+    sensemaking_signals: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     @property
     def admissible_for_inference(self) -> bool:
         return admissible_for_inference(self.robustness)
+
+
+@dataclass
+class SpeedDifferentialAssessment:
+    """Mandatory per-atom sensemaking speed analysis (ASSSIB)."""
+
+    side_a_processing: str = "unknown"
+    side_b_processing: str = "unknown"
+    differential_exploited: str = "none_evident"
+    probe_intent: str = "none_evident"
+    notes: str = "none evident — explicit gap"
+
+    def __post_init__(self) -> None:
+        if self.side_a_processing not in PROCESSING_SPEED:
+            raise ValueError(f"side_a_processing must be one of {PROCESSING_SPEED}")
+        if self.side_b_processing not in PROCESSING_SPEED:
+            raise ValueError(f"side_b_processing must be one of {PROCESSING_SPEED}")
+        if self.probe_intent not in PROBE_INTENTS:
+            raise ValueError(f"probe_intent must be one of {PROBE_INTENTS}")
 
 
 @dataclass
@@ -40,6 +66,7 @@ class MechanismAssessment:
     justifications: dict[str, str] = field(default_factory=dict)
     factor_links: list[str] = field(default_factory=list)
     historical_anchors: list[str] = field(default_factory=list)
+    speed_differential: SpeedDifferentialAssessment = field(default_factory=SpeedDifferentialAssessment)
     notes: list[str] = field(default_factory=list)
 
 
@@ -78,11 +105,16 @@ class ReasoningEngine:
         robustness = "Weak" if valid_hits else "Moderate"
         if not valid_hits and not hits:
             robustness = "Strong"
+        from hanani.rhetoric import SENSEMAKING_SIGNAL_KEYWORDS
+
+        lower = atom.text.lower()
+        signals = [kw for kw in SENSEMAKING_SIGNAL_KEYWORDS if kw in lower]
         return RhetoricAssessment(
             robustness=robustness,
             fallacy_hits=[h for h in valid_hits if h.startswith("fallacy.")],
             enthymeme_hits=[h for h in valid_hits if h.startswith("enthymeme.")],
             audit_scores={c: True for c in AUDIT_CRITERIA},
+            sensemaking_signals=signals,
             notes=["Layer 1 scaffold — replace with graph traversal + LLM audit"],
         )
 
@@ -93,13 +125,17 @@ class ReasoningEngine:
         *,
         mechanism_tags: list[str] | None = None,
         justifications: dict[str, str] | None = None,
+        speed: SpeedDifferentialAssessment | None = None,
     ) -> MechanismAssessment | None:
         if not layer1.admissible_for_inference:
             return None
-        tags = mechanism_tags or []
+        tags = list(mechanism_tags or [])
+        if layer1.sensemaking_signals and "asymmetric_sensemaking_speed_informational_brinkmanship" not in tags:
+            tags.append("asymmetric_sensemaking_speed_informational_brinkmanship")
         return MechanismAssessment(
             tags=tags,
             justifications=justifications or {},
+            speed_differential=speed or SpeedDifferentialAssessment(),
             notes=["Layer 2 scaffold — exhaustive tagger not yet wired"],
         )
 
@@ -110,6 +146,7 @@ class ReasoningEngine:
         rhetoric_hits: list[str] | None = None,
         mechanism_tags: list[str] | None = None,
         justifications: dict[str, str] | None = None,
+        speed: SpeedDifferentialAssessment | None = None,
     ) -> AtomAssessmentRecord:
         layer1 = self.assess_layer1(atom, rhetoric_hits=rhetoric_hits)
         layer2 = self.assess_layer2(
@@ -117,6 +154,7 @@ class ReasoningEngine:
             layer1,
             mechanism_tags=mechanism_tags,
             justifications=justifications,
+            speed=speed,
         )
         return AtomAssessmentRecord(atom=atom, layer1=layer1, layer2=layer2)
 
@@ -127,6 +165,7 @@ class ReasoningEngine:
             "mechanism_layers": list_layers(),
             "audit_criteria_count": len(AUDIT_CRITERIA),
             "fallacy_pattern_count": len(FALLACIES),
+            "cross_cutting_dynamics": list(CROSS_CUTTING_DYNAMICS.keys()),
         }
 
 
@@ -142,5 +181,6 @@ __all__ = [
     "REASONING_VERSION",
     "ReasoningEngine",
     "RhetoricAssessment",
+    "SpeedDifferentialAssessment",
     "default_engine",
 ]

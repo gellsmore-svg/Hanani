@@ -11,6 +11,20 @@ AUDIT_CRITERIA: tuple[str, ...] = (
     "audit.qualifiers_falsifiability",
     "audit.analytical_intent",
     "audit.update_signals",
+    "audit.sensemaking_speed_signals",
+)
+
+SENSEMAKING_SIGNAL_KEYWORDS: tuple[str, ...] = (
+    "reaction time",
+    "coordination",
+    "ambiguous",
+    "leak",
+    "probe",
+    "sensational",
+    "over-react",
+    "under-react",
+    "sensemaking",
+    "processing speed",
 )
 
 ARGUMENT_ROLES: tuple[str, ...] = (
@@ -92,6 +106,7 @@ def admissible_for_inference(robustness: str) -> bool:
 __all__ = [
     "ARGUMENT_ROLES",
     "AUDIT_CRITERIA",
+    "SENSEMAKING_SIGNAL_KEYWORDS",
     "ENTHYMEME_PATTERNS",
     "FALLACIES",
     "RHETORIC_DOC",

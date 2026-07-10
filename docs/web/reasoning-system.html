@@ -11,7 +11,7 @@
     <div class="wrap">
       <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
       <h1>Reasoning system</h1>
-      <nav class="nav"><a href="index.html">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html" class="active">Reasoning system</a><a href="vision.html">Vision</a></nav>
+      <nav class="nav"><a href="index.html">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html" class="active">Reasoning system</a><a href="vision.html">Vision</a><a href="ontology.html">Ontology</a></nav>
     </div>
   </header>
   <main class="wrap content">
@@ -109,7 +109,8 @@ gaps, closure vs. inquiry — applied to <strong>source text and each logic atom
 1. Map argument structure (premises, warrants, conclusion).
 2. Traverse rhetorical graph: match fallacy patterns, enthymemes, closure signals.
 3. Score chain completeness, falsifiability, update signals.
-4. Emit <code>rhetoric_assessment</code>: pass / qualified / fail with explicit hits on Graph B nodes.</p>
+4. Flag <strong>sensemaking-speed signals</strong> (reaction time, ambiguity, probes, sensationalism).
+5. Emit <code>rhetoric_assessment</code>: pass / qualified / fail with explicit hits on Graph B nodes.</p>
 <p><strong>Gate:</strong> Atoms with <code>fail</code> may be stored but marked <strong>inadmissible for mechanism inference</strong>
 unless user overrides. Weak sources do not propagate to hypothesis generation.</p>
 <h3 id="layer-2-mechanism-semantic-assessment">Layer 2 — Mechanism semantic assessment<a class="headerlink" href="#layer-2-mechanism-semantic-assessment" title="Permanent link">&para;</a></h3>
@@ -119,7 +120,12 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.</
 2. Step-by-step justification per tag (text → concept).
 3. Link to operational factors where observable (<code>troop-movements</code> ↔ costly signal).
 4. Cross-link historical anchors as <strong>templates</strong>, not proof.
-5. Record supporting/contradicting atoms in graph.</p>
+5. Record supporting/contradicting atoms in graph.
+6. <strong>Mandatory ASSSIB block:</strong> <code>speed_differential</code> on every atom — processing speeds per
+   side, probe intent, differential exploited, or <code>none_evident</code> explicitly.
+7. Emit graph edges: <code>processes_faster_than</code>, <code>probes_sensemaking_speed</code>,
+   <code>creates_ambiguity_to_slow</code>, <code>exploits_speed_differential</code> when applicable.</p>
+<p><strong>Cross-cutting dynamic:</strong> <a href="ontology/living-semantic-model.md#89-cross-cutting-dynamic-asymmetric-sensemaking-speed--informational-brinkmanship-asssib">Asymmetric Sensemaking Speed &amp; Informational Brinkmanship</a> (ontology v0.2).</p>
 <h3 id="atom-assessment-record-per-atom">Atom assessment record (per atom)<a class="headerlink" href="#atom-assessment-record-per-atom" title="Permanent link">&para;</a></h3>
 <pre><code class="language-json">{
   &quot;atom_id&quot;: &quot;Atom-001&quot;,
@@ -131,9 +137,16 @@ unless user overrides. Weak sources do not propagate to hypothesis generation.</
     &quot;admissible_for_inference&quot;: true
   },
   &quot;layer2_mechanisms&quot;: {
-    &quot;tags&quot;: [&quot;L1.security_dilemma&quot;, &quot;L4.cheap_talk&quot;],
+    &quot;tags&quot;: [&quot;L1.security_dilemma&quot;, &quot;L4.cheap_talk&quot;, &quot;asymmetric_sensemaking_speed_informational_brinkmanship&quot;],
     &quot;justifications&quot;: {&quot;L1.security_dilemma&quot;: &quot;…&quot;},
-    &quot;factor_links&quot;: [&quot;diplomatic-signalling&quot;]
+    &quot;factor_links&quot;: [&quot;diplomatic-signalling&quot;],
+    &quot;speed_differential&quot;: {
+      &quot;side_a_processing&quot;: &quot;slow&quot;,
+      &quot;side_b_processing&quot;: &quot;fast&quot;,
+      &quot;differential_exploited&quot;: &quot;B_faster&quot;,
+      &quot;probe_intent&quot;: &quot;measure_reaction_speed&quot;,
+      &quot;notes&quot;: &quot;…&quot;
+    }
   },
   &quot;assessment_summary&quot;: null,
   &quot;version&quot;: &quot;0.2&quot;

@@ -1,7 +1,7 @@
 # Hanani Living Semantic Model / Ontology
 
-**Version:** 0.1  
-**Graph ID:** `mechanism`  
+**Version:** 0.2  
+**Graph ID:** `mechanism`
 **Status:** Seed graph — expandable from scholarly mechanisms, not from news cycles  
 **Project:** Hanani **reasoning system** (see [`reasoning-system.md`](../reasoning-system.md))  
 **Role:** **Graph A** — mechanism/factor semantics for **Layer 2** atom tagging  
@@ -113,7 +113,14 @@ Apply to **every** source before atom extraction. Output audit block first.
   "evidence_against": ["..."],
   "alternatives": ["..."],
   "strength": "high | medium | low",
-  "uncertainty": "explicit note"
+  "uncertainty": "explicit note",
+  "speed_differential": {
+    "side_a_processing": "fast | slow | unknown",
+    "side_b_processing": "fast | slow | unknown",
+    "differential_exploited": "A_faster | B_faster | parity | none_evident",
+    "probe_intent": "measure_reaction_speed | measure_model_precision | deliberate_ambiguity | none_evident",
+    "notes": "mandatory — use 'none evident' explicitly if no speed signal"
+  }
 }
 ```
 
@@ -311,6 +318,90 @@ Apply to **every** source before atom extraction. Output audit block first.
 
 - Promises erode; audience costs decay; new crises require re-establishing credibility.
 
+### 8.9 Cross-cutting dynamic: Asymmetric Sensemaking Speed & Informational Brinkmanship (ASSSIB)
+
+**Canonical name:** `asymmetric_sensemaking_speed_informational_brinkmanship`  
+**Primary layer:** L5 (emergent) — **cross-cuts** L3 (Jervis, prospect theory, mental simulation speed), L4 (cheap talk, ambiguity, probing signals), L2 (two-level domestic processing speeds, selectorate cohesion), L1 (security dilemma under time pressure).
+
+**Definition:** Deliberate or emergent probing, ambiguity creation, and information maneuvers whose primary target is the **relative speed, precision, and coherence** with which actors detect ambiguous signals, process them through an internal model, update assessments, coordinate responses, and avoid over- or under-reaction — and the **exploitation of differentials** in that processing speed.
+
+| Feature | Codification |
+|---|---|
+| Low-cost probing | Extreme rhetoric, leaks, sensationalism, or minor moves test alliance weak spots and **reaction speed/precision** — not necessarily literal intent to execute the threatened action |
+| Human + strategic stress | "Throwaway" extreme statements as stress response **and** probe in murky information environments |
+| Differential risk | Danger from **gaps in processing speed/quality** between sides — not absolute speed alone |
+| Ambiguity as weapon | Deliberate vagueness slows opponent coherent response; buys time for prober |
+| Murky sensory brinkmanship | Cat-and-mouse in **sensemaking** domain, not only military moves |
+| Traffic metaphor | Systemic collision risk from speed mismatch (harmony/disruption) even without intent to collide |
+| Hanani advantage | Side applying richer systematic model **faster** gains edge; single-layer slow sensemaking = vulnerability |
+
+**Layer linkages:**
+
+| Linked concept | Interaction |
+|---|---|
+| Jervis misperception | Amplified under time pressure; spiral/deterrence reads made before models converge |
+| Prospect theory | Loss-domain actors more probe-prone **and** more vulnerable to being slowed |
+| Schelling | Incomplete-info probing; focal points under ambiguity; credible-commitment **tests** |
+| Two-level games | Domestic sensemaking speed vs. international coordination lag |
+| Selectorate | Cohesion/speed of winning coalition affects collective processing |
+| Feedback loops (8.2) | Probe → misread → partial response → escalatory probe |
+
+**Tagging guidance (mandatory per atom):**
+
+1. Does the atom assume **fast or slow** sensemaking on Side A or Side B?
+2. Is probing intended to measure **reaction speed**, **model precision**, or **create ambiguity**?
+3. If none evident — record **`none_evident`** explicitly (counts as gap signal).
+4. Tag ASSSIB when any probe, leak, sensational framing, or coordination-lag claim appears.
+
+**Graph edges (analysis graph):**
+
+- `processes_faster_than` (actor → actor, on atom or probe)
+- `probes_sensemaking_speed` (signal → target alliance/actor)
+- `creates_ambiguity_to_slow` (signal → target processing)
+- `exploits_speed_differential` (actor → actor)
+
+---
+
+## 8.10 Integration summary — ASSSIB (v0.2)
+
+ASSSIB makes **sensemaking speed** a first-class analytical object. The core risk is often not the threatened action itself but a **dangerous mismatch** in how quickly and coherently each side interprets probes.
+
+**Why Hanani value increases:** Applying the full layered ontology systematically and faster than an opponent (or than one's own prior cycle) is a **strategic capability** — it reduces vulnerability to informational brinkmanship and improves probe interpretation (distinguishing cheap talk + stress from costly commitment).
+
+**Workflow hooks:** Rhetoric audits flag speed/ambiguity language; Layer 2 tags ASSSIB + linked layers; gap analysis asks about actor processing differentials; retrieval prioritizes reaction-time and sensemaking-quality evidence.
+
+---
+
+## 8.11 Tagging examples (hypothetical logic atoms)
+
+**Example A — Atom-HYP-001**  
+*"A Baltic frontline state official's leaked memo suggesting maximalist aid demands is intended to test whether NATO/EU capitals coordinate a precise response within 48 hours or fragment into national narratives."*
+
+| Field | Assessment |
+|---|---|
+| Layers | L4.cheap_talk, L2.two_level_games, L5.ASSSIB |
+| Speed differential | Side A (alliance capitals): slow/fragmented vs. Side B (prober): fast — **differential exploited by prober** |
+| Probe intent | `measure_reaction_speed` + `measure_model_precision` |
+| Jervis | Spiral risk if leak read as unified alliance intent |
+
+**Example B — Atom-HYP-002**  
+*"Leader's televised ultimatum deadline is rhetorically extreme but troop indicators show no matching costly mobilization — analysts should treat primarily as domestic stress discharge and international probe, not imminent execution."*
+
+| Field | Assessment |
+|---|---|
+| Layers | L4.cheap_talk vs costly signal, L3.prospect_loss_aversion, L5.ASSSIB |
+| Speed differential | Opponent slow processors may **over-react** to cheap talk; fast processors gain calibration time |
+| Probe intent | `deliberate_ambiguity` + `measure_model_precision` |
+
+**Example C — Atom-HYP-003**  
+*"ExComm-style meetings during the missile crisis compressed sensemaking into hours; back-channel parallel processing reduced public-deadline pressure."*
+
+| Field | Assessment |
+|---|---|
+| Layers | L2.bureaucratic_politics, L5.ASSSIB, L4.credible_commitments |
+| Speed differential | US **accelerated** coherent processing via parallel channels; reduced speed mismatch with Soviet probes |
+| Anchor | `cuban_missile_crisis_1962` |
+
 ---
 
 ## 9. Historical anchors (seed mappings)
@@ -326,6 +417,7 @@ Apply to **every** source before atom extraction. Output audit block first.
 | L3 | Misperception management; stress under uncertainty |
 | L4 | Naval quarantine as costly signal; back-channel cheap talk |
 | L5 | Brinkmanship resolution; focal point (missile trade); spiral avoided via direct communication |
+| **ASSSIB** | Time-compressed sensemaking; parallel back-channels reduced speed mismatch under probes |
 
 ### 9.2 Russia–Ukraine (2014 → 2022+)
 
@@ -336,8 +428,17 @@ Apply to **every** source before atom extraction. Output audit block first.
 | L3 | Prospect losses (influence, NATO/EU expansion frames); historical identity reference points |
 | L4 | Troop buildups as costly signals vs. ultimatum rhetoric as cheap talk |
 | L5 | Path dependence from Crimea/Minsk; escalation spirals; commitment problems on ceasefires |
+| **ASSSIB** | Troop-buildup probes vs. rhetoric; alliance coordination speed on aid/red lines |
 
-### 9.3 Napoleonic overextension (lighter anchor)
+### 9.3 Baltic / alliance probe pattern (template)
+
+| Layer | Mechanism |
+|---|---|
+| L2 | Frontline state two-level pressure on alliance capitals |
+| L4 | Leaks / extreme framing as cheap-talk probes |
+| L5 **ASSSIB** | Tests NATO/EU **reaction speed and precision** — not necessarily literal intent behind leak content |
+
+### 9.4 Napoleonic overextension (lighter anchor)
 
 | Layer | Mechanism |
 |---|---|
@@ -345,7 +446,7 @@ Apply to **every** source before atom extraction. Output audit block first.
 | L3 | Overconfidence; escalation of commitment |
 | L6 | Misperception of Russian winter campaign capacity (historical analogy risk) |
 
-### 9.4 Hormuz / Gulf chokepoint (theatre anchor — seed)
+### 9.5 Hormuz / Gulf chokepoint (theatre anchor — seed)
 
 | Layer | Mechanism |
 |---|---|
@@ -358,7 +459,7 @@ Apply to **every** source before atom extraction. Output audit block first.
 ## 10. Analysis graph (empty at v0.1)
 
 **Node types:** `logic_atom`, `source`, `ontology_concept`, `historical_anchor`  
-**Edge types:** `agrees`, `contradicts`, `complements`, `implies`, `gap`, `supports`, `weakens`
+**Edge types:** `agrees`, `contradicts`, `complements`, `implies`, `gap`, `supports`, `weakens`, `processes_faster_than`, `probes_sensemaking_speed`, `creates_ambiguity_to_slow`, `exploits_speed_differential`
 
 ```mermaid
 graph LR
@@ -383,10 +484,21 @@ graph LR
 | Medium | Kleptocratic revenue (L1.4) unpopulated | Economic / sanctions analysis with explicit chains |
 | Medium | Bureaucratic politics (L2.3) thin | ExComm-style organizational accounts |
 | Low | Dark Triad tags | Only if behavioral evidence in text — avoid seeding from reputation |
+| **High** | ASSSIB speed-differential tags on live atoms | Sources on alliance coordination lag, probe/leak dynamics |
 
 ---
 
 ## 12. Changelog
+
+### v0.2 — 2026-07-05 (ASSSIB integration)
+
+- Added **Asymmetric Sensemaking Speed & Informational Brinkmanship** as prominent L5 cross-cutting dynamic (§8.9).
+- Mandatory `speed_differential` block on logic atom schema; new analysis-graph edge types.
+- Integration summary (§8.10), three hypothetical tagging examples (§8.11).
+- Historical anchors updated: Cuba ASSSIB row; Ukraine ASSSIB row; Baltic/alliance probe template (§9.3).
+- **Stability:** L1–L4 seed concepts unchanged.
+- **Inference:** ASSSIB is structural addition — no theatre inference until atoms ingested.
+- **Next:** Process sources with augmented mandatory speed assessment.
 
 ### v0.1 — 2026-07-05 (initialization)
 
@@ -423,4 +535,4 @@ Hanani's operational factor list (`hanani factors`) captures **observable variab
 
 ---
 
-*End of Living Semantic Model v0.1*
+*End of Living Semantic Model v0.2*
