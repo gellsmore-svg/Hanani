@@ -126,3 +126,36 @@ def test_assessment_records_are_json_serialisable(tmp_path) -> None:
     ingest_and_assess(_ARTICLE, source_id="s", title="t", store=store)
     for record in store.assessments():
         json.dumps(record)  # must not raise
+
+
+def test_speed_edges_persisted_when_evidence_present(tmp_path) -> None:
+    """FR-ASSSIB-06 integration: assessments with speed evidence emit edges."""
+    from hanani.reasoning import ReasoningEngine, SpeedDifferentialAssessment
+
+    class SpeedAwareEngine(ReasoningEngine):
+        def assess_atom(self, atom, **kwargs):
+            kwargs["speed"] = SpeedDifferentialAssessment(
+                side_a_processing="fast", side_b_processing="slow",
+                differential_exploited="side_a_exploits",
+                probe_intent="measure_reaction_speed",
+                notes="probe observed",
+            )
+            return super().assess_atom(atom, **kwargs)
+
+    store = SliceStore(tmp_path)
+    summary = ingest_and_assess(
+        _ARTICLE, source_id="reuters", title="Odesa", store=store,
+        engine=SpeedAwareEngine(),
+    )
+    assert summary["speed_edges"] > 0
+    edges = store.graph_edges(summary["article_id"])
+    kinds = {e["kind"] for e in edges}
+    assert "probes_sensemaking_speed" in kinds
+    assert "exploits_speed_differential" in kinds and "processes_faster_than" in kinds
+    assert store.summary()["speed_edge_count"] == len(edges)
+
+
+def test_no_speed_edges_without_evidence(tmp_path) -> None:
+    store = SliceStore(tmp_path)
+    summary = ingest_and_assess(_ARTICLE, source_id="r", title="t", store=store)
+    assert summary["speed_edges"] == 0 and store.graph_edges() == []

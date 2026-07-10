@@ -23,6 +23,7 @@ class SliceStore:
         self.articles_path = self.directory / "articles.jsonl"
         self.assessments_path = self.directory / "assessments.jsonl"
         self.debates_path = self.directory / "debates.jsonl"
+        self.graph_edges_path = self.directory / "graph_edges.jsonl"
 
     def _append(self, path: Path, record: dict[str, Any]) -> None:
         self.directory.mkdir(parents=True, exist_ok=True)
@@ -58,6 +59,10 @@ class SliceStore:
     def save_debate(self, record: dict[str, Any]) -> None:
         self._append(self.debates_path, record)
 
+    def save_graph_edges(self, article_id: str, edges: list[dict[str, Any]]) -> None:
+        for edge in edges:
+            self._append(self.graph_edges_path, {"article_id": article_id, **edge})
+
     # --- read ----------------------------------------------------------
 
     def articles(self) -> list[dict[str, Any]]:
@@ -65,6 +70,12 @@ class SliceStore:
 
     def assessments(self, article_id: str | None = None) -> list[dict[str, Any]]:
         records = self._load(self.assessments_path)
+        if article_id is None:
+            return records
+        return [r for r in records if r.get("article_id") == article_id]
+
+    def graph_edges(self, article_id: str | None = None) -> list[dict[str, Any]]:
+        records = self._load(self.graph_edges_path)
         if article_id is None:
             return records
         return [r for r in records if r.get("article_id") == article_id]
@@ -94,4 +105,5 @@ class SliceStore:
             "robustness": robustness,
             "sources": sorted({a.get("source_id", "?") for a in articles}),
             "debate_count": len(self.debates()),
+            "speed_edge_count": len(self.graph_edges()),
         }

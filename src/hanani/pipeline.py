@@ -159,8 +159,17 @@ def ingest_and_assess(
         records.append(record)
     corpus.link_atoms(article.article_id, [a.atom_id for a in atoms])
 
+    # FR-ASSSIB-06: assessed atoms emit explicit speed-differential edges into
+    # the analysis graph (empty until an assessment carries speed evidence).
+    from dataclasses import asdict
+
+    from hanani.assib import speed_edges_from_assessment
+
+    edges = [asdict(e) for r in records for e in speed_edges_from_assessment(r)]
+
     store.save_article(article.to_dict())
     store.save_assessments(article.article_id, [r.to_dict() for r in records])
+    store.save_graph_edges(article.article_id, edges)
 
     return {
         "article_id": article.article_id,
@@ -169,6 +178,7 @@ def ingest_and_assess(
         "atom_count": len(atoms),
         "admissible_atoms": admissible,
         "robustness": robustness,
+        "speed_edges": len(edges),
         "model_tier": ask is not None,
         "store_dir": str(store.directory),
     }

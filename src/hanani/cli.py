@@ -187,6 +187,7 @@ def _cmd_corpus(args: argparse.Namespace) -> int:
     print(f"  robustness: {summary['robustness']}")
     print(f"  sources: {', '.join(summary['sources']) or '(none)'}")
     print(f"  debates: {summary['debate_count']}")
+    print(f"  speed edges: {summary['speed_edge_count']}")
     print(f"  store: {summary['store_dir']}")
     return 0
 
