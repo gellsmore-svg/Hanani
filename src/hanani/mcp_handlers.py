@@ -79,6 +79,16 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         except Exception as exc:  # noqa: BLE001
             return {"error": f"gap analysis failed: {type(exc).__name__}: {exc}"}
 
+    def map_relations(article_id: str | None = None, **_kw: Any) -> dict[str, Any]:
+        from hanani.relations import map_relations as run_relations
+
+        try:
+            return run_relations(_store(), article_id=article_id)
+        except ValueError as exc:
+            return {"error": str(exc)}
+        except Exception as exc:  # noqa: BLE001
+            return {"error": f"relations failed: {type(exc).__name__}: {exc}"}
+
     def factors(**_kw: Any) -> dict[str, Any]:
         from hanani.factors import list_factors
 
@@ -93,6 +103,8 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         "debate_corpus": debate_corpus,
         "hanani.analyze_gaps": analyze_gaps,
         "analyze_gaps": analyze_gaps,
+        "hanani.map_relations": map_relations,
+        "map_relations": map_relations,
         "hanani.factors": factors,
         "factors": factors,
     }

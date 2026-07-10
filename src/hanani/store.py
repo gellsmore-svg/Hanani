@@ -105,5 +105,5 @@ class SliceStore:
             "robustness": robustness,
             "sources": sorted({a.get("source_id", "?") for a in articles}),
             "debate_count": len(self.debates()),
-            "speed_edge_count": len(self.graph_edges()),
+            "graph_edge_count": len(self.graph_edges()),
         }

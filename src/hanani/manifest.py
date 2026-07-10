@@ -113,6 +113,30 @@ def build_manifest():
                 tags=["reasoning", "gaps", "asssib"],
             ),
             capability(
+                "map_relations",
+                "Semantic relational mapping between logic atoms: typed, "
+                "auditable edges (agrees/complements/yields from the "
+                "deterministic floor; contradicts/implies/supports/weakens via "
+                "the validated model tier), persisted to the analysis graph "
+                "(FR-ANALYSIS-01).",
+                input_schema={
+                    "type": "object",
+                    "properties": {
+                        "article_id": {"type": "string", "description": "relate one article (omit for whole corpus)"},
+                    },
+                },
+                output_schema={
+                    "type": "object",
+                    "properties": {
+                        "scope": {"type": "string"},
+                        "atom_count": {"type": "integer"},
+                        "relation_count": {"type": "integer"},
+                        "kinds": {"type": "object"},
+                    },
+                },
+                tags=["reasoning", "graph", "relations"],
+            ),
+            capability(
                 "factors",
                 "List the geopolitical factor taxonomy.",
                 input_schema={"type": "object", "properties": {}},

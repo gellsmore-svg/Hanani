@@ -178,6 +178,24 @@ def _cmd_debate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_relations(args: argparse.Namespace) -> int:
+    from hanani.relations import map_relations
+    from hanani.store import SliceStore
+
+    try:
+        report = map_relations(SliceStore(args.store), article_id=args.article_id)
+    except ValueError as error:
+        print(f"hanani relations: {error}", file=sys.stderr)
+        return 2
+    print(f"relations: scope={report['scope']}  atoms={report['atom_count']}  "
+          f"edges={report['relation_count']}")
+    for kind, count in sorted(report["kinds"].items()):
+        print(f"  {kind}: {count}")
+    if not report["kinds"]:
+        print("  (no relations found)")
+    return 0
+
+
 def _cmd_gaps(args: argparse.Namespace) -> int:
     from hanani.gaps import analyze_gaps
     from hanani.store import SliceStore
@@ -206,7 +224,7 @@ def _cmd_corpus(args: argparse.Namespace) -> int:
     print(f"  robustness: {summary['robustness']}")
     print(f"  sources: {', '.join(summary['sources']) or '(none)'}")
     print(f"  debates: {summary['debate_count']}")
-    print(f"  speed edges: {summary['speed_edge_count']}")
+    print(f"  graph edges: {summary['graph_edge_count']}")
     print(f"  store: {summary['store_dir']}")
     return 0
 
@@ -258,6 +276,11 @@ def main(argv: list[str] | None = None) -> int:
     debate_p.add_argument("--extractor", choices=("rule", "hoglah"), default="rule",
                           help="Milcah unit extraction: deterministic rule floor or the hoglah LLM tier")
     debate_p.set_defaults(func=_cmd_debate)
+
+    rel_p = sub.add_parser("relations", help="Semantic relational mapping between atoms (FR-ANALYSIS-01)")
+    rel_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    rel_p.add_argument("--article-id", default=None, help="Relate one article (default: whole corpus)")
+    rel_p.set_defaults(func=_cmd_relations)
 
     gaps_p = sub.add_parser("gaps", help="ASSSIB gap analysis over the persisted corpus (FR-ASSSIB-04)")
     gaps_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")

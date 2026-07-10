@@ -402,12 +402,40 @@ are a **first-class analytical object** for future atom processing.
 
 ### FR-ANALYSIS — Analysis graph & gaps
 
-#### FR-ANALYSIS-01 Atom graph merge
+#### FR-ANALYSIS-01 Semantic relational mapping between logic atoms
 
-The system **shall** merge assessed atoms into an analysis graph with edges for agreement,
-contradiction, complementarity, implication, and gap.
+The system **shall** map assessed atoms into an analysis graph of **typed,
+auditable semantic relations**, drawn only from the registered vocabulary
+(`hanani.graph.ATOM_EDGE_TYPES`: agrees, contradicts, complements, implies,
+gap, supports, weakens, yields, evaluates — plus the ASSSIB speed edges of
+FR-ASSSIB-06).
 
-**Status:** Design only.
+Normative sub-requirements:
+
+a. **Vocabulary-closed.** A relation whose kind is not in the registered
+   vocabulary **shall** be rejected — model output never invents edge types.
+b. **Auditable basis.** Every relation **shall** carry its basis
+   (`deterministic:<rule>` or `model`) and a confidence/score property, so
+   downstream reasoning can weight or filter by provenance.
+c. **Two tiers.** A deterministic floor (duplicate detection, same-article
+   temporal sequence, cross-source lexical corroboration candidates) **shall**
+   always run offline; an optional model tier may propose richer typed
+   relations (contradicts/implies/supports/weakens), validated per (a).
+d. **Gate respected.** Only Layer-1-admissible atoms participate in
+   inferential relations (implies/supports/weakens); duplicates and sequence
+   relations may include gated atoms for corpus hygiene.
+e. **Persisted.** Relations **shall** be persisted alongside the ASSSIB speed
+   edges (`graph_edges.jsonl`) and countable in the corpus summary and gap
+   analysis.
+f. **Family-aligned.** The mapping mirrors the family pattern (Tirzah graph
+   memory nodes/edges): atom→atom edges now, exportable into Tirzah's graph
+   via the existing push path later.
+
+**Acceptance:** `hanani.relations.relate_atoms` (floor + validated model tier);
+`hanani relations` CLI; `map_relations` manifest capability/MCP tool; relation
+records in `graph_edges.jsonl` with basis + score.
+
+**Status:** Implemented (floor + model tier seam); relation-aware synthesis pending.
 
 #### FR-ANALYSIS-02 Gap analysis
 
@@ -565,4 +593,5 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 | 0.2 | 2026-07-05 | Full reasoning-system requirements; dual graphs; layered engine; web docs FR |
 | 0.3 | 2026-07-05 | ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules |
 | 0.4 | 2026-07-10 | Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks |
+| 0.6 | 2026-07-10 | FR-ANALYSIS-01 refined into normative semantic relational mapping between logic atoms (vocabulary-closed, auditable basis, two tiers, gate-respecting, persisted); `hanani.relations` |
 | 0.5 | 2026-07-10 | FR-ASSSIB-01–07 formal traceability; `hanani.assib` module; augmentation prompt mapped to normative FRs |

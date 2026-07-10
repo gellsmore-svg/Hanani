@@ -79,7 +79,7 @@ Optional model tier via Hoglah (`--hoglah-model`); deterministic floor always ru
 
 | Component | Version |
 |---|---|
-| Requirements (REQ-HANANI-001) | **0.5** |
+| Requirements (REQ-HANANI-001) | **0.6** |
 | Mechanism ontology | **0.3** (`ONTOLOGY_VERSION`) |
 | Reasoning engine schema | **0.3** (`REASONING_VERSION`) |
 | Rhetoric graph | **0.2** (adds `audit.sensemaking_speed_signals`) |
@@ -132,6 +132,7 @@ hanani workflow status # includes ASSSIB gap-question count
 hanani ingest article.txt --source-id SRC --title "..."
 hanani corpus          # ~/.hanani summary
 hanani gaps            # ASSSIB gap analysis (FR-ASSSIB-04/05)
+hanani relations       # atom↔atom semantic relations (FR-ANALYSIS-01)
 hanani push-tirzah     # optional [tirzah] extra
 hanani debate          # optional [milcah] extra
 hanani docs serve      # http://127.0.0.1:8805
@@ -151,11 +152,12 @@ hanani docs serve      # http://127.0.0.1:8805
 | Coherence profiles + LCD | Scaffold (`coherence.py`; not auto-wired in ingest yet) |
 | Source article history | Scaffold in `sources.py`; wired in `pipeline.ingest_article()` |
 | Gap analysis runner | **Implemented** (`hanani gaps`, `gaps.analyze_gaps`, MCP `hanani.analyze_gaps`) |
+| Atom semantic relations (FR-ANALYSIS-01) | **Implemented** (`hanani relations`, `relations.relate_atoms` — floor + validated model tier; edges in `graph_edges.jsonl`) |
 | Active retrieval loop | Constants only (`RETRIEVAL_PRIORITIES`) |
 | Per-atom summaries (Phase 2) | Planned |
 | Collective narrative (Phase 3) | Planned |
 
-**63 tests passing** (`pytest`). CI: ruff + pytest.
+**68 tests passing** (`pytest`). CI: ruff + pytest.
 
 ---
 

@@ -367,10 +367,35 @@ are a <strong>first-class analytical object</strong> for future atom processing.
 <p><strong>Status:</strong> Implemented.</p>
 <hr />
 <h3 id="fr-analysis-analysis-graph-gaps">FR-ANALYSIS — Analysis graph &amp; gaps<a class="headerlink" href="#fr-analysis-analysis-graph-gaps" title="Permanent link">&para;</a></h3>
-<h4 id="fr-analysis-01-atom-graph-merge">FR-ANALYSIS-01 Atom graph merge<a class="headerlink" href="#fr-analysis-01-atom-graph-merge" title="Permanent link">&para;</a></h4>
-<p>The system <strong>shall</strong> merge assessed atoms into an analysis graph with edges for agreement,
-contradiction, complementarity, implication, and gap.</p>
-<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-analysis-01-semantic-relational-mapping-between-logic-atoms">FR-ANALYSIS-01 Semantic relational mapping between logic atoms<a class="headerlink" href="#fr-analysis-01-semantic-relational-mapping-between-logic-atoms" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> map assessed atoms into an analysis graph of <strong>typed,
+auditable semantic relations</strong>, drawn only from the registered vocabulary
+(<code>hanani.graph.ATOM_EDGE_TYPES</code>: agrees, contradicts, complements, implies,
+gap, supports, weakens, yields, evaluates — plus the ASSSIB speed edges of
+FR-ASSSIB-06).</p>
+<p>Normative sub-requirements:</p>
+<p>a. <strong>Vocabulary-closed.</strong> A relation whose kind is not in the registered
+   vocabulary <strong>shall</strong> be rejected — model output never invents edge types.
+b. <strong>Auditable basis.</strong> Every relation <strong>shall</strong> carry its basis
+   (<code>deterministic:&lt;rule&gt;</code> or <code>model</code>) and a confidence/score property, so
+   downstream reasoning can weight or filter by provenance.
+c. <strong>Two tiers.</strong> A deterministic floor (duplicate detection, same-article
+   temporal sequence, cross-source lexical corroboration candidates) <strong>shall</strong>
+   always run offline; an optional model tier may propose richer typed
+   relations (contradicts/implies/supports/weakens), validated per (a).
+d. <strong>Gate respected.</strong> Only Layer-1-admissible atoms participate in
+   inferential relations (implies/supports/weakens); duplicates and sequence
+   relations may include gated atoms for corpus hygiene.
+e. <strong>Persisted.</strong> Relations <strong>shall</strong> be persisted alongside the ASSSIB speed
+   edges (<code>graph_edges.jsonl</code>) and countable in the corpus summary and gap
+   analysis.
+f. <strong>Family-aligned.</strong> The mapping mirrors the family pattern (Tirzah graph
+   memory nodes/edges): atom→atom edges now, exportable into Tirzah's graph
+   via the existing push path later.</p>
+<p><strong>Acceptance:</strong> <code>hanani.relations.relate_atoms</code> (floor + validated model tier);
+<code>hanani relations</code> CLI; <code>map_relations</code> manifest capability/MCP tool; relation
+records in <code>graph_edges.jsonl</code> with basis + score.</p>
+<p><strong>Status:</strong> Implemented (floor + model tier seam); relation-aware synthesis pending.</p>
 <h4 id="fr-analysis-02-gap-analysis">FR-ANALYSIS-02 Gap analysis<a class="headerlink" href="#fr-analysis-02-gap-analysis" title="Permanent link">&para;</a></h4>
 <p>The system <strong>shall</strong> compare covered mechanism and rhetoric nodes against the full registries
 and report prioritized gaps with stated information needs.</p>
@@ -610,6 +635,11 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <td>0.4</td>
 <td>2026-07-10</td>
 <td>Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks</td>
+</tr>
+<tr>
+<td>0.6</td>
+<td>2026-07-10</td>
+<td>FR-ANALYSIS-01 refined into normative semantic relational mapping between logic atoms (vocabulary-closed, auditable basis, two tiers, gate-respecting, persisted); <code>hanani.relations</code></td>
 </tr>
 <tr>
 <td>0.5</td>

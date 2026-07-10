@@ -16,6 +16,7 @@ from __future__ import annotations
 from typing import Any
 
 from hanani.assib import GAP_ANALYSIS_QUESTIONS, RETRIEVAL_PRIORITIES
+from hanani.ontology import SPEED_GRAPH_EDGES
 from hanani.store import SliceStore
 
 _UNKNOWN_SPEEDS = ("unknown", "")
@@ -105,7 +106,7 @@ def analyze_gaps(store: SliceStore) -> dict[str, Any]:
         "speed_gaps": len(speed_gaps),
         "signals_without_speed": len(signals_without_speed),
         "missing_party_ids": len(missing_party_ids),
-        "speed_edges": len(store.graph_edges()),
+        "speed_edges": sum(1 for e in store.graph_edges() if e.get("kind") in SPEED_GRAPH_EDGES),
         "gap_rate": gap_rate,
         "findings": findings,
         "questions": list(GAP_ANALYSIS_QUESTIONS),

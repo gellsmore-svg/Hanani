@@ -152,7 +152,7 @@ def test_speed_edges_persisted_when_evidence_present(tmp_path) -> None:
     kinds = {e["kind"] for e in edges}
     assert "probes_sensemaking_speed" in kinds
     assert "exploits_speed_differential" in kinds and "processes_faster_than" in kinds
-    assert store.summary()["speed_edge_count"] == len(edges)
+    assert store.summary()["graph_edge_count"] == len(edges)
 
 
 def test_no_speed_edges_without_evidence(tmp_path) -> None:
