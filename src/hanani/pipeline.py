@@ -1,0 +1,209 @@
+"""Vertical slice: ingest one article → atoms → Layer 1 → Layer 2 → persist.
+
+The first *executable* path through Hanani's reasoning design (everything before
+this was schema + vocabulary). Family pattern throughout: a **deterministic
+floor** that always runs offline, plus an optional **model tier** via an
+injectable ``ask: Callable[[str], str]`` (wire Hoglah with :func:`hoglah_ask`).
+The model tier is best-effort — bad output falls back to the floor, and model
+fallacy claims are validated against the rhetoric vocabulary, never trusted raw.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import time
+from typing import Any, Callable
+
+from hanani.reasoning import LogicAtom, ReasoningEngine, default_engine
+from hanani.rhetoric import ENTHYMEME_PATTERNS, FALLACIES
+from hanani.sources import SourceCorpus, content_hash, default_corpus
+from hanani.store import SliceStore
+
+AskFn = Callable[[str], str]
+
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
+_MIN_ATOM_CHARS = 40
+
+# Conservative deterministic cues → rhetoric-graph hits. Deliberately few and
+# high-precision: this is the offline floor, not the audit of record.
+_CUE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("fallacy.false_dilemma",
+     re.compile(r"\bonly (?:two|one)\b|\bno (?:other )?(?:choice|alternative)\b|\beither\b.{3,80}\bor\b", re.I | re.S)),
+    ("fallacy.slippery_slope",
+     re.compile(r"\binevitabl\w*\b|\bspiral(?:ing)? into\b|\bslide toward\b|\bdomino\b", re.I)),
+    ("fallacy.appeal_to_authority_in_text",
+     re.compile(r"\bexperts (?:say|agree|warn)\b|\bofficials? said?\b|\banalysts agree\b", re.I)),
+    ("fallacy.rhetoric_action_conflation",
+     re.compile(r"\bvow(?:s|ed)? to\b|\bthreat(?:en(?:s|ed)?)? to\b.*\bproves\b", re.I)),
+)
+
+
+# --- atom extraction --------------------------------------------------------
+
+
+def extract_atoms(
+    text: str, *, source_id: str, ask: AskFn | None = None, max_atoms: int = 10
+) -> list[LogicAtom]:
+    """Split an article into candidate logic atoms (claim-bearing sentences).
+
+    Deterministic floor: sentence segmentation, keeping substantive sentences.
+    Model tier (``ask``): the model proposes claim strings (JSON array); output
+    is validated and capped, and any failure falls back to the floor.
+    """
+    claims: list[str] = []
+    if ask is not None:
+        claims = _ask_claims(ask, text, max_atoms)
+    if not claims:
+        sentences = [s.strip() for s in _SENTENCE_SPLIT.split(text or "")]
+        claims = [s for s in sentences if len(s) >= _MIN_ATOM_CHARS][:max_atoms]
+    return [
+        LogicAtom(
+            atom_id=f"atom-{content_hash(claim)[:10]}",
+            source_id=source_id,
+            text=claim,
+        )
+        for claim in claims
+    ]
+
+
+def _ask_claims(ask: AskFn, text: str, max_atoms: int) -> list[str]:
+    prompt = (
+        "Extract the distinct factual or causal CLAIMS asserted in this news "
+        "text. Return ONLY a JSON array of claim strings (verbatim or lightly "
+        f"normalised), at most {max_atoms}.\n\nTEXT:\n{text[:6000]}"
+    )
+    try:
+        raw = ask(prompt)
+        data = json.loads(raw[raw.index("[") : raw.rindex("]") + 1])
+        return [c.strip() for c in data if isinstance(c, str) and len(c.strip()) >= 10][:max_atoms]
+    except Exception:  # noqa: BLE001 - model tier is best-effort
+        return []
+
+
+# --- Layer 1 rhetoric hits ---------------------------------------------------
+
+
+def detect_rhetoric_hits(text: str, *, ask: AskFn | None = None) -> list[str]:
+    """Rhetoric-graph hits for one atom: deterministic cues + optional model audit.
+
+    Model output is validated against the FALLACIES / ENTHYMEME_PATTERNS
+    vocabulary — an unknown key from the model is dropped, never invented.
+    """
+    hits = {key for key, pattern in _CUE_RULES if pattern.search(text or "")}
+    if ask is not None:
+        hits.update(_ask_hits(ask, text))
+    return sorted(hits)
+
+
+def _ask_hits(ask: AskFn, text: str) -> set[str]:
+    vocabulary = sorted(FALLACIES) + sorted(ENTHYMEME_PATTERNS)
+    prompt = (
+        "Audit this single claim against the fallacy/enthymeme vocabulary. "
+        "Return ONLY a JSON array of matching keys from the vocabulary "
+        "(empty array if clean).\n\nVOCABULARY:\n"
+        + "\n".join(vocabulary)
+        + f"\n\nCLAIM:\n{text[:2000]}"
+    )
+    try:
+        raw = ask(prompt)
+        data = json.loads(raw[raw.index("[") : raw.rindex("]") + 1])
+        allowed = set(vocabulary)
+        return {k for k in data if isinstance(k, str) and k in allowed}
+    except Exception:  # noqa: BLE001 - model tier is best-effort
+        return set()
+
+
+# --- the slice ---------------------------------------------------------------
+
+
+def ingest_and_assess(
+    text: str,
+    *,
+    source_id: str,
+    title: str,
+    provenance: str = "manual",
+    ask: AskFn | None = None,
+    store: SliceStore | None = None,
+    corpus: SourceCorpus | None = None,
+    engine: ReasoningEngine | None = None,
+    max_atoms: int = 10,
+    metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Run the full slice on one article and persist the results.
+
+    Returns a summary: article id, atom count, per-tier robustness, and how many
+    atoms passed the Layer-1 admissibility gate into Layer 2.
+    """
+    if not (text or "").strip():
+        raise ValueError("article text is required")
+    corpus = corpus or default_corpus()
+    engine = engine or default_engine()
+    store = store or SliceStore()
+
+    article = corpus.register(
+        source_id=source_id, title=title, text=text,
+        provenance=provenance, metadata=metadata,
+    )
+    atoms = extract_atoms(text, source_id=source_id, ask=ask, max_atoms=max_atoms)
+    records = []
+    robustness: dict[str, int] = {}
+    admissible = 0
+    for atom in atoms:
+        hits = detect_rhetoric_hits(atom.text, ask=ask)
+        record = engine.assess_atom(atom, rhetoric_hits=hits)
+        tier = record.layer1.robustness if record.layer1 else "unknown"
+        robustness[tier] = robustness.get(tier, 0) + 1
+        if record.layer2 is not None:
+            admissible += 1
+        records.append(record)
+    corpus.link_atoms(article.article_id, [a.atom_id for a in atoms])
+
+    store.save_article(article.to_dict())
+    store.save_assessments(article.article_id, [r.to_dict() for r in records])
+
+    return {
+        "article_id": article.article_id,
+        "source_id": source_id,
+        "title": title,
+        "atom_count": len(atoms),
+        "admissible_atoms": admissible,
+        "robustness": robustness,
+        "model_tier": ask is not None,
+        "store_dir": str(store.directory),
+    }
+
+
+# --- optional Hoglah model tier ----------------------------------------------
+
+
+def hoglah_ask(
+    model: str, *, timeout: float = 180.0, poll_interval: float = 2.0
+) -> AskFn | None:
+    """An ``ask`` backed by the Hoglah queue (family Hoglah-first LLM policy).
+
+    Returns None when the hoglah library isn't installed — callers then run the
+    deterministic floor only. Requires a running Hoglah worker to complete jobs.
+    """
+    try:
+        from hoglah import Hoglah, JobStatus
+    except Exception:  # noqa: BLE001 - optional extra
+        return None
+
+    client = Hoglah(start_worker=False)
+    terminal_bad = {JobStatus.FAILED, JobStatus.CANCELLED} if hasattr(JobStatus, "FAILED") else set()
+
+    def ask(prompt: str) -> str:
+        job_id = client.submit(prompt=prompt, model=model, step_name="hanani.slice")
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            result = client.get(job_id)
+            status = getattr(result, "status", None)
+            if getattr(result, "output", None):
+                return str(result.output)
+            if status in terminal_bad:
+                raise RuntimeError(f"hoglah job {job_id} ended {status}")
+            time.sleep(poll_interval)
+        raise TimeoutError(f"hoglah job {job_id} did not finish in {timeout}s")
+
+    return ask

@@ -83,6 +83,51 @@ def _cmd_coherence(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_ingest(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from hanani.pipeline import hoglah_ask, ingest_and_assess
+    from hanani.store import SliceStore
+
+    text = sys.stdin.read() if args.path == "-" else Path(args.path).read_text(encoding="utf-8")
+    ask = None
+    if args.hoglah_model:
+        ask = hoglah_ask(args.hoglah_model)
+        if ask is None:
+            print("warn: hoglah not installed — running the deterministic floor only", file=sys.stderr)
+    try:
+        summary = ingest_and_assess(
+            text,
+            source_id=args.source_id,
+            title=args.title or Path(args.path).stem,
+            provenance=args.provenance,
+            ask=ask,
+            store=SliceStore(args.store),
+            max_atoms=args.max_atoms,
+        )
+    except ValueError as error:
+        print(f"hanani ingest: {error}", file=sys.stderr)
+        return 2
+    print(f"article: {summary['article_id']}  ({summary['source_id']}: {summary['title']})")
+    print(f"  atoms: {summary['atom_count']}  admissible→Layer2: {summary['admissible_atoms']}")
+    print(f"  robustness: {summary['robustness']}")
+    print(f"  model tier: {'on' if summary['model_tier'] else 'off (deterministic floor)'}")
+    print(f"  stored: {summary['store_dir']}")
+    return 0
+
+
+def _cmd_corpus(args: argparse.Namespace) -> int:
+    from hanani.store import SliceStore
+
+    summary = SliceStore(args.store).summary()
+    print(f"stored corpus: {summary['article_count']} articles, {summary['atom_count']} atoms")
+    print(f"  admissible atoms: {summary['admissible_atoms']}")
+    print(f"  robustness: {summary['robustness']}")
+    print(f"  sources: {', '.join(summary['sources']) or '(none)'}")
+    print(f"  store: {summary['store_dir']}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="hanani", description=PURPOSE)
     parser.add_argument("--version", action="version", version=f"hanani {__version__}")
@@ -100,6 +145,25 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("coherence", help="Coherence speed profiles (individual + collective LCD)").set_defaults(
         func=_cmd_coherence
     )
+
+    ingest = sub.add_parser(
+        "ingest", help="Vertical slice: article → atoms → Layer 1 → Layer 2 → persist"
+    )
+    ingest.add_argument("path", help="Article text file, or '-' for stdin")
+    ingest.add_argument("--source-id", required=True, help="Analytical source id (e.g. reuters)")
+    ingest.add_argument("--title", default=None, help="Article title (default: file stem)")
+    ingest.add_argument("--provenance", default="file", help="Where the text came from")
+    ingest.add_argument("--max-atoms", type=int, default=10)
+    ingest.add_argument("--hoglah-model", default=None,
+                        help="Enable the model tier via the Hoglah queue (needs a running worker)")
+    from hanani.store import DEFAULT_STORE_DIR
+
+    ingest.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    ingest.set_defaults(func=_cmd_ingest)
+
+    corpus_p = sub.add_parser("corpus", help="Summarise the persisted slice store")
+    corpus_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    corpus_p.set_defaults(func=_cmd_corpus)
 
     docs = sub.add_parser("docs", help="Documentation site (build / serve)")
     docs_sub = docs.add_subparsers(dest="docs_command")

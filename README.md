@@ -22,6 +22,11 @@ hanani ontology          # mechanism graph (L1–L5)
 hanani rhetoric          # fallacy / audit graph
 hanani workflow status
 hanani docs serve          # requirements + architecture as web pages
+
+# The vertical slice — article → atoms → Layer 1 rhetoric → Layer 2 → persisted:
+hanani ingest article.txt --source-id reuters --title "Odesa depot strike"
+hanani ingest article.txt --source-id reuters --hoglah-model llama3   # + model tier
+hanani corpus              # summarise the persisted store (~/.hanani)
 ```
 
 Graphs: [`living-semantic-model.md`](docs/ontology/living-semantic-model.md) ·
