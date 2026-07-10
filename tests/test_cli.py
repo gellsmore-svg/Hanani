@@ -29,6 +29,13 @@ def test_factors_non_empty():
     assert len(list_factors()) >= 10
 
 
+def test_ontology_cli_lists_layers():
+    from hanani.ontology import ONTOLOGY_VERSION, list_layers
+
+    assert ONTOLOGY_VERSION == "0.1"
+    assert len(list_layers()) == 5
+
+
 def test_factors_include_propaganda():
     from hanani.factors import list_factors
 

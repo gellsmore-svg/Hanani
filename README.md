@@ -12,8 +12,11 @@ See [`docs/vision.md`](docs/vision.md).
 ```bash
 hanani --help
 hanani factors
+hanani ontology          # living semantic model v0.1
 hanani workflow status
 ```
+
+Ontology: [`docs/ontology/living-semantic-model.md`](docs/ontology/living-semantic-model.md)
 
 ## Family stack
 

@@ -7,6 +7,7 @@ import sys
 
 from hanani import __version__
 from hanani.factors import list_factors
+from hanani.ontology import ONTOLOGY_DOC, ONTOLOGY_VERSION, list_layers
 from hanani.workflow import workflow_status
 
 PURPOSE = (
@@ -22,6 +23,16 @@ def _cmd_factors(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_ontology(_: argparse.Namespace) -> int:
+    print(f"ontology version: {ONTOLOGY_VERSION}")
+    print(f"document: {ONTOLOGY_DOC}")
+    for layer, tags in list_layers().items():
+        print(f"\n{layer}")
+        for tag in tags:
+            print(f"  - {tag}")
+    return 0
+
+
 def _cmd_workflow_status(_: argparse.Namespace) -> int:
     print(workflow_status())
     return 0
@@ -33,6 +44,9 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("factors", help="List factor taxonomy").set_defaults(func=_cmd_factors)
+    sub.add_parser("ontology", help="Living semantic model (version + layer tags)").set_defaults(
+        func=_cmd_ontology
+    )
 
     workflow = sub.add_parser("workflow", help="Workflow orchestration")
     workflow_sub = workflow.add_subparsers(dest="workflow_command")
@@ -43,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.command:
         print(PURPOSE)
-        print("Try: hanani factors | hanani workflow status")
+        print("Try: hanani factors | hanani ontology | hanani workflow status")
         return 0
 
     if args.command == "workflow" and not getattr(args, "workflow_command", None):

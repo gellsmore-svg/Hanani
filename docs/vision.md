@@ -28,6 +28,14 @@ Troop movements, logistics, ammunition, industrial production, sanctions,
 diplomatic signalling, satellite imagery, historical precedents, economic
 indicators, political incentives, military doctrine, propaganda signals.
 
+## Living semantic ontology
+
+Multi-layer analytical model (rhetorical logic first, reputation-blind):
+[`docs/ontology/living-semantic-model.md`](ontology/living-semantic-model.md) v0.1.
+
+Operational factors (`hanani factors`) capture observable variables; the ontology
+captures mechanisms (security dilemma, prospect theory, signaling, spirals, etc.).
+
 ## Milcah
 
 Milcah is the argument-evaluation and multi-LLM debate layer — scheduled by
