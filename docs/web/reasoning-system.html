@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reasoning system · Hanani</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
+      <h1>Reasoning system</h1>
+      <nav class="nav"><a href="index.html">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html" class="active">Reasoning system</a><a href="vision.html">Vision</a></nav>
+    </div>
+  </header>
+  <main class="wrap content">
+    <h1 id="hanani-reasoning-system-architecture">Hanani Reasoning System — Architecture<a class="headerlink" href="#hanani-reasoning-system-architecture" title="Permanent link">&para;</a></h1>
+<p><strong>Goal:</strong> A reusable, expandable <strong>reasoning engine</strong> — not a one-off analysis of today's
+headlines. The system maintains <strong>living semantic graphs</strong>, ingests sources over time,
+evaluates <strong>logic atoms</strong> through layered checks, and (later) synthesises assessments
+and outcome narratives from the collective picture.</p>
+<p><strong>Guiding question (unchanged):</strong> What do all available reports imply when combined?</p>
+<hr />
+<h2 id="what-this-is-is-not">What this is / is not<a class="headerlink" href="#what-this-is-is-not" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>This <strong>is</strong></th>
+<th>This <strong>is not</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Expandable semantic graphs (mechanisms + rhetoric)</td>
+<td>A single briefing on Ukraine or Hormuz</td>
+</tr>
+<tr>
+<td>A pipeline that evaluates every logic atom exhaustively</td>
+<td>Reputation-weighted source ranking</td>
+</tr>
+<tr>
+<td>Versioned ontology that grows with evidence</td>
+<td>Static prompt + one-shot LLM summary</td>
+</tr>
+<tr>
+<td>Layered truth assessment (rhetoric → mechanisms → synthesis)</td>
+<td>Moral or ideological verdict engine</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dual-semantic-graphs-one-store-typed-nodes">Dual semantic graphs (one store, typed nodes)<a class="headerlink" href="#dual-semantic-graphs-one-store-typed-nodes" title="Permanent link">&para;</a></h2>
+<p>Both graphs live in the <strong>same graph store</strong> with distinct node kinds and link types.
+They are maintained independently but queried together during atom assessment.</p>
+<pre><code class="language-mermaid">flowchart TB
+  subgraph graphs [Semantic graph store]
+    M[Mechanism graph&lt;br/&gt;L1–L5 factors, theatres, behaviors]
+    R[Rhetorical graph&lt;br/&gt;fallacies, warrants, audit patterns]
+    A[Logic atoms]
+    S[Sources]
+  end
+  M ---|tags| A
+  R ---|evaluates| A
+  S ---|yields| A
+  A ---|supports / contradicts| A
+</code></pre>
+<h3 id="graph-a-mechanism-factor-semantics">Graph A — Mechanism / factor semantics<a class="headerlink" href="#graph-a-mechanism-factor-semantics" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Tag logic atoms against <strong>why</strong> things happen in geopolitics — not just
+observable variables (<code>hanani factors</code>) but analytical mechanisms.</p>
+<ul>
+<li><strong>Nodes:</strong> layer concepts (security dilemma, prospect loss domain, costly signal, …),
+  cross-cutting constructs (Schelling focal point, Jervis spiral), historical anchor
+  templates, theatre scaffolds (Russia–Ukraine, Hormuz), behavioral pattern classes.</li>
+<li><strong>Edges:</strong> <code>part_of</code>, <code>instance_of</code>, <code>implies</code>, <code>enables</code>, <code>contradicts</code>,
+  <code>correlates_with</code>, <code>exemplified_by</code> (anchor), <code>observed_via</code> (link to operational factor).</li>
+<li><strong>Source of truth:</strong> <a href="ontology/living-semantic-model.md"><code>ontology/living-semantic-model.md</code></a>
+  (human-readable) + <code>hanani.ontology</code> + future <code>ontology/graph.json</code> (machine).</li>
+<li><strong>Expansion rule:</strong> New nodes only with justification from audited atoms or cited
+  scholarly mechanism — never from outlet prestige.</li>
+</ul>
+<h3 id="graph-b-rhetorical-logic-semantics">Graph B — Rhetorical logic semantics<a class="headerlink" href="#graph-b-rhetorical-logic-semantics" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Evaluate <strong>how</strong> arguments are made — fallacies, enthymemes, warrant
+gaps, closure vs. inquiry — applied to <strong>source text and each logic atom</strong>.</p>
+<ul>
+<li><strong>Nodes:</strong> fallacy types, audit criteria, argument roles (premise, warrant,
+  conclusion, qualifier, rebuttal), robustness tiers, enthymeme patterns.</li>
+<li><strong>Edges:</strong> <code>violates</code>, <code>exhibits</code>, <code>missing_warrant</code>, <code>supports_chain</code>,
+  <code>undermines</code>, <code>subtype_of</code>, <code>detected_in</code> (atom or source).</li>
+<li><strong>Source of truth:</strong> <a href="ontology/rhetorical-logic-graph.md"><code>ontology/rhetorical-logic-graph.md</code></a></li>
+<li><code>hanani.rhetoric</code>.</li>
+<li><strong>Reputation-blind:</strong> Nodes like <code>appeal_to_authority</code> fire when the <strong>text</strong> uses
+  authority as warrant — never because the model "knows" the outlet.</li>
+</ul>
+<hr />
+<h2 id="reasoning-engine-layered-assessment-pipeline">Reasoning engine — layered assessment pipeline<a class="headerlink" href="#reasoning-engine-layered-assessment-pipeline" title="Permanent link">&para;</a></h2>
+<p>Each <strong>logic atom</strong> passes through <strong>every applicable stage</strong>. No shortcuts.</p>
+<pre><code>Source → [optional source-level rhetoric gate] → Atom extraction
+  → Layer 1: Rhetorical / fallacy assessment (Graph B)
+  → Layer 2: Mechanism tagging (Graph A) — exhaustive multi-tag
+  → Atom assessment record (structured)
+  → Merge into analysis graph (atoms + sources + concept hits)
+  → [Phase 2] Per-atom narrative assessment summary
+  → [Phase 3] Collective narrative + likely outcome scenarios
+</code></pre>
+<h3 id="layer-1-rhetorical-truth-assessment-first-gate">Layer 1 — Rhetorical truth assessment (first gate)<a class="headerlink" href="#layer-1-rhetorical-truth-assessment-first-gate" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> Atom text + local source context (not outlet name).</p>
+<p><strong>Process:</strong>
+1. Map argument structure (premises, warrants, conclusion).
+2. Traverse rhetorical graph: match fallacy patterns, enthymemes, closure signals.
+3. Score chain completeness, falsifiability, update signals.
+4. Emit <code>rhetoric_assessment</code>: pass / qualified / fail with explicit hits on Graph B nodes.</p>
+<p><strong>Gate:</strong> Atoms with <code>fail</code> may be stored but marked <strong>inadmissible for mechanism inference</strong>
+unless user overrides. Weak sources do not propagate to hypothesis generation.</p>
+<h3 id="layer-2-mechanism-semantic-assessment">Layer 2 — Mechanism semantic assessment<a class="headerlink" href="#layer-2-mechanism-semantic-assessment" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> Atoms that pass Layer 1 (or qualified with documented gaps).</p>
+<p><strong>Process:</strong>
+1. Exhaustive tag against <strong>all applicable</strong> mechanism nodes (not default 1–2 tags).
+2. Step-by-step justification per tag (text → concept).
+3. Link to operational factors where observable (<code>troop-movements</code> ↔ costly signal).
+4. Cross-link historical anchors as <strong>templates</strong>, not proof.
+5. Record supporting/contradicting atoms in graph.</p>
+<h3 id="atom-assessment-record-per-atom">Atom assessment record (per atom)<a class="headerlink" href="#atom-assessment-record-per-atom" title="Permanent link">&para;</a></h3>
+<pre><code class="language-json">{
+  &quot;atom_id&quot;: &quot;Atom-001&quot;,
+  &quot;source_id&quot;: &quot;src-…&quot;,
+  &quot;layer1_rhetoric&quot;: {
+    &quot;robustness&quot;: &quot;Moderate&quot;,
+    &quot;fallacy_hits&quot;: [&quot;cherry_picking&quot;],
+    &quot;enthymemes&quot;: [&quot;assumes adversary risk-neutral&quot;],
+    &quot;admissible_for_inference&quot;: true
+  },
+  &quot;layer2_mechanisms&quot;: {
+    &quot;tags&quot;: [&quot;L1.security_dilemma&quot;, &quot;L4.cheap_talk&quot;],
+    &quot;justifications&quot;: {&quot;L1.security_dilemma&quot;: &quot;…&quot;},
+    &quot;factor_links&quot;: [&quot;diplomatic-signalling&quot;]
+  },
+  &quot;assessment_summary&quot;: null,
+  &quot;version&quot;: &quot;0.2&quot;
+}
+</code></pre>
+<p><code>assessment_summary</code> populated in <strong>Phase 2</strong> (human-readable per-atom digest).</p>
+<h3 id="phase-2-per-atom-assessment-summaries-planned">Phase 2 — Per-atom assessment summaries (planned)<a class="headerlink" href="#phase-2-per-atom-assessment-summaries-planned" title="Permanent link">&para;</a></h3>
+<p>Short structured summary: what the atom claims, rhetoric quality, mechanism tags,
+confidence, conflicts with other atoms, what would falsify it.</p>
+<h3 id="phase-3-collective-narrative-outcomes-planned">Phase 3 — Collective narrative &amp; outcomes (planned)<a class="headerlink" href="#phase-3-collective-narrative-outcomes-planned" title="Permanent link">&para;</a></h3>
+<p>Single narrative across <strong>all admissible atoms</strong> and sources:
+- Corroboration and tension clusters
+- Gaps in mechanism coverage
+- <strong>Most likely outcomes</strong> that fit the largest admissible fact set and cohere with
+  tagged behavioral patterns (prospect loss, brinkmanship, selectorate incentives, etc.)
+- Explicit alternative scenarios and what evidence would discriminate them</p>
+<p>Orchestrated via <code>hanani.workflow</code> + Milcah debate on structural confidence — not
+a prose summary that skips the graph.</p>
+<hr />
+<h2 id="relation-to-existing-modules">Relation to existing modules<a class="headerlink" href="#relation-to-existing-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Role in reasoning system</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hanani.factors</code></td>
+<td>Observable variables — linked <strong>from</strong> mechanism tags</td>
+</tr>
+<tr>
+<td><code>hanani.ontology</code></td>
+<td>Mechanism graph seed (Layer 1–5 IDs)</td>
+</tr>
+<tr>
+<td><code>hanani.rhetoric</code></td>
+<td>Rhetorical graph seed (fallacies, audit criteria)</td>
+</tr>
+<tr>
+<td><code>hanani.graph</code></td>
+<td>Node/edge model, merge, query</td>
+</tr>
+<tr>
+<td><code>hanani.reasoning</code></td>
+<td>Pipeline stages Layer 1 → Layer 2 → assessment</td>
+</tr>
+<tr>
+<td><code>hanani.workflow</code></td>
+<td>Schedules ingestion, reasoning batches, Milcah, trace</td>
+</tr>
+<tr>
+<td>Milcah</td>
+<td>Debate on hypothesis confidence after graph build</td>
+</tr>
+<tr>
+<td>Tirzah</td>
+<td>Memory over ingested reports and past atom assessments</td>
+</tr>
+<tr>
+<td>Galeed</td>
+<td>Inspectable trace of every layer hit</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="implementation-phases">Implementation phases<a class="headerlink" href="#implementation-phases" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Deliverable</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>Mechanism ontology v0.1 + rhetorical graph seed + this architecture</td>
+<td><strong>current</strong></td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>Graph store + Layer 1 &amp; 2 engine (atom in → assessment record out)</td>
+<td>next</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Source ingestion registry + atom extraction hooks</td>
+<td>planned</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Per-atom assessment summaries</td>
+<td>planned</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Collective narrative + outcome scenario generator</td>
+<td>planned</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Gap-driven retrieval loop + ontology versioning automation</td>
+<td>planned</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Mechanism ontology:</strong> <code>ontology/living-semantic-model.md</code> — version in header.</li>
+<li><strong>Rhetorical graph:</strong> <code>ontology/rhetorical-logic-graph.md</code> — separate version line.</li>
+<li><strong>Engine contract:</strong> <code>hanani.reasoning.REASONING_VERSION</code> — pipeline schema bumps.</li>
+</ul>
+<p>Changelog entries record <strong>stability</strong> (concepts unchanged across cycles) vs.
+<strong>shift</strong> (new nodes, revised edges, deprecated fallacy patterns).</p>
+  </main>
+  <footer class="site-footer wrap">
+    <p>REQ-HANANI-001 · Built from <code>docs/</code> via <code>scripts/build_docs.py</code></p>
+  </footer>
+</body>
+</html>

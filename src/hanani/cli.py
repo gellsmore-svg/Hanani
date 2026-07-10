@@ -72,6 +72,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     sub.add_parser("reasoning", help="Reasoning engine status").set_defaults(func=_cmd_reasoning)
 
+    docs = sub.add_parser("docs", help="Documentation site (build / serve)")
+    docs_sub = docs.add_subparsers(dest="docs_command")
+    docs_sub.add_parser("build", help="Build docs/web from Markdown")
+    docs_sub.add_parser("serve", help="Build and serve docs at http://127.0.0.1:8765")
+
     workflow = sub.add_parser("workflow", help="Workflow orchestration")
     workflow_sub = workflow.add_subparsers(dest="workflow_command")
     workflow_sub.add_parser("status", help="Workflow status").set_defaults(
@@ -87,6 +92,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "workflow" and not getattr(args, "workflow_command", None):
         print(workflow_status())
         return 0
+
+    if args.command == "docs":
+        from hanani.docs_server import build_docs, serve
+
+        if getattr(args, "docs_command", None) == "build":
+            return build_docs()
+        return serve()
 
     return args.func(args)
 

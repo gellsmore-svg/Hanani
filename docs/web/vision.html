@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vision · Hanani</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
+      <h1>Vision</h1>
+      <nav class="nav"><a href="index.html">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html">Reasoning system</a><a href="vision.html" class="active">Vision</a></nav>
+    </div>
+  </header>
+  <main class="wrap content">
+    <h1 id="vision-geopolitical-news-reasoning-system">Vision — Geopolitical News Reasoning System<a class="headerlink" href="#vision-geopolitical-news-reasoning-system" title="Permanent link">&para;</a></h1>
+<p>Standalone project — no shared platform layer with scripture translation or any
+other application.</p>
+<h2 id="what-this-is">What this is<a class="headerlink" href="#what-this-is" title="Permanent link">&para;</a></h2>
+<p>A <strong>reusable reasoning system</strong> — not a one-off briefing on a current crisis.</p>
+<p>It maintains <strong>two expandable semantic graphs</strong> (mechanisms + rhetorical logic), evaluates
+every <strong>logic atom</strong> through layered checks, and (later) synthesises a collective
+narrative with likely outcomes.</p>
+<blockquote>
+<p>What do all available reports imply when combined?</p>
+</blockquote>
+<p>See <a href="reasoning-system.html"><code>reasoning-system.md</code></a>.</p>
+<h2 id="initial-theatres">Initial theatres<a class="headerlink" href="#initial-theatres" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Russia–Ukraine</li>
+<li>Hormuz Strait / US–Iran–Gulf states</li>
+</ul>
+<h2 id="pipeline">Pipeline<a class="headerlink" href="#pipeline" title="Permanent link">&para;</a></h2>
+<pre><code>News feeds → semantic extraction → claim extraction → evidence graph
+  → factor identification → competing hypotheses → multi-LLM debate
+  → confidence estimates → predictions / scenario analysis
+</code></pre>
+<h2 id="factors-as-explicit-variables">Factors as explicit variables<a class="headerlink" href="#factors-as-explicit-variables" title="Permanent link">&para;</a></h2>
+<p>Troop movements, logistics, ammunition, industrial production, sanctions,
+diplomatic signalling, satellite imagery, historical precedents, economic
+indicators, political incentives, military doctrine, propaganda signals.</p>
+<h2 id="living-semantic-ontology">Living semantic ontology<a class="headerlink" href="#living-semantic-ontology" title="Permanent link">&para;</a></h2>
+<p>Multi-layer analytical model (rhetorical logic first, reputation-blind):
+<a href="ontology/living-semantic-model.md"><code>docs/ontology/living-semantic-model.md</code></a> v0.1.</p>
+<p>Operational factors (<code>hanani factors</code>) capture observable variables; the ontology
+captures mechanisms (security dilemma, prospect theory, signaling, spirals, etc.).</p>
+<h2 id="milcah">Milcah<a class="headerlink" href="#milcah" title="Permanent link">&para;</a></h2>
+<p>Milcah is the argument-evaluation and multi-LLM debate layer — scheduled by
+Hanani's internal workflow orchestration (<code>hanani.workflow</code>).</p>
+  </main>
+  <footer class="site-footer wrap">
+    <p>REQ-HANANI-001 · Built from <code>docs/</code> via <code>scripts/build_docs.py</code></p>
+  </footer>
+</body>
+</html>

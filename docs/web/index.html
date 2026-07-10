@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Requirements · Hanani</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
+      <h1>Requirements</h1>
+      <nav class="nav"><a href="index.html" class="active">Requirements</a><a href="architecture.html">Architecture</a><a href="reasoning-system.html">Reasoning system</a><a href="vision.html">Vision</a></nav>
+    </div>
+  </header>
+  <main class="wrap content">
+    <h1 id="hanani-system-requirements">Hanani — System Requirements<a class="headerlink" href="#hanani-system-requirements" title="Permanent link">&para;</a></h1>
+<p><strong>Document:</strong> REQ-HANANI-001<br />
+<strong>Version:</strong> 0.2<br />
+<strong>Status:</strong> Normative — implementation shall trace to these requirements<br />
+<strong>Product:</strong> Reusable geopolitical <strong>reasoning system</strong> (not a one-off crisis analysis tool)</p>
+<hr />
+<h2 id="1-purpose-scope">1. Purpose &amp; scope<a class="headerlink" href="#1-purpose-scope" title="Permanent link">&para;</a></h2>
+<h3 id="11-purpose">1.1 Purpose<a class="headerlink" href="#11-purpose" title="Permanent link">&para;</a></h3>
+<p>Hanani shall provide a <strong>living, expandable reasoning engine</strong> that:</p>
+<ol>
+<li>Maintains <strong>semantic graphs</strong> of geopolitical mechanisms and rhetorical logic patterns.</li>
+<li>Ingests analytical <strong>sources</strong> over time and decomposes them into <strong>logic atoms</strong>.</li>
+<li>Assesses each atom <strong>exhaustively</strong> through layered checks (rhetoric first, mechanisms second).</li>
+<li>Builds an <strong>analysis graph</strong> of agreements, contradictions, and gaps.</li>
+<li><strong>Later</strong> produces per-atom assessment summaries and a <strong>collective narrative</strong> with the most
+   likely outcomes that fit admissible facts and tagged behavioral patterns.</li>
+</ol>
+<h3 id="12-guiding-question">1.2 Guiding question<a class="headerlink" href="#12-guiding-question" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>What do all available reports imply when combined?</p>
+</blockquote>
+<h3 id="13-in-scope">1.3 In scope<a class="headerlink" href="#13-in-scope" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Dual semantic graphs (mechanism + rhetoric), unified store.</li>
+<li>Layered reasoning engine (Layer 1 → Layer 2 → record → synthesis).</li>
+<li>Source/witness registry, atom extraction, graph merge.</li>
+<li>Inspectable traces (Galeed-compatible).</li>
+<li>Workflow orchestration (Milcah debate, Hoglah execution).</li>
+<li>Human-readable <strong>requirements and architecture published as web documentation</strong>.</li>
+</ul>
+<h3 id="14-out-of-scope-v0x">1.4 Out of scope (v0.x)<a class="headerlink" href="#14-out-of-scope-v0x" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Real-time news wire ingestion at scale.</li>
+<li>Outlet reputation scoring or prestige-weighted source ranking.</li>
+<li>Moral/ideological verdict engine.</li>
+<li>Automated military prediction marketed as certainty.</li>
+</ul>
+<h3 id="15-core-principles-shall">1.5 Core principles (shall)<a class="headerlink" href="#15-core-principles-shall" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Principle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td><strong>Rhetorical logic first</strong> — structure in the text, not outlet fame</td>
+</tr>
+<tr>
+<td>P2</td>
+<td><strong>Exhaustive application</strong> — every atom gets full Layer 1 + Layer 2 treatment</td>
+</tr>
+<tr>
+<td>P3</td>
+<td><strong>Living ontology</strong> — versioned graphs; stability vs. shift recorded</td>
+</tr>
+<tr>
+<td>P4</td>
+<td><strong>Reputation-blind</strong> — training-data associations explicitly suppressed</td>
+</tr>
+<tr>
+<td>P5</td>
+<td><strong>Inspectable</strong> — every assessment step traceable</td>
+</tr>
+<tr>
+<td>P6</td>
+<td><strong>Permitted uncertainty</strong> — speculative outputs labelled</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-definitions">2. Definitions<a class="headerlink" href="#2-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logic atom</strong></td>
+<td>Minimal unit of assertion, causal claim, warrant, analogy, or counterfactual extracted from a source</td>
+</tr>
+<tr>
+<td><strong>Mechanism graph</strong></td>
+<td>Expandable semantic map of geopolitical analytical concepts (L1–L5 layers)</td>
+</tr>
+<tr>
+<td><strong>Rhetoric graph</strong></td>
+<td>Semantic map of fallacies, enthymemes, and audit criteria</td>
+</tr>
+<tr>
+<td><strong>Layer 1</strong></td>
+<td>Rhetorical / fallacy assessment — first truth gate</td>
+</tr>
+<tr>
+<td><strong>Layer 2</strong></td>
+<td>Mechanism tagging against the factor ontology — second assessment</td>
+</tr>
+<tr>
+<td><strong>Admissible atom</strong></td>
+<td>Atom passing Layer 1 at Strong or qualified Moderate</td>
+</tr>
+<tr>
+<td><strong>Operational factor</strong></td>
+<td>Observable variable (<code>troop-movements</code>, <code>sanctions</code>, …) linked from mechanism tags</td>
+</tr>
+<tr>
+<td><strong>Assessment record</strong></td>
+<td>Structured output per atom after Layer 1 + Layer 2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-functional-requirements">3. Functional requirements<a class="headerlink" href="#3-functional-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="fr-graph-semantic-graphs">FR-GRAPH — Semantic graphs<a class="headerlink" href="#fr-graph-semantic-graphs" title="Permanent link">&para;</a></h3>
+<h4 id="fr-graph-01-mechanism-graph">FR-GRAPH-01 Mechanism graph<a class="headerlink" href="#fr-graph-01-mechanism-graph" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> maintain an expandable <strong>mechanism graph</strong> containing:</p>
+<ul>
+<li>Layer 1–5 concepts (superstructure, institutional, agentic, signaling, emergent).</li>
+<li>Cross-cutting nodes (Schelling, Jervis, Putnam constructs).</li>
+<li>Historical anchor templates (e.g. Cuban Missile Crisis, Russia–Ukraine arc).</li>
+<li>Theatre scaffolds (Russia–Ukraine, Hormuz) as organizational hooks.</li>
+<li>Edges: <code>part_of</code>, <code>implies</code>, <code>enables</code>, <code>contradicts</code>, <code>correlates_with</code>, <code>exemplified_by</code>, <code>observed_via</code>.</li>
+</ul>
+<p><strong>Acceptance:</strong> <code>hanani ontology</code> lists ≥30 mechanism concepts; graph serialisable; version in registry.</p>
+<p><strong>Status:</strong> Seed (<code>hanani.ontology</code>, <code>docs/ontology/living-semantic-model.md</code> v0.1).</p>
+<h4 id="fr-graph-02-rhetoric-graph">FR-GRAPH-02 Rhetoric graph<a class="headerlink" href="#fr-graph-02-rhetoric-graph" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> maintain a <strong>rhetoric graph</strong> containing:</p>
+<ul>
+<li>Fallacy and analytical-error patterns (≥20 seed nodes).</li>
+<li>Enthymeme templates (load-bearing unstated assumptions).</li>
+<li>Audit criteria nodes (chain completeness, evidence integration, falsifiability, etc.).</li>
+<li>Argument roles (premise, warrant, conclusion, qualifier, rebuttal).</li>
+<li>Edges: <code>violates</code>, <code>exhibits</code>, <code>missing_warrant</code>, <code>detected_in</code>, <code>subtype_of</code>.</li>
+</ul>
+<p><strong>Acceptance:</strong> <code>hanani rhetoric</code> reports fallacy count; reputation is not an input to matching.</p>
+<p><strong>Status:</strong> Seed (<code>hanani.rhetoric</code>, <code>docs/ontology/rhetorical-logic-graph.md</code> v0.1).</p>
+<h4 id="fr-graph-03-unified-graph-store">FR-GRAPH-03 Unified graph store<a class="headerlink" href="#fr-graph-03-unified-graph-store" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> store mechanism nodes, rhetoric nodes, logic atoms, sources, and
+analysis edges in one <strong>typed graph</strong> with query API (neighbors, by kind).</p>
+<p><strong>Acceptance:</strong> <code>hanani.graph.SemanticGraph</code> supports add/query; atom edges include <code>agrees</code>, <code>contradicts</code>, <code>evaluates</code>, <code>tags</code>.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.graph</code>).</p>
+<h4 id="fr-graph-04-graph-expansion-governance">FR-GRAPH-04 Graph expansion governance<a class="headerlink" href="#fr-graph-04-graph-expansion-governance" title="Permanent link">&para;</a></h4>
+<p>New mechanism or rhetoric nodes <strong>shall</strong> be added only with documented justification
+(evidence from audited atoms or cited scholarly mechanism — not outlet prestige).</p>
+<p><strong>Acceptance:</strong> Changelog entry required per expansion; version bump on material change.</p>
+<p><strong>Status:</strong> Process defined; automation not implemented.</p>
+<hr />
+<h3 id="fr-reason-reasoning-engine">FR-REASON — Reasoning engine<a class="headerlink" href="#fr-reason-reasoning-engine" title="Permanent link">&para;</a></h3>
+<h4 id="fr-reason-01-layered-pipeline-order">FR-REASON-01 Layered pipeline order<a class="headerlink" href="#fr-reason-01-layered-pipeline-order" title="Permanent link">&para;</a></h4>
+<p>For every logic atom the engine <strong>shall</strong> execute in order:</p>
+<ol>
+<li><strong>Layer 1</strong> — rhetorical logic assessment (rhetoric graph).</li>
+<li><strong>Layer 2</strong> — mechanism tagging (mechanism graph) <strong>only if</strong> Layer 1 admissible.</li>
+<li><strong>Assessment record</strong> — structured merge of Layer 1 + Layer 2.</li>
+<li><em>(Phase 2)</em> Per-atom assessment summary.</li>
+<li><em>(Phase 3)</em> Contribution to collective narrative and outcome scenarios.</li>
+</ol>
+<p><strong>Acceptance:</strong> <code>ReasoningEngine.assess_atom()</code> enforces order; Layer 2 skipped when Layer 1 Weak.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.reasoning</code>).</p>
+<h4 id="fr-reason-02-layer-1-exhaustiveness">FR-REASON-02 Layer 1 exhaustiveness<a class="headerlink" href="#fr-reason-02-layer-1-exhaustiveness" title="Permanent link">&para;</a></h4>
+<p>Layer 1 <strong>shall</strong> evaluate each atom against <strong>all applicable</strong> rhetoric patterns and audit
+criteria; hits <strong>shall</strong> be listed explicitly (no silent drops).</p>
+<p><strong>Acceptance:</strong> Assessment record includes <code>fallacy_hits</code>, <code>enthymeme_hits</code>, <code>audit_scores</code>, <code>robustness</code> tier.</p>
+<p><strong>Status:</strong> Interface defined; matcher not implemented.</p>
+<h4 id="fr-reason-03-layer-2-exhaustiveness">FR-REASON-03 Layer 2 exhaustiveness<a class="headerlink" href="#fr-reason-03-layer-2-exhaustiveness" title="Permanent link">&para;</a></h4>
+<p>Layer 2 <strong>shall</strong> tag each admissible atom against <strong>all applicable</strong> mechanism nodes with
+step-by-step justification per tag (not default 1–2 tags).</p>
+<p><strong>Acceptance:</strong> <code>justifications</code> dict keyed by tag id; empty tag set requires explicit "no mechanism match" note.</p>
+<p><strong>Status:</strong> Interface defined; tagger not implemented.</p>
+<h4 id="fr-reason-04-admissibility-gate">FR-REASON-04 Admissibility gate<a class="headerlink" href="#fr-reason-04-admissibility-gate" title="Permanent link">&para;</a></h4>
+<p>Atoms with Layer 1 robustness <strong>Weak</strong> <strong>shall not</strong> propagate to mechanism inference,
+hypothesis generation, or collective narrative unless operator override with audit trail.</p>
+<p><strong>Acceptance:</strong> <code>admissible_for_inference</code> property; graph marks inadmissible atoms.</p>
+<p><strong>Status:</strong> Implemented in scaffold.</p>
+<h4 id="fr-reason-05-per-atom-assessment-summary-phase-2">FR-REASON-05 Per-atom assessment summary (Phase 2)<a class="headerlink" href="#fr-reason-05-per-atom-assessment-summary-phase-2" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> produce a human-readable <strong>assessment summary</strong> per atom covering:
+claim, rhetoric quality, mechanism tags, confidence, conflicts, falsification conditions.</p>
+<p><strong>Acceptance:</strong> <code>assessment_summary</code> field populated; traceable to Layer 1/2 records.</p>
+<p><strong>Status:</strong> Planned.</p>
+<h4 id="fr-reason-06-collective-narrative-outcomes-phase-3">FR-REASON-06 Collective narrative &amp; outcomes (Phase 3)<a class="headerlink" href="#fr-reason-06-collective-narrative-outcomes-phase-3" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> synthesise a <strong>single narrative</strong> across all admissible atoms and sources:
+corroboration clusters, tensions, coverage gaps, <strong>most likely outcomes</strong> fitting the admissible
+fact set and coherent with tagged behavioral patterns; alternative scenarios with discriminating evidence.</p>
+<p><strong>Acceptance:</strong> Output includes explicit uncertainty; cites atom ids and sources; no prestige weighting.</p>
+<p><strong>Status:</strong> Planned.</p>
+<hr />
+<h3 id="fr-source-sources-atoms">FR-SOURCE — Sources &amp; atoms<a class="headerlink" href="#fr-source-sources-atoms" title="Permanent link">&para;</a></h3>
+<h4 id="fr-source-01-witness-registry">FR-SOURCE-01 Witness registry<a class="headerlink" href="#fr-source-01-witness-registry" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> register ingested material as witnesses with opaque id, timestamp,
+provenance, and content hash — <strong>not</strong> prestige score.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-source-02-atom-extraction">FR-SOURCE-02 Atom extraction<a class="headerlink" href="#fr-source-02-atom-extraction" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> extract logic atoms from admissible source text with types:
+assertion, causal_claim, analogy, intent_assessment, counterfactual, warrant, premise.</p>
+<p><strong>Acceptance:</strong> Each atom links to <code>source_id</code>; stable <code>atom_id</code>.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-source-03-source-level-rhetoric-gate-optional">FR-SOURCE-03 Source-level rhetoric gate (optional)<a class="headerlink" href="#fr-source-03-source-level-rhetoric-gate-optional" title="Permanent link">&para;</a></h4>
+<p>The system <strong>may</strong> run a source-level Layer 1 audit before atom extraction; weak sources
+<strong>shall</strong> be set aside with documented reasons.</p>
+<p><strong>Status:</strong> Design only.</p>
+<hr />
+<h3 id="fr-analysis-analysis-graph-gaps">FR-ANALYSIS — Analysis graph &amp; gaps<a class="headerlink" href="#fr-analysis-analysis-graph-gaps" title="Permanent link">&para;</a></h3>
+<h4 id="fr-analysis-01-atom-graph-merge">FR-ANALYSIS-01 Atom graph merge<a class="headerlink" href="#fr-analysis-01-atom-graph-merge" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> merge assessed atoms into an analysis graph with edges for agreement,
+contradiction, complementarity, implication, and gap.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-analysis-02-gap-analysis">FR-ANALYSIS-02 Gap analysis<a class="headerlink" href="#fr-analysis-02-gap-analysis" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> compare covered mechanism and rhetoric nodes against the full registries
+and report prioritized gaps with stated information needs.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-analysis-03-active-retrieval">FR-ANALYSIS-03 Active retrieval<a class="headerlink" href="#fr-analysis-03-active-retrieval" title="Permanent link">&para;</a></h4>
+<p>When gaps are identified, the system <strong>shall</strong> recommend or retrieve additional sources
+subject to the <strong>same</strong> Layer 1 filter (no reputation bypass).</p>
+<p><strong>Status:</strong> Design only.</p>
+<hr />
+<h3 id="fr-ops-operational-factors">FR-OPS — Operational factors<a class="headerlink" href="#fr-ops-operational-factors" title="Permanent link">&para;</a></h3>
+<h4 id="fr-ops-01-factor-taxonomy">FR-OPS-01 Factor taxonomy<a class="headerlink" href="#fr-ops-01-factor-taxonomy" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> expose an operational factor list (troops, logistics, sanctions, …).</p>
+<p><strong>Status:</strong> Implemented (<code>hanani.factors</code>).</p>
+<h4 id="fr-ops-02-factor-mechanism-linkage">FR-OPS-02 Factor ↔ mechanism linkage<a class="headerlink" href="#fr-ops-02-factor-mechanism-linkage" title="Permanent link">&para;</a></h4>
+<p>Mechanism tags <strong>shall</strong> link to operational factors where observable (<code>observed_via</code> edge).</p>
+<p><strong>Acceptance:</strong> Assessment record <code>factor_links</code> field.</p>
+<p><strong>Status:</strong> Field defined; auto-linker not implemented.</p>
+<hr />
+<h3 id="fr-work-orchestration-family-stack">FR-WORK — Orchestration &amp; family stack<a class="headerlink" href="#fr-work-orchestration-family-stack" title="Permanent link">&para;</a></h3>
+<h4 id="fr-work-01-workflow-orchestration">FR-WORK-01 Workflow orchestration<a class="headerlink" href="#fr-work-01-workflow-orchestration" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> coordinate ingestion → reasoning → graph → debate → synthesis via
+<code>hanani.workflow</code>.</p>
+<p><strong>Status:</strong> Scaffold.</p>
+<h4 id="fr-work-02-milcah-debate">FR-WORK-02 Milcah debate<a class="headerlink" href="#fr-work-02-milcah-debate" title="Permanent link">&para;</a></h4>
+<p>Competing hypotheses <strong>shall</strong> be debated via Milcah after graph build; structural confidence
+estimates <strong>shall</strong> be output.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-work-03-galeed-trace">FR-WORK-03 Galeed trace<a class="headerlink" href="#fr-work-03-galeed-trace" title="Permanent link">&para;</a></h4>
+<p>Every layer hit and assessment step <strong>shall</strong> be emit-able as process trace events.</p>
+<p><strong>Status:</strong> Design only.</p>
+<h4 id="fr-work-04-keturah-manifest">FR-WORK-04 Keturah manifest<a class="headerlink" href="#fr-work-04-keturah-manifest" title="Permanent link">&para;</a></h4>
+<p>Capabilities <strong>shall</strong> be exposed via Keturah manifest for LLM/tool consumption.</p>
+<p><strong>Status:</strong> Scaffold (<code>hanani.manifest</code>).</p>
+<hr />
+<h3 id="fr-docs-documentation">FR-DOCS — Documentation<a class="headerlink" href="#fr-docs-documentation" title="Permanent link">&para;</a></h3>
+<h4 id="fr-docs-01-requirements-publication">FR-DOCS-01 Requirements publication<a class="headerlink" href="#fr-docs-01-requirements-publication" title="Permanent link">&para;</a></h4>
+<p>Requirements <strong>shall</strong> be maintained as normative Markdown (<code>docs/requirements.md</code>) and
+published as a <strong>readable web page</strong> buildable from the repo.</p>
+<p><strong>Acceptance:</strong> <code>docs/web/index.html</code> renders REQ-HANANI-001; <code>hanani docs serve</code> serves locally.</p>
+<p><strong>Status:</strong> This document + web build (in progress).</p>
+<h4 id="fr-docs-02-architecture-publication">FR-DOCS-02 Architecture publication<a class="headerlink" href="#fr-docs-02-architecture-publication" title="Permanent link">&para;</a></h4>
+<p>Architecture and reasoning-system specs <strong>shall</strong> be linked from the docs site.</p>
+<p><strong>Acceptance:</strong> Nav links to architecture and reasoning-system pages.</p>
+<p><strong>Status:</strong> Planned (same site).</p>
+<hr />
+<h2 id="4-non-functional-requirements">4. Non-functional requirements<a class="headerlink" href="#4-non-functional-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td><strong>Local-first</strong> — LLM calls through Hoglah by default</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td><strong>Python 3.11+</strong>, pip-installable (<code>pip install -e .</code>)</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td><strong>Traces serialisable</strong> (JSON) and human-readable</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td><strong>Standalone</strong> — no shared platform repo with scripture translation (Ed)</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td><strong>Private repository</strong> until explicitly published</td>
+</tr>
+<tr>
+<td>NFR-06</td>
+<td><strong>Deterministic graph IDs</strong> — node ids stable across versions where possible</td>
+</tr>
+<tr>
+<td>NFR-07</td>
+<td><strong>Test coverage</strong> — every implemented FR has pytest acceptance test</td>
+</tr>
+<tr>
+<td>NFR-08</td>
+<td><strong>Docs build</strong> — <code>python scripts/build_docs.py</code> regenerates web site from Markdown</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-implementation-phases-traceability">5. Implementation phases (traceability)<a class="headerlink" href="#5-implementation-phases-traceability" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Requirements</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>FR-DOCS-*, FR-GRAPH-01/02, P1–P6</td>
+<td>Requirements + graph seeds + docs site</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>FR-REASON-01–04, FR-GRAPH-03</td>
+<td>Real Layer 1/2 matchers</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>FR-SOURCE-*, FR-ANALYSIS-01</td>
+<td>Ingestion + atom extraction</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>FR-REASON-05, FR-ANALYSIS-02</td>
+<td>Per-atom summaries + gaps</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>FR-REASON-06, FR-WORK-02</td>
+<td>Collective narrative + Milcah</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>FR-ANALYSIS-03, FR-GRAPH-04</td>
+<td>Retrieval loop + ontology automation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-requirement-status-summary">6. Requirement status summary<a class="headerlink" href="#6-requirement-status-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Implemented</th>
+<th>Scaffold</th>
+<th>Planned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mechanism graph</td>
+<td>—</td>
+<td>✓</td>
+<td>expand</td>
+</tr>
+<tr>
+<td>Rhetoric graph</td>
+<td>—</td>
+<td>✓</td>
+<td>expand</td>
+</tr>
+<tr>
+<td>Reasoning engine</td>
+<td>gate</td>
+<td>✓</td>
+<td>matchers</td>
+</tr>
+<tr>
+<td>Sources / atoms</td>
+<td>—</td>
+<td>—</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Synthesis</td>
+<td>—</td>
+<td>—</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Web requirements</td>
+<td>—</td>
+<td>in progress</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-references">7. References<a class="headerlink" href="#7-references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="reasoning-system.html"><code>reasoning-system.md</code></a> — architecture</li>
+<li><a href="architecture.html"><code>architecture.md</code></a> — component diagram</li>
+<li><a href="ontology/living-semantic-model.md"><code>ontology/living-semantic-model.md</code></a> — mechanism graph</li>
+<li><a href="ontology/rhetorical-logic-graph.md"><code>ontology/rhetorical-logic-graph.md</code></a> — rhetoric graph</li>
+<li><a href="vision.html"><code>vision.md</code></a> — product vision</li>
+</ul>
+<hr />
+<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1</td>
+<td>2026-07-05</td>
+<td>Initial FR1–FR9 scaffold</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td>2026-07-05</td>
+<td>Full reasoning-system requirements; dual graphs; layered engine; web docs FR</td>
+</tr>
+</tbody>
+</table>
+  </main>
+  <footer class="site-footer wrap">
+    <p>REQ-HANANI-001 · Built from <code>docs/</code> via <code>scripts/build_docs.py</code></p>
+  </footer>
+</body>
+</html>

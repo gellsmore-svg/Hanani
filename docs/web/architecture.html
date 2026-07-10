@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Architecture · Hanani</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Hanani · Geopolitical reasoning system</p>
+      <h1>Architecture</h1>
+      <nav class="nav"><a href="index.html">Requirements</a><a href="architecture.html" class="active">Architecture</a><a href="reasoning-system.html">Reasoning system</a><a href="vision.html">Vision</a></nav>
+    </div>
+  </header>
+  <main class="wrap content">
+    <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                         Hanani                                   │
+│  ┌─────────────────────┐    ┌─────────────────────┐              │
+│  │ Mechanism graph (A) │    │ Rhetoric graph (B)  │              │
+│  │ L1–L5 + factors     │    │ fallacies + audit   │              │
+│  └──────────┬──────────┘    └──────────┬──────────┘              │
+│             └────────────┬─────────────┘                         │
+│                          ▼                                       │
+│              reasoning engine (Layer 1 → Layer 2)                │
+│                          ▼                                       │
+│         logic atoms · assessment records · analysis graph        │
+│                          ▼                                       │
+│              [Phase 3] narrative + outcome scenarios             │
+│                          ▼                                       │
+│                   workflow (orchestration)                       │
+└────────────────────────────┬─────────────────────────────────────┘
+                             ▼
+        ┌───────────────────────────────────────────┐
+        │  Milcah  Tirzah  Hoglah  Galeed           │
+        └───────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hanani.ontology</code></td>
+<td>Mechanism graph seed</td>
+</tr>
+<tr>
+<td><code>hanani.rhetoric</code></td>
+<td>Rhetoric graph seed</td>
+</tr>
+<tr>
+<td><code>hanani.graph</code></td>
+<td>Unified node/edge store</td>
+</tr>
+<tr>
+<td><code>hanani.reasoning</code></td>
+<td>Layered atom assessment pipeline</td>
+</tr>
+<tr>
+<td><code>hanani.factors</code></td>
+<td>Observable variables linked from mechanisms</td>
+</tr>
+<tr>
+<td><code>hanani.workflow</code></td>
+<td>Batch orchestration, Milcah scheduling</td>
+</tr>
+</tbody>
+</table>
+<p>Detail: <a href="reasoning-system.html"><code>reasoning-system.md</code></a>.</p>
+  </main>
+  <footer class="site-footer wrap">
+    <p>REQ-HANANI-001 · Built from <code>docs/</code> via <code>scripts/build_docs.py</code></p>
+  </footer>
+</body>
+</html>

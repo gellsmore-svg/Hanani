@@ -13,7 +13,8 @@ narrative with likely outcomes.
 
 > What do all available reports imply when combined?
 
-See [`reasoning-system.md`](reasoning-system.md).
+Normative requirements: [`requirements.md`](requirements.md) · web: `hanani docs serve`  
+Architecture: [`reasoning-system.md`](reasoning-system.md).
 
 ## Initial theatres
 
