@@ -5,7 +5,7 @@ graphs + a layered assessment engine, not a one-off crisis briefing or news read
 
 > What do all available reports imply when combined?
 
-**Requirements (web):** run `hanani docs serve` → http://127.0.0.1:8765/
+**Requirements (web):** run `hanani docs serve` → http://127.0.0.1:8805/
 
 Architecture: [`docs/reasoning-system.md`](docs/reasoning-system.md) ·
 [`docs/requirements.md`](docs/requirements.md)

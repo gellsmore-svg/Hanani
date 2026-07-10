@@ -17,7 +17,7 @@ def build_docs() -> int:
     return subprocess.call([sys.executable, str(BUILD)], cwd=ROOT)
 
 
-def serve(port: int = 8765, *, rebuild: bool = True) -> int:
+def serve(port: int = 8805, *, rebuild: bool = True) -> int:
     if rebuild:
         code = build_docs()
         if code != 0:
@@ -46,7 +46,7 @@ def serve(port: int = 8765, *, rebuild: bool = True) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build and serve Hanani documentation.")
     parser.add_argument("command", nargs="?", choices=["build", "serve"], default="serve")
-    parser.add_argument("-p", "--port", type=int, default=8765)
+    parser.add_argument("-p", "--port", type=int, default=8805)
     parser.add_argument("--no-rebuild", action="store_true", help="Serve without rebuilding")
     args = parser.parse_args(argv)
     if args.command == "build":

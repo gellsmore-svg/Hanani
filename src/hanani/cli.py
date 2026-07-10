@@ -104,7 +104,7 @@ def main(argv: list[str] | None = None) -> int:
     docs = sub.add_parser("docs", help="Documentation site (build / serve)")
     docs_sub = docs.add_subparsers(dest="docs_command")
     docs_sub.add_parser("build", help="Build docs/web from Markdown")
-    docs_sub.add_parser("serve", help="Build and serve docs at http://127.0.0.1:8765")
+    docs_sub.add_parser("serve", help="Build and serve docs at http://127.0.0.1:8805")
 
     workflow = sub.add_parser("workflow", help="Workflow orchestration")
     workflow_sub = workflow.add_subparsers(dest="workflow_command")
