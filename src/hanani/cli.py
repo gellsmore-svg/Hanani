@@ -139,6 +139,33 @@ def _cmd_push_tirzah(args: argparse.Namespace) -> int:
     return 0 if summary["failed"] == 0 else 1
 
 
+def _cmd_debate(args: argparse.Namespace) -> int:
+    from hanani.debate import debate_corpus
+    from hanani.store import SliceStore
+
+    try:
+        record = debate_corpus(
+            SliceStore(args.store),
+            article_id=args.article_id,
+            max_iterations=args.max_iterations,
+            extractor=args.extractor,
+        )
+    except (RuntimeError, ValueError) as error:
+        print(f"hanani debate: {error}", file=sys.stderr)
+        return 2
+    verdict = record["verdict"]
+    print(f"debate: scope={record['scope']}  atoms={len(record['debated_atom_ids'])} "
+          f"(excluded inadmissible: {len(record['excluded_inadmissible'])})")
+    print(f"  terminal: {verdict['terminal_reason']}  confidence: {verdict['confidence']:.2f}")
+    for claim in verdict["claims"][:5]:
+        print(f"  claim: {claim}")
+    for objection in verdict["objections"][:5]:
+        print(f"  objection: {objection}")
+    if not verdict["objections"]:
+        print("  objections: (none)")
+    return 0
+
+
 def _cmd_corpus(args: argparse.Namespace) -> int:
     from hanani.store import SliceStore
 
@@ -147,6 +174,7 @@ def _cmd_corpus(args: argparse.Namespace) -> int:
     print(f"  admissible atoms: {summary['admissible_atoms']}")
     print(f"  robustness: {summary['robustness']}")
     print(f"  sources: {', '.join(summary['sources']) or '(none)'}")
+    print(f"  debates: {summary['debate_count']}")
     print(f"  store: {summary['store_dir']}")
     return 0
 
@@ -187,6 +215,16 @@ def main(argv: list[str] | None = None) -> int:
     corpus_p = sub.add_parser("corpus", help="Summarise the persisted slice store")
     corpus_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
     corpus_p.set_defaults(func=_cmd_corpus)
+
+    debate_p = sub.add_parser(
+        "debate", help="Milcah multi-LLM debate over the admissible atoms (milcah extra)"
+    )
+    debate_p.add_argument("--store", default=str(DEFAULT_STORE_DIR), help="Store directory")
+    debate_p.add_argument("--article-id", default=None, help="Debate one article (default: whole corpus)")
+    debate_p.add_argument("--max-iterations", type=int, default=3)
+    debate_p.add_argument("--extractor", choices=("rule", "hoglah"), default="rule",
+                          help="Milcah unit extraction: deterministic rule floor or the hoglah LLM tier")
+    debate_p.set_defaults(func=_cmd_debate)
 
     push_p = sub.add_parser(
         "push-tirzah", help="Push stored articles+assessments into Tirzah memory (tirzah extra)"

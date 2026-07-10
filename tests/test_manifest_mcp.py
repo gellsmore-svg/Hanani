@@ -20,7 +20,7 @@ _ARTICLE = (
 def test_build_manifest_declares_slice_capabilities() -> None:
     m = build_manifest()
     names = [c.name for c in m.capabilities]
-    assert names == ["ingest_and_assess", "corpus_summary", "factors"]
+    assert names == ["ingest_and_assess", "corpus_summary", "debate_corpus", "factors"]
     ingest = m.capabilities[0]
     assert set(ingest.input_schema["required"]) == {"text", "source_id", "title"}
 

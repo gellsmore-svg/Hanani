@@ -22,6 +22,7 @@ class SliceStore:
         self.directory = Path(directory)
         self.articles_path = self.directory / "articles.jsonl"
         self.assessments_path = self.directory / "assessments.jsonl"
+        self.debates_path = self.directory / "debates.jsonl"
 
     def _append(self, path: Path, record: dict[str, Any]) -> None:
         self.directory.mkdir(parents=True, exist_ok=True)
@@ -54,6 +55,9 @@ class SliceStore:
         for record in records:
             self._append(self.assessments_path, {"article_id": article_id, **record})
 
+    def save_debate(self, record: dict[str, Any]) -> None:
+        self._append(self.debates_path, record)
+
     # --- read ----------------------------------------------------------
 
     def articles(self) -> list[dict[str, Any]]:
@@ -61,6 +65,12 @@ class SliceStore:
 
     def assessments(self, article_id: str | None = None) -> list[dict[str, Any]]:
         records = self._load(self.assessments_path)
+        if article_id is None:
+            return records
+        return [r for r in records if r.get("article_id") == article_id]
+
+    def debates(self, article_id: str | None = None) -> list[dict[str, Any]]:
+        records = self._load(self.debates_path)
         if article_id is None:
             return records
         return [r for r in records if r.get("article_id") == article_id]
@@ -83,4 +93,5 @@ class SliceStore:
             "admissible_atoms": admissible,
             "robustness": robustness,
             "sources": sorted({a.get("source_id", "?") for a in articles}),
+            "debate_count": len(self.debates()),
         }

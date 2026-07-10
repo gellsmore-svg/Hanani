@@ -10,7 +10,8 @@ def workflow_status() -> str:
         "Hanani workflow orchestration\n"
         f"  status: {STATUS}\n"
         "  implemented: ingest → atoms → Layer 1 rhetoric → Layer 2 mechanisms → persist\n"
-        "    (`hanani ingest` — deterministic floor + optional Hoglah model tier)\n"
-        "  pending: evidence graph → hypotheses → multi-LLM debate → synthesise → trace\n"
+        "    (`hanani ingest`), Tirzah memory push (`hanani push-tirzah`), and the\n"
+        "    Milcah multi-LLM debate over admissible atoms (`hanani debate`)\n"
+        "  pending: evidence graph → hypotheses → synthesise → trace\n"
         "  siblings: Milcah, Tirzah, Hoglah, Galeed\n"
     )

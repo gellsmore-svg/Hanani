@@ -51,6 +51,26 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         except Exception as exc:  # noqa: BLE001
             return {"error": f"summary failed: {type(exc).__name__}: {exc}"}
 
+    def debate_corpus(
+        article_id: str | None = None,
+        max_iterations: int = 3,
+        extractor: str = "rule",
+        **_kw: Any,
+    ) -> dict[str, Any]:
+        from hanani.debate import debate_corpus as run_debate
+
+        try:
+            return run_debate(
+                _store(),
+                article_id=article_id,
+                max_iterations=max_iterations,
+                extractor=extractor if extractor in ("rule", "hoglah") else "rule",
+            )
+        except (RuntimeError, ValueError) as exc:
+            return {"error": str(exc)}
+        except Exception as exc:  # noqa: BLE001 - surface cleanly to the agent
+            return {"error": f"debate failed: {type(exc).__name__}: {exc}"}
+
     def factors(**_kw: Any) -> dict[str, Any]:
         from hanani.factors import list_factors
 
@@ -61,6 +81,8 @@ def build_handlers(*, store: SliceStore | None = None) -> dict[str, Callable[...
         "ingest_and_assess": ingest_and_assess,
         "hanani.corpus_summary": corpus_summary,
         "corpus_summary": corpus_summary,
+        "hanani.debate_corpus": debate_corpus,
+        "debate_corpus": debate_corpus,
         "hanani.factors": factors,
         "factors": factors,
     }

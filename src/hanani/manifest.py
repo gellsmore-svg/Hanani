@@ -67,6 +67,32 @@ def build_manifest():
                 tags=["corpus", "status"],
             ),
             capability(
+                "debate_corpus",
+                "Milcah multi-LLM debate over the Layer-1-admissible atoms "
+                "(one article or the whole store): pressure-tests what the "
+                "combined reports imply, returning a bounded verdict — claims, "
+                "objections, evidence, confidence, terminal_reason. Gated "
+                "(inadmissible) atoms are excluded and listed.",
+                input_schema={
+                    "type": "object",
+                    "properties": {
+                        "article_id": {"type": "string", "description": "debate one article (omit for whole corpus)"},
+                        "max_iterations": {"type": "integer", "minimum": 1, "maximum": 10, "default": 3},
+                        "extractor": {"type": "string", "enum": ["rule", "hoglah"], "default": "rule"},
+                    },
+                },
+                output_schema={
+                    "type": "object",
+                    "properties": {
+                        "scope": {"type": "string"},
+                        "debated_atom_ids": {"type": "array", "items": {"type": "string"}},
+                        "excluded_inadmissible": {"type": "array", "items": {"type": "string"}},
+                        "verdict": {"type": "object"},
+                    },
+                },
+                tags=["reasoning", "debate", "milcah"],
+            ),
+            capability(
                 "factors",
                 "List the geopolitical factor taxonomy.",
                 input_schema={"type": "object", "properties": {}},
