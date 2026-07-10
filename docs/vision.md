@@ -5,9 +5,15 @@ other application.
 
 ## What this is
 
-An **evidence synthesis and reasoning engine** asking:
+A **reusable reasoning system** — not a one-off briefing on a current crisis.
+
+It maintains **two expandable semantic graphs** (mechanisms + rhetorical logic), evaluates
+every **logic atom** through layered checks, and (later) synthesises a collective
+narrative with likely outcomes.
 
 > What do all available reports imply when combined?
+
+See [`reasoning-system.md`](reasoning-system.md).
 
 ## Initial theatres
 

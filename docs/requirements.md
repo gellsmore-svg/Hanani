@@ -11,12 +11,26 @@ Status: **specified, not yet implemented** unless marked otherwise.
 
 **Status:** design only.
 
-## FR2 — Factor Taxonomy
+## FR2 — Dual Semantic Graphs
 
-- Define geopolitical factors as data (YAML/JSON schema).
-- Apply factor-extraction policies per theatre / topic.
+- **Mechanism graph:** expandable L1–L5 concepts, historical anchors, theatre scaffolds.
+- **Rhetoric graph:** fallacies, enthymemes, audit criteria — Layer 1 truth assessment.
+- Unified store with typed nodes/edges; versioned Markdown + machine registry.
+
+**Status:** seed (`hanani.ontology`, `hanani.rhetoric`, `hanani.graph`).
+
+## FR2b — Factor Taxonomy (operational observables)
+
+- Define geopolitical factors as data; link **from** mechanism tags.
 
 **Status:** scaffold (`hanani.factors`).
+
+## FR2c — Reasoning Engine
+
+- Per-atom pipeline: Layer 1 rhetoric → Layer 2 mechanisms → assessment record.
+- Later: per-atom summary, collective narrative, likely outcomes.
+
+**Status:** scaffold (`hanani.reasoning`). Spec: [`reasoning-system.md`](reasoning-system.md).
 
 ## FR3 — Workflow Orchestration
 

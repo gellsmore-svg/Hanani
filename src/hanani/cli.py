@@ -8,6 +8,8 @@ import sys
 from hanani import __version__
 from hanani.factors import list_factors
 from hanani.ontology import ONTOLOGY_DOC, ONTOLOGY_VERSION, list_layers
+from hanani.reasoning import REASONING_VERSION, default_engine
+from hanani.rhetoric import RHETORIC_GRAPH_VERSION, list_fallacies
 from hanani.workflow import workflow_status
 
 PURPOSE = (
@@ -23,8 +25,26 @@ def _cmd_factors(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_reasoning(_: argparse.Namespace) -> int:
+    engine = default_engine()
+    summary = engine.registry_summary()
+    print(f"reasoning engine: {REASONING_VERSION}")
+    print(f"  rhetoric graph: {summary['rhetoric_graph_version']}")
+    print(f"  fallacy patterns: {summary['fallacy_pattern_count']}")
+    print(f"  mechanism layers: {len(summary['mechanism_layers'])}")
+    print(f"  audit criteria: {summary['audit_criteria_count']}")
+    print("  pipeline: Layer 1 rhetoric → Layer 2 mechanisms → [summary] → [narrative]")
+    return 0
+
+
+def _cmd_rhetoric(_: argparse.Namespace) -> int:
+    print(f"rhetoric graph version: {RHETORIC_GRAPH_VERSION}")
+    print(f"fallacy patterns: {len(list_fallacies())}")
+    return 0
+
+
 def _cmd_ontology(_: argparse.Namespace) -> int:
-    print(f"ontology version: {ONTOLOGY_VERSION}")
+    print(f"mechanism graph version: {ONTOLOGY_VERSION}")
     print(f"document: {ONTOLOGY_DOC}")
     for layer, tags in list_layers().items():
         print(f"\n{layer}")
@@ -44,9 +64,13 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("factors", help="List factor taxonomy").set_defaults(func=_cmd_factors)
-    sub.add_parser("ontology", help="Living semantic model (version + layer tags)").set_defaults(
+    sub.add_parser("ontology", help="Mechanism graph (version + layer tags)").set_defaults(
         func=_cmd_ontology
     )
+    sub.add_parser("rhetoric", help="Rhetoric graph (fallacy pattern count)").set_defaults(
+        func=_cmd_rhetoric
+    )
+    sub.add_parser("reasoning", help="Reasoning engine status").set_defaults(func=_cmd_reasoning)
 
     workflow = sub.add_parser("workflow", help="Workflow orchestration")
     workflow_sub = workflow.add_subparsers(dest="workflow_command")
@@ -57,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.command:
         print(PURPOSE)
-        print("Try: hanani factors | hanani ontology | hanani workflow status")
+        print("Try: hanani reasoning | hanani ontology | hanani rhetoric | hanani factors")
         return 0
 
     if args.command == "workflow" and not getattr(args, "workflow_command", None):

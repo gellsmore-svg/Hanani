@@ -1,9 +1,11 @@
 # Hanani — Geopolitical News Reasoning
 
-**Hanani** is a standalone geopolitical news *reasoning* platform — an evidence
-synthesis engine, not a news reader.
+**Hanani** is a standalone geopolitical **reasoning system** — expandable semantic
+graphs + a layered assessment engine, not a one-off crisis briefing or news reader.
 
 > What do all available reports imply when combined?
+
+Architecture: [`docs/reasoning-system.md`](docs/reasoning-system.md)
 
 Initial focus: Russia–Ukraine, Hormuz Strait / US–Iran–Gulf states.
 
@@ -12,11 +14,14 @@ See [`docs/vision.md`](docs/vision.md).
 ```bash
 hanani --help
 hanani factors
-hanani ontology          # living semantic model v0.1
+hanani reasoning         # engine status (Layer 1 → Layer 2 pipeline)
+hanani ontology          # mechanism graph (L1–L5)
+hanani rhetoric          # fallacy / audit graph
 hanani workflow status
 ```
 
-Ontology: [`docs/ontology/living-semantic-model.md`](docs/ontology/living-semantic-model.md)
+Graphs: [`living-semantic-model.md`](docs/ontology/living-semantic-model.md) ·
+[`rhetorical-logic-graph.md`](docs/ontology/rhetorical-logic-graph.md)
 
 ## Family stack
 

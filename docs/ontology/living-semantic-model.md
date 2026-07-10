@@ -1,9 +1,14 @@
 # Hanani Living Semantic Model / Ontology
 
 **Version:** 0.1  
-**Status:** Initialized — no source atoms ingested yet  
-**Project:** Hanani geopolitical news reasoning engine  
-**Maintainer protocol:** Exhaustive tagging; rhetorical logic before reputation; version every material change
+**Graph ID:** `mechanism`  
+**Status:** Seed graph — expandable from scholarly mechanisms, not from news cycles  
+**Project:** Hanani **reasoning system** (see [`reasoning-system.md`](../reasoning-system.md))  
+**Role:** **Graph A** — mechanism/factor semantics for **Layer 2** atom tagging  
+
+This document is **not** a one-off conflict analysis. It is the living, versioned
+backbone that logic atoms attach to after passing **Layer 1** rhetorical assessment
+([`rhetorical-logic-graph.md`](rhetorical-logic-graph.md)).
 
 ---
 
@@ -22,7 +27,15 @@
 
 ---
 
-## 1. Workflow (canonical cycle)
+## 1. Position in the reasoning engine
+
+```
+Logic atom → Layer 1 (rhetoric graph) → Layer 2 (this mechanism graph) → assessment record
+                                                                    ↓
+                                              [later] collective narrative + outcomes
+```
+
+## 2. Workflow (when sources are eventually ingested)
 
 ```mermaid
 flowchart TD
