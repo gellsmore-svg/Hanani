@@ -68,6 +68,15 @@ backbone that logic atoms attach to after passing <strong>Layer 1</strong> rheto
                                               [later] collective narrative + outcomes
 </code></pre>
 <h2 id="2-workflow-when-sources-are-eventually-ingested">2. Workflow (when sources are eventually ingested)<a class="headerlink" href="#2-workflow-when-sources-are-eventually-ingested" title="Permanent link">&para;</a></h2>
+<p><strong>ASSSIB hooks (mandatory at every cycle):</strong></p>
+<ol>
+<li>Layer 1 — flag sensemaking-speed signals (<code>audit.sensemaking_speed_signals</code>).</li>
+<li>Layer 2 — mandatory <code>speed_differential</code> per atom; auto-tag ASSSIB when signals present.</li>
+<li>Coherence registry — update party trajectories; recompute collective LCD when party ids set.</li>
+<li>Analysis graph — emit speed-differential edges (<code>processes_faster_than</code>, etc.).</li>
+<li>Gap analysis — run <code>GAP_ANALYSIS_QUESTIONS</code> (see <code>hanani.assib</code>).</li>
+<li>Retrieval — prioritize <code>RETRIEVAL_PRIORITIES</code> when ASSSIB gaps remain.</li>
+</ol>
 <pre><code class="language-mermaid">flowchart TD
   A[Initialize / update ontology] --&gt; B[Source ingestion]
   B --&gt; C{Rhetorical logic audit}
@@ -176,6 +185,10 @@ backbone that logic atoms attach to after passing <strong>Layer 1</strong> rheto
   &quot;speed_differential&quot;: {
     &quot;side_a_processing&quot;: &quot;fast | slow | unknown&quot;,
     &quot;side_b_processing&quot;: &quot;fast | slow | unknown&quot;,
+    &quot;side_a_coherence&quot;: &quot;high | medium | low | fragmented | unknown&quot;,
+    &quot;side_b_coherence&quot;: &quot;high | medium | low | fragmented | unknown&quot;,
+    &quot;side_a_party_id&quot;: &quot;optional — links to CoherenceSpeedProfile&quot;,
+    &quot;side_b_party_id&quot;: &quot;optional — links to CoherenceSpeedProfile&quot;,
     &quot;differential_exploited&quot;: &quot;A_faster | B_faster | parity | none_evident&quot;,
     &quot;probe_intent&quot;: &quot;measure_reaction_speed | measure_model_precision | deliberate_ambiguity | none_evident&quot;,
     &quot;notes&quot;: &quot;mandatory — use 'none evident' explicitly if no speed signal&quot;
@@ -647,6 +660,38 @@ collective LCD profiles constrain interpretation of alliance/coalition responses
 <tr>
 <td>Anchor</td>
 <td><code>cuban_missile_crisis_1962</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example D — Atom-HYP-004 (Ukraine-related ongoing signaling)</strong><br />
+<em>"Repeated troop-indicator buildups paired with ultimatum rhetoric test whether Western capitals distinguish costly mobilization from cheap-talk pressure — probing aid/red-line coordination speed ahead of any literal offensive execution."</em></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layers</td>
+<td>L4.troop_buildup_costly_signal vs cheap_talk, L3.prospect_loss_aversion, L2.two_level_games, L5.ASSSIB</td>
+</tr>
+<tr>
+<td>Speed differential</td>
+<td>Prober: fast/coherent vs. alliance capitals: slow/fragmented on red-line reads — <strong>B_faster exploited</strong></td>
+</tr>
+<tr>
+<td>Coherence</td>
+<td>LCD binding likely on most domestically fragmented capital — not NATO's fastest responder</td>
+</tr>
+<tr>
+<td>Probe intent</td>
+<td><code>measure_reaction_speed</code> + <code>measure_model_precision</code></td>
+</tr>
+<tr>
+<td>Anchor</td>
+<td><code>russia_ukraine_2014_2022_plus</code></td>
 </tr>
 </tbody>
 </table>

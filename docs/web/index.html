@@ -17,7 +17,7 @@
   <main class="wrap content">
     <h1 id="hanani-system-requirements">Hanani — System Requirements<a class="headerlink" href="#hanani-system-requirements" title="Permanent link">&para;</a></h1>
 <p><strong>Document:</strong> REQ-HANANI-001<br />
-<strong>Version:</strong> 0.4
+<strong>Version:</strong> 0.5
 <strong>Status:</strong> Normative — implementation shall trace to these requirements<br />
 <strong>Product:</strong> Reusable geopolitical <strong>reasoning system</strong> (not a one-off crisis analysis tool)</p>
 <hr />
@@ -306,6 +306,66 @@ against alliance/coalition responses.</p>
 <code>CoherenceRegistry.move_context()</code>; <code>hanani coherence</code> CLI.</p>
 <p><strong>Status:</strong> Scaffold (<code>hanani.coherence</code>).</p>
 <hr />
+<h3 id="fr-asssib-asymmetric-sensemaking-speed-informational-brinkmanship">FR-ASSSIB — Asymmetric Sensemaking Speed &amp; Informational Brinkmanship<a class="headerlink" href="#fr-asssib-asymmetric-sensemaking-speed-informational-brinkmanship" title="Permanent link">&para;</a></h3>
+<p>Permanent, high-priority augmentation. Maps to ontology §8.9–§8.11 and the normative
+integration prompt. Core risk target: <strong>dangerous mismatch</strong> in how quickly and coherently
+each side makes sense of probes — not the threatened action alone.</p>
+<h4 id="fr-asssib-01-ontology-integration">FR-ASSSIB-01 Ontology integration<a class="headerlink" href="#fr-asssib-01-ontology-integration" title="Permanent link">&para;</a></h4>
+<p>The living mechanism ontology <strong>shall</strong> include ASSSIB
+(<code>asymmetric_sensemaking_speed_informational_brinkmanship</code>) as a prominent <strong>L5 emergent
+cross-cutting dynamic</strong> with documented linkages to L2 (two-level games, selectorate),
+L3 (Jervis, prospect theory, mental simulation), L4 (cheap talk, ambiguity, probing signals),
+and L1 (security dilemma under time pressure).</p>
+<p>The ontology <strong>shall</strong> document: low-cost probing, stress+strategic throwaway rhetoric,
+differential (not absolute) speed risk, ambiguity-as-weapon, murky sensory brinkmanship,
+traffic-metaphor systemic risk, and Hanani systematic-model speed advantage.</p>
+<p><strong>Acceptance:</strong> Ontology §8.9; <code>hanani.ontology.CROSS_CUTTING_DYNAMICS</code>; historical anchors
+(Cuba, Ukraine, Baltic/alliance probe template); ≥3 tagging examples.</p>
+<p><strong>Status:</strong> Implemented (ontology v0.3, §8.9–§8.11).</p>
+<h4 id="fr-asssib-02-layer-1-sensemaking-signal-flagging">FR-ASSSIB-02 Layer 1 sensemaking signal flagging<a class="headerlink" href="#fr-asssib-02-layer-1-sensemaking-signal-flagging" title="Permanent link">&para;</a></h4>
+<p>Rhetorical logic audits and atom Layer 1 assessment <strong>shall</strong> explicitly flag content
+discussing or implying: sensemaking/reaction speed, over/under-reaction to sensationalism,
+deliberate ambiguity creation, probe-to-test-coordination, leaks, or coordination lag.</p>
+<p><strong>Acceptance:</strong> <code>audit.sensemaking_speed_signals</code> in rhetoric graph;
+<code>RhetoricAssessment.sensemaking_signals</code>; keyword scaffold in <code>hanani.rhetoric</code>.</p>
+<p><strong>Status:</strong> Scaffold implemented; full matcher pending.</p>
+<h4 id="fr-asssib-03-mandatory-per-atom-speed-differential-block">FR-ASSSIB-03 Mandatory per-atom speed-differential block<a class="headerlink" href="#fr-asssib-03-mandatory-per-atom-speed-differential-block" title="Permanent link">&para;</a></h4>
+<p><strong>Every</strong> logic atom Layer 2 assessment <strong>shall</strong> include <code>speed_differential</code> even when
+no speed signal is present — <strong><code>none_evident</code> required explicitly</strong> (gap signal).</p>
+<p>Assessment <strong>shall</strong> answer: fast/slow per side; probe intent; differential exploited;
+coherence per side when inferable; optional party id linkage.</p>
+<p><strong>Acceptance:</strong> <code>SpeedDifferentialAssessment</code> on every <code>MechanismAssessment</code>;
+<code>hanani.assib.ATOM_SPEED_PROMPTS</code>; auto-tag ASSSIB when Layer 1 sensemaking signals present.</p>
+<p><strong>Status:</strong> Schema + scaffold (<code>hanani.reasoning</code> v0.3).</p>
+<h4 id="fr-asssib-04-gap-analysis-speed-questions">FR-ASSSIB-04 Gap analysis speed questions<a class="headerlink" href="#fr-asssib-04-gap-analysis-speed-questions" title="Permanent link">&para;</a></h4>
+<p>Gap analysis <strong>shall</strong> routinely ask the normative ASSSIB questions about relative
+processing speeds, sensemaking quality, differential creation/exploitation, LCD binding
+members, and per-source coherence trajectories.</p>
+<p><strong>Acceptance:</strong> <code>hanani.assib.GAP_ANALYSIS_QUESTIONS</code> exported; referenced in FR-ANALYSIS-02.</p>
+<p><strong>Status:</strong> Constants implemented; automated gap runner pending.</p>
+<h4 id="fr-asssib-05-retrieval-prioritization">FR-ASSSIB-05 Retrieval prioritization<a class="headerlink" href="#fr-asssib-05-retrieval-prioritization" title="Permanent link">&para;</a></h4>
+<p>When ASSSIB-related gaps are identified, active retrieval <strong>shall</strong> prioritize sources
+illuminating processing-speed dynamics, reaction times, alliance coordination lag, and
+how sides model each other's sensemaking speed — subject to Layer 1 filter (no prestige bypass).</p>
+<p><strong>Acceptance:</strong> <code>hanani.assib.RETRIEVAL_PRIORITIES</code>.</p>
+<p><strong>Status:</strong> Constants implemented; retrieval loop pending.</p>
+<h4 id="fr-asssib-06-analysis-graph-speed-edges">FR-ASSSIB-06 Analysis-graph speed edges<a class="headerlink" href="#fr-asssib-06-analysis-graph-speed-edges" title="Permanent link">&para;</a></h4>
+<p>When building or updating the analysis graph, assessed atoms <strong>shall</strong> be able to emit
+explicit speed-differential edges:</p>
+<ul>
+<li><code>processes_faster_than</code></li>
+<li><code>probes_sensemaking_speed</code></li>
+<li><code>creates_ambiguity_to_slow</code></li>
+<li><code>exploits_speed_differential</code></li>
+</ul>
+<p><strong>Acceptance:</strong> <code>hanani.assib.speed_edges_from_assessment()</code>; edges in <code>GRAPH_EDGE_TYPES</code>.</p>
+<p><strong>Status:</strong> Scaffold implemented.</p>
+<h4 id="fr-asssib-07-readiness-declaration">FR-ASSSIB-07 Readiness declaration<a class="headerlink" href="#fr-asssib-07-readiness-declaration" title="Permanent link">&para;</a></h4>
+<p>The system <strong>shall</strong> expose a machine-readable readiness check confirming speed differentials
+are a <strong>first-class analytical object</strong> for future atom processing.</p>
+<p><strong>Acceptance:</strong> <code>hanani.assib.readiness()</code> returns <code>ready: true</code> with mandatory flags.</p>
+<p><strong>Status:</strong> Implemented.</p>
+<hr />
 <h3 id="fr-analysis-analysis-graph-gaps">FR-ANALYSIS — Analysis graph &amp; gaps<a class="headerlink" href="#fr-analysis-analysis-graph-gaps" title="Permanent link">&para;</a></h3>
 <h4 id="fr-analysis-01-atom-graph-merge">FR-ANALYSIS-01 Atom graph merge<a class="headerlink" href="#fr-analysis-01-atom-graph-merge" title="Permanent link">&para;</a></h4>
 <p>The system <strong>shall</strong> merge assessed atoms into an analysis graph with edges for agreement,
@@ -480,6 +540,12 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <td>matchers</td>
 </tr>
 <tr>
+<td>ASSSIB augmentation</td>
+<td>ontology + schema</td>
+<td>workflow constants + edges</td>
+<td>matchers + retrieval</td>
+</tr>
+<tr>
 <td>Sources / atoms</td>
 <td>—</td>
 <td>history scaffold</td>
@@ -544,6 +610,11 @@ published as a <strong>readable web page</strong> buildable from the repo.</p>
 <td>0.4</td>
 <td>2026-07-10</td>
 <td>Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>2026-07-10</td>
+<td>FR-ASSSIB-01–07 formal traceability; <code>hanani.assib</code> module; augmentation prompt mapped to normative FRs</td>
 </tr>
 </tbody>
 </table>

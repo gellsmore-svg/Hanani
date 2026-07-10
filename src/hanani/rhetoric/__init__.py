@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-RHETORIC_GRAPH_VERSION = "0.1"
+RHETORIC_GRAPH_VERSION = "0.2"
 RHETORIC_DOC = "docs/ontology/rhetorical-logic-graph.md"
 
 AUDIT_CRITERIA: tuple[str, ...] = (

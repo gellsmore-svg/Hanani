@@ -1,6 +1,6 @@
 # Rhetorical Logic Semantic Graph
 
-**Version:** 0.1  
+**Version:** 0.2
 **Graph ID:** `rhetoric`  
 **Purpose:** Layer 1 truth assessment — evaluate sources and logic atoms by **reasoning
 structure in the text**, not outlet reputation.
@@ -31,6 +31,11 @@ evidence without addressing disconfirmation.
 | `audit.qualifiers_falsifiability` | Scope, uncertainty, testable claims |
 | `audit.analytical_intent` | Mechanism-seeking vs. narrative closure |
 | `audit.update_signals` | Revision openness |
+| `audit.sensemaking_speed_signals` | Reaction time, ambiguity, probes, sensationalism, coordination lag (ASSSIB Layer 1 hook) |
+
+**ASSSIB flagging rule:** Any source or atom discussing sensemaking speed, over/under-reaction
+to sensationalism, deliberate ambiguity, leaks as probes, or alliance coordination lag **shall**
+populate `sensemaking_signals` on the Layer 1 assessment record.
 
 ### 2.2 Argument structure roles
 

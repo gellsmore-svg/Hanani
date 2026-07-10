@@ -1,7 +1,7 @@
 # Hanani — System Requirements
 
 **Document:** REQ-HANANI-001  
-**Version:** 0.4
+**Version:** 0.5
 **Status:** Normative — implementation shall trace to these requirements  
 **Product:** Reusable geopolitical **reasoning system** (not a one-off crisis analysis tool)
 
@@ -308,6 +308,98 @@ against alliance/coalition responses.
 
 ---
 
+### FR-ASSSIB — Asymmetric Sensemaking Speed & Informational Brinkmanship
+
+Permanent, high-priority augmentation. Maps to ontology §8.9–§8.11 and the normative
+integration prompt. Core risk target: **dangerous mismatch** in how quickly and coherently
+each side makes sense of probes — not the threatened action alone.
+
+#### FR-ASSSIB-01 Ontology integration
+
+The living mechanism ontology **shall** include ASSSIB
+(`asymmetric_sensemaking_speed_informational_brinkmanship`) as a prominent **L5 emergent
+cross-cutting dynamic** with documented linkages to L2 (two-level games, selectorate),
+L3 (Jervis, prospect theory, mental simulation), L4 (cheap talk, ambiguity, probing signals),
+and L1 (security dilemma under time pressure).
+
+The ontology **shall** document: low-cost probing, stress+strategic throwaway rhetoric,
+differential (not absolute) speed risk, ambiguity-as-weapon, murky sensory brinkmanship,
+traffic-metaphor systemic risk, and Hanani systematic-model speed advantage.
+
+**Acceptance:** Ontology §8.9; `hanani.ontology.CROSS_CUTTING_DYNAMICS`; historical anchors
+(Cuba, Ukraine, Baltic/alliance probe template); ≥3 tagging examples.
+
+**Status:** Implemented (ontology v0.3, §8.9–§8.11).
+
+#### FR-ASSSIB-02 Layer 1 sensemaking signal flagging
+
+Rhetorical logic audits and atom Layer 1 assessment **shall** explicitly flag content
+discussing or implying: sensemaking/reaction speed, over/under-reaction to sensationalism,
+deliberate ambiguity creation, probe-to-test-coordination, leaks, or coordination lag.
+
+**Acceptance:** `audit.sensemaking_speed_signals` in rhetoric graph;
+`RhetoricAssessment.sensemaking_signals`; keyword scaffold in `hanani.rhetoric`.
+
+**Status:** Scaffold implemented; full matcher pending.
+
+#### FR-ASSSIB-03 Mandatory per-atom speed-differential block
+
+**Every** logic atom Layer 2 assessment **shall** include `speed_differential` even when
+no speed signal is present — **`none_evident` required explicitly** (gap signal).
+
+Assessment **shall** answer: fast/slow per side; probe intent; differential exploited;
+coherence per side when inferable; optional party id linkage.
+
+**Acceptance:** `SpeedDifferentialAssessment` on every `MechanismAssessment`;
+`hanani.assib.ATOM_SPEED_PROMPTS`; auto-tag ASSSIB when Layer 1 sensemaking signals present.
+
+**Status:** Schema + scaffold (`hanani.reasoning` v0.3).
+
+#### FR-ASSSIB-04 Gap analysis speed questions
+
+Gap analysis **shall** routinely ask the normative ASSSIB questions about relative
+processing speeds, sensemaking quality, differential creation/exploitation, LCD binding
+members, and per-source coherence trajectories.
+
+**Acceptance:** `hanani.assib.GAP_ANALYSIS_QUESTIONS` exported; referenced in FR-ANALYSIS-02.
+
+**Status:** Constants implemented; automated gap runner pending.
+
+#### FR-ASSSIB-05 Retrieval prioritization
+
+When ASSSIB-related gaps are identified, active retrieval **shall** prioritize sources
+illuminating processing-speed dynamics, reaction times, alliance coordination lag, and
+how sides model each other's sensemaking speed — subject to Layer 1 filter (no prestige bypass).
+
+**Acceptance:** `hanani.assib.RETRIEVAL_PRIORITIES`.
+
+**Status:** Constants implemented; retrieval loop pending.
+
+#### FR-ASSSIB-06 Analysis-graph speed edges
+
+When building or updating the analysis graph, assessed atoms **shall** be able to emit
+explicit speed-differential edges:
+
+- `processes_faster_than`
+- `probes_sensemaking_speed`
+- `creates_ambiguity_to_slow`
+- `exploits_speed_differential`
+
+**Acceptance:** `hanani.assib.speed_edges_from_assessment()`; edges in `GRAPH_EDGE_TYPES`.
+
+**Status:** Scaffold implemented.
+
+#### FR-ASSSIB-07 Readiness declaration
+
+The system **shall** expose a machine-readable readiness check confirming speed differentials
+are a **first-class analytical object** for future atom processing.
+
+**Acceptance:** `hanani.assib.readiness()` returns `ready: true` with mandatory flags.
+
+**Status:** Implemented.
+
+---
+
 ### FR-ANALYSIS — Analysis graph & gaps
 
 #### FR-ANALYSIS-01 Atom graph merge
@@ -447,6 +539,7 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 | Mechanism graph | — | ✓ | expand |
 | Rhetoric graph | — | ✓ | expand |
 | Reasoning engine | gate | ✓ | matchers |
+| ASSSIB augmentation | ontology + schema | workflow constants + edges | matchers + retrieval |
 | Sources / atoms | — | history scaffold | ✓ |
 | Coherence profiles | — | ✓ | LCD + moves |
 | Synthesis | — | — | ✓ |
@@ -472,3 +565,4 @@ Architecture and reasoning-system specs **shall** be linked from the docs site.
 | 0.2 | 2026-07-05 | Full reasoning-system requirements; dual graphs; layered engine; web docs FR |
 | 0.3 | 2026-07-05 | ASSSIB dynamic; mandatory speed_differential per atom; workflow/gap/retrieval rules |
 | 0.4 | 2026-07-10 | Source article history; individual/collective coherence profiles; LCD constraint; move-context hooks |
+| 0.5 | 2026-07-10 | FR-ASSSIB-01–07 formal traceability; `hanani.assib` module; augmentation prompt mapped to normative FRs |

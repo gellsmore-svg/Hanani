@@ -10,6 +10,7 @@ from hanani.factors import list_factors
 from hanani.ontology import ONTOLOGY_DOC, ONTOLOGY_VERSION, list_layers
 from hanani.reasoning import REASONING_VERSION, default_engine
 from hanani.rhetoric import RHETORIC_GRAPH_VERSION, list_fallacies
+from hanani.assib import readiness
 from hanani.coherence import default_registry
 from hanani.sources import default_corpus
 from hanani.workflow import workflow_status
@@ -66,6 +67,17 @@ def _cmd_sources(_: argparse.Namespace) -> int:
     print(f"source corpus: {summary['source_count']} sources, {summary['article_count']} articles")
     for sid, info in summary["sources"].items():
         print(f"  {sid}: {info['article_count']} articles")
+    return 0
+
+
+def _cmd_asssib(_: argparse.Namespace) -> int:
+    info = readiness()
+    print(f"ASSSIB readiness: {info['ready']}")
+    print(f"  dynamic: {info['dynamic']}")
+    print(f"  mandatory per-atom speed_differential: {info['mandatory_per_atom']}")
+    print(f"  coherence profiles: {info['coherence_profiles']}")
+    print(f"  collective LCD: {info['collective_lcd']}")
+    print(info["message"])
     return 0
 
 
@@ -192,6 +204,7 @@ def main(argv: list[str] | None = None) -> int:
         func=_cmd_rhetoric
     )
     sub.add_parser("reasoning", help="Reasoning engine status").set_defaults(func=_cmd_reasoning)
+    sub.add_parser("asssib", help="ASSSIB augmentation readiness").set_defaults(func=_cmd_asssib)
     sub.add_parser("sources", help="Source corpus status (article history)").set_defaults(func=_cmd_sources)
     sub.add_parser("coherence", help="Coherence speed profiles (individual + collective LCD)").set_defaults(
         func=_cmd_coherence
@@ -249,7 +262,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.command:
         print(PURPOSE)
         print(
-            "Try: hanani reasoning | hanani ontology | hanani sources | hanani coherence | hanani factors"
+            "Try: hanani reasoning | hanani asssib | hanani ontology | hanani sources | hanani coherence"
         )
         return 0
 

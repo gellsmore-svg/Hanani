@@ -37,6 +37,15 @@ Logic atom → Layer 1 (rhetoric graph) → Layer 2 (this mechanism graph) → a
 
 ## 2. Workflow (when sources are eventually ingested)
 
+**ASSSIB hooks (mandatory at every cycle):**
+
+1. Layer 1 — flag sensemaking-speed signals (`audit.sensemaking_speed_signals`).
+2. Layer 2 — mandatory `speed_differential` per atom; auto-tag ASSSIB when signals present.
+3. Coherence registry — update party trajectories; recompute collective LCD when party ids set.
+4. Analysis graph — emit speed-differential edges (`processes_faster_than`, etc.).
+5. Gap analysis — run `GAP_ANALYSIS_QUESTIONS` (see `hanani.assib`).
+6. Retrieval — prioritize `RETRIEVAL_PRIORITIES` when ASSSIB gaps remain.
+
 ```mermaid
 flowchart TD
   A[Initialize / update ontology] --> B[Source ingestion]
@@ -117,6 +126,10 @@ Apply to **every** source before atom extraction. Output audit block first.
   "speed_differential": {
     "side_a_processing": "fast | slow | unknown",
     "side_b_processing": "fast | slow | unknown",
+    "side_a_coherence": "high | medium | low | fragmented | unknown",
+    "side_b_coherence": "high | medium | low | fragmented | unknown",
+    "side_a_party_id": "optional — links to CoherenceSpeedProfile",
+    "side_b_party_id": "optional — links to CoherenceSpeedProfile",
     "differential_exploited": "A_faster | B_faster | parity | none_evident",
     "probe_intent": "measure_reaction_speed | measure_model_precision | deliberate_ambiguity | none_evident",
     "notes": "mandatory — use 'none evident' explicitly if no speed signal"
@@ -446,6 +459,17 @@ collective LCD profiles constrain interpretation of alliance/coalition responses
 | Layers | L2.bureaucratic_politics, L5.ASSSIB, L4.credible_commitments |
 | Speed differential | US **accelerated** coherent processing via parallel channels; reduced speed mismatch with Soviet probes |
 | Anchor | `cuban_missile_crisis_1962` |
+
+**Example D — Atom-HYP-004 (Ukraine-related ongoing signaling)**  
+*"Repeated troop-indicator buildups paired with ultimatum rhetoric test whether Western capitals distinguish costly mobilization from cheap-talk pressure — probing aid/red-line coordination speed ahead of any literal offensive execution."*
+
+| Field | Assessment |
+|---|---|
+| Layers | L4.troop_buildup_costly_signal vs cheap_talk, L3.prospect_loss_aversion, L2.two_level_games, L5.ASSSIB |
+| Speed differential | Prober: fast/coherent vs. alliance capitals: slow/fragmented on red-line reads — **B_faster exploited** |
+| Coherence | LCD binding likely on most domestically fragmented capital — not NATO's fastest responder |
+| Probe intent | `measure_reaction_speed` + `measure_model_precision` |
+| Anchor | `russia_ukraine_2014_2022_plus` |
 
 ---
 
