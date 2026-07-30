@@ -183,7 +183,7 @@ def test_gap_analysis_over_stored_corpus(tmp_path, capsys) -> None:
     from hanani.cli import main
     assert main(["gaps", "--store", str(tmp_path)]) == 0
     out = capsys.readouterr().out
-    assert "speed gaps:" in out and "retrieve next" in out
+    assert "speed gaps:" in out and "mechanism coverage:" in out and "retrieve next" in out
 
 
 def test_gap_analysis_empty_store(tmp_path) -> None:
@@ -214,3 +214,24 @@ def test_gap_analysis_no_gaps_when_speed_evidence_present(tmp_path) -> None:
     report = analyze_gaps(store)
     assert report["speed_gaps"] == 0 and report["gap_rate"] == 0.0
     assert not any(f["kind"] == "no_party_linkage" for f in report["findings"])
+
+
+def test_gap_analysis_reports_registry_and_history_coverage(tmp_path) -> None:
+    from hanani.gaps import analyze_gaps
+
+    store = SliceStore(tmp_path)
+    ingest_and_assess(
+        "Officials described a slow reaction time after an ambiguous leak created coordination pressure.",
+        source_id="wire", title="Single signal", store=store,
+    )
+    report = analyze_gaps(store)
+
+    coverage = report["registry_coverage"]
+    assert coverage["mechanisms"]["total"] > 0
+    assert "asymmetric_sensemaking_speed_informational_brinkmanship" in coverage["mechanisms"]["covered"]
+    assert coverage["rhetoric"]["total"] > 0
+    assert report["asssib_history_gaps"]["source_history"] == [
+        {"source_id": "wire", "article_count": 1}
+    ]
+    kinds = {finding["kind"] for finding in report["findings"]}
+    assert "mechanism_layer_gap" in kinds and "source_history_gap" in kinds

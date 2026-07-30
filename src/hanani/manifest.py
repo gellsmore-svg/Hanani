@@ -94,11 +94,11 @@ def build_manifest():
             ),
             capability(
                 "analyze_gaps",
-                "ASSSIB gap analysis over the persisted corpus: which assessed "
-                "atoms carry explicit none_evident speed blocks, which flagged "
-                "sensemaking signals without speed evidence, party-linkage "
-                "coverage — with the normative gap questions and, when gaps "
-                "exist, the retrieval priorities (FR-ASSSIB-04/05).",
+                "Registry-aware gap analysis over the persisted corpus: ASSSIB "
+                "speed/coherence gaps, mechanism and rhetoric coverage, and "
+                "thin source or party trajectories with stated information needs "
+                "(FR-ANALYSIS-02). It recommends evidence needs but does not "
+                "perform active retrieval.",
                 input_schema={"type": "object", "properties": {}},
                 output_schema={
                     "type": "object",
@@ -106,6 +106,8 @@ def build_manifest():
                         "assessed": {"type": "integer"},
                         "speed_gaps": {"type": "integer"},
                         "gap_rate": {"type": "number"},
+                        "registry_coverage": {"type": "object"},
+                        "asssib_history_gaps": {"type": "object"},
                         "findings": {"type": "array", "items": {"type": "object"}},
                         "retrieval_priorities": {"type": "array", "items": {"type": "string"}},
                     },

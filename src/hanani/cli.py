@@ -204,10 +204,17 @@ def _cmd_gaps(args: argparse.Namespace) -> int:
     print(f"gap analysis: {report['assessed']} assessed atoms "
           f"({report['gated']} rhetoric-gated) — speed gaps: {report['speed_gaps']} "
           f"(rate {report['gap_rate']:.0%})")
+    coverage = report["registry_coverage"]
+    print("  mechanism coverage: "
+          f"{len(coverage['mechanisms']['covered'])}/{coverage['mechanisms']['total']} "
+          f"({coverage['mechanisms']['coverage_rate']:.0%})")
+    print("  rhetoric coverage: "
+          f"{len(coverage['rhetoric']['covered'])}/{coverage['rhetoric']['total']} "
+          f"({coverage['rhetoric']['coverage_rate']:.0%})")
     for finding in report["findings"]:
         print(f"  [{finding['kind']}] {finding['note']}")
     if not report["findings"]:
-        print("  no ASSSIB gaps above threshold")
+        print("  no reportable gaps in the current corpus")
     if report["retrieval_priorities"]:
         print("  retrieve next (FR-ASSSIB-05, Layer-1 filter applies):")
         for priority in report["retrieval_priorities"][:5]:

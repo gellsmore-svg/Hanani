@@ -449,7 +449,9 @@ Gap analysis **shall** cross-check per-source article histories and party cohere
 trajectories when ASSSIB tags appear — especially whether collective LCD binding members
 explain observed coordination lag on current moves.
 
-**Status:** Design only (LCD scaffold available).
+**Status:** Implemented: deterministic registry coverage, prioritized information
+needs, ASSSIB source-history checks, and party-trajectory checks. Active source
+retrieval remains FR-ANALYSIS-03.
 
 #### FR-ANALYSIS-03 Active retrieval
 
