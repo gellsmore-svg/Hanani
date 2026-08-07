@@ -17,6 +17,41 @@ def test_cli_no_args_prints_purpose():
     assert "Geopolitical News Reasoning" in result.stdout
 
 
+def test_installed_console_script_factors_and_workflow_status():
+    """#2: exercise the installed ``hanani`` entry point, not only ``-m``."""
+    import shutil
+    from pathlib import Path
+
+    # Prefer the venv console script when running under pytest in a venv.
+    script = shutil.which("hanani")
+    if script is None:
+        # Editable install places scripts next to the test interpreter.
+        candidate = Path(sys.executable).resolve().parent / "hanani"
+        script = str(candidate) if candidate.is_file() else None
+    if not script:
+        import pytest
+
+        pytest.skip("hanani console script not on PATH (pip install -e .)")
+
+    factors = subprocess.run(
+        [script, "factors"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert factors.returncode == 0, factors.stderr
+    assert factors.stdout.strip()
+
+    status = subprocess.run(
+        [script, "workflow", "status"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert status.returncode == 0, status.stderr
+    assert "vertical-slice" in status.stdout or "ingest" in status.stdout
+
+
 def test_workflow_status_vertical_slice():
     from hanani.workflow import workflow_status
 
