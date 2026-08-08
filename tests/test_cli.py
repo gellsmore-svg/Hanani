@@ -77,3 +77,41 @@ def test_factors_include_propaganda():
 
     ids = {f["id"] for f in list_factors()}
     assert "propaganda-signals" in ids
+
+
+def test_rhetoric_cli_reports_declared_vs_offline(capsys):
+    from hanani.cli import main
+
+    assert main(["rhetoric"]) == 0
+    out = capsys.readouterr().out
+    assert "declared" in out and "detectable offline" in out
+
+
+def test_asssib_cli_distinguishes_schema_from_operational(capsys):
+    from hanani.cli import main
+
+    assert main(["asssib"]) == 0
+    out = capsys.readouterr().out
+    assert "schema ready" in out.lower()
+    assert "operationally wired" in out.lower()
+
+
+def test_debate_missing_extra_exits_nonzero(tmp_path, monkeypatch):
+    """Review F4/M3: optional-extra failure must not look like success."""
+    import hanani.debate as dbt
+    from hanani.cli import main
+    from hanani.pipeline import ingest_and_assess
+    from hanani.store import SliceStore
+
+    store = SliceStore(tmp_path)
+    ingest_and_assess(
+        "Grain volumes fell fifteen percent in June after port strikes resumed.",
+        source_id="wire", title="t", store=store,
+    )
+
+    def boom(_extractor):
+        raise ImportError("No module named 'milcah'")
+
+    monkeypatch.setattr(dbt, "_milcah_run", boom)
+    rc = main(["debate", "--store", str(tmp_path)])
+    assert rc != 0

@@ -30,8 +30,12 @@ def test_gap_and_retrieval_constants() -> None:
 def test_readiness_declares_first_class_speed() -> None:
     info = readiness()
     assert info["ready"] is True
+    assert info["schema_ready"] is True
+    assert info["operationally_wired"] is False
     assert info["first_class_speed_differential"] is True
     assert info["mandatory_per_atom"] is True
+    assert info["coherence_auto_wired_in_ingest"] is False
+    assert "schema" in info["message"].lower()
 
 
 def test_speed_edges_from_probe_assessment() -> None:

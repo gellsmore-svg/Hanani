@@ -22,6 +22,17 @@ def test_layer1_blocks_layer2_on_weak_rhetoric() -> None:
     assert engine.assess_layer2(atom, layer1) is None
 
 
+def test_layer1_audit_scores_are_unassessed_not_true() -> None:
+    """Review H2: scaffold must not write fabricated True audit passes."""
+    from hanani.rhetoric import AUDIT_CRITERIA
+
+    engine = ReasoningEngine()
+    atom = LogicAtom(atom_id="a1", source_id="s1", text="A clean factual claim.")
+    layer1 = engine.assess_layer1(atom, rhetoric_hits=[])
+    assert set(layer1.audit_scores) == set(AUDIT_CRITERIA)
+    assert all(v is None for v in layer1.audit_scores.values())
+
+
 def test_full_pipeline_strong_atom() -> None:
     engine = default_engine()
     atom = LogicAtom(atom_id="a1", source_id="s1", text="Mobilization preceded talks.")

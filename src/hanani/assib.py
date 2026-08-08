@@ -126,18 +126,30 @@ def _exploitation_pair(
 
 
 def readiness() -> dict[str, Any]:
-    """Confirm augmented model readiness for source processing."""
+    """ASSSIB schema readiness vs operational wiring (review F3).
+
+    Schema fields and gap analysis are in place; coherence profiles and
+    collective LCD exist as scaffolds and are not auto-wired into ingest.
+    """
     return {
+        # Backward-compatible: "ready" means the ASSSIB *schema* is present.
         "ready": True,
+        "schema_ready": True,
+        "operationally_wired": False,
         "dynamic": ASSSIB_ID,
         "first_class_speed_differential": True,
         "mandatory_per_atom": True,
-        "coherence_profiles": True,
-        "collective_lcd": True,
+        "coherence_profiles": True,  # module/API present (scaffold)
+        "collective_lcd": True,  # module/API present (scaffold)
+        "coherence_auto_wired_in_ingest": False,
+        "collective_lcd_auto_wired_in_ingest": False,
         "message": (
-            "Hanani is ready to process new sources with ASSSIB-augmented ontology. "
-            "Every atom receives mandatory speed_differential assessment; "
-            "sensemaking signals flagged at Layer 1; coherence/LCD profiles available."
+            "ASSSIB schema is ready: every atom carries a mandatory "
+            "speed_differential block (none_evident when no evidence), and "
+            "`hanani gaps` reports coverage honestly. Coherence profiles and "
+            "collective LCD exist as scaffolds and are not auto-wired into "
+            "ingest yet — check `hanani coherence` / `hanani gaps` for "
+            "operational state before treating the store as party-linked."
         ),
     }
 

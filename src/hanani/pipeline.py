@@ -27,16 +27,70 @@ _MIN_ATOM_CHARS = 40
 
 # Conservative deterministic cues → rhetoric-graph hits. Deliberately few and
 # high-precision: this is the offline floor, not the audit of record.
+# Expanded 2026-08-08 (review H1) for common analytic fallacies that were
+# scoring Strong and propagating with no model tier available.
 _CUE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("fallacy.false_dilemma",
      re.compile(r"\bonly (?:two|one)\b|\bno (?:other )?(?:choice|alternative)\b|\beither\b.{3,80}\bor\b", re.I | re.S)),
     ("fallacy.slippery_slope",
      re.compile(r"\binevitabl\w*\b|\bspiral(?:ing)? into\b|\bslide toward\b|\bdomino\b", re.I)),
     ("fallacy.appeal_to_authority_in_text",
-     re.compile(r"\bexperts (?:say|agree|warn)\b|\bofficials? said?\b|\banalysts agree\b", re.I)),
+     re.compile(
+         r"\bexperts (?:say|agree|warn)\b"
+         r"|\bofficials? said?\b"
+         r"|\banalysts agree\b"
+         r"|\bbecause (?:the )?\w[\w\s-]{0,40}\b(?:said|says|stated|claims)\b"
+         r"|\bthis is true because\b",
+         re.I,
+     )),
     ("fallacy.rhetoric_action_conflation",
      re.compile(r"\bvow(?:s|ed)? to\b|\bthreat(?:en(?:s|ed)?)? to\b.*\bproves\b", re.I)),
+    ("fallacy.appeal_to_common_belief",
+     re.compile(
+         r"\beveryone knows\b"
+         r"|\bit is widely (?:accepted|known|believed)\b"
+         r"|\bas (?:everybody|everyone) knows\b"
+         r"|\bno one (?:seriously )?disputes\b"
+         r"|\bit is common knowledge\b",
+         re.I,
+     )),
+    ("fallacy.ad_hominem_in_text",
+     re.compile(
+         r"\banyone who (?:doubts|disagrees|questions)\b"
+         r"|\bthose who (?:doubt|disagree|question)\b"
+         r"|\bare (?:simply |just )?(?:apologists|stooges|puppets|naive)\b"
+         r"|\bhas not been paying attention\b"
+         r"|\bonly a (?:fool|idiot|traitor)\b"
+         r"|\bKremlin apologists\b",
+         re.I,
+     )),
+    ("fallacy.circular_reasoning",
+     re.compile(
+         r"\bproves the theory\b.{0,80}\btheory explains\b"
+         r"|\bthe theory\b.{0,40}\bexplains the\b.{0,40}\bproves\b"
+         r"|\bas proven by the fact that it is proven\b",
+         re.I | re.S,
+     )),
 )
+
+
+def offline_cue_keys() -> frozenset[str]:
+    """Rhetoric-graph keys reachable by the deterministic floor alone."""
+    return frozenset(key for key, _ in _CUE_RULES)
+
+
+def rhetoric_floor_coverage() -> dict[str, int | float | list[str]]:
+    """Declared vocabulary size vs offline-detectable keys (review F2/M4)."""
+    declared = sorted(set(FALLACIES) | {k for k in ENTHYMEME_PATTERNS})
+    offline = sorted(offline_cue_keys())
+    total = len(declared)
+    detectable = len(offline)
+    return {
+        "declared": total,
+        "detectable_offline": detectable,
+        "offline_keys": offline,
+        "coverage_rate": (detectable / total) if total else 0.0,
+    }
 
 
 # --- atom extraction --------------------------------------------------------

@@ -157,7 +157,7 @@ hanani docs serve      # http://127.0.0.1:8805
 | Per-atom summaries (Phase 2) | Planned |
 | Collective narrative (Phase 3) | Planned |
 
-**68 tests passing** (`pytest`). CI: ruff + pytest.
+**80+ tests passing** (`pytest`; count drifts with each increment — run `pytest -q`). CI: ruff + pytest.
 
 ---
 

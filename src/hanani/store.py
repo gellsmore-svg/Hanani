@@ -4,6 +4,14 @@ Dependency-free JSONL under ``~/.hanani`` (directory overridable): one line per
 record, append-only, tolerant of unreadable lines. This is the slice's honest
 persistence floor; pushing the same records into Tirzah's graph memory is a
 later increment behind the ``tirzah`` extra.
+
+Load path re-reads the whole file into memory (review M2) — fine at small
+scale; add rotation/compaction before long-lived multi-source runs.
+
+Append atomicity (review L2): concurrent writers rely on POSIX ``O_APPEND``
+atomicity for writes below ``PIPE_BUF`` (typically 4096 B). Measured assessment
+records are well under that today. Phase 2 per-atom ``assessment_summary``
+narratives may exceed it — take a lock (or one-writer queue) before that lands.
 """
 
 from __future__ import annotations
@@ -24,17 +32,22 @@ class SliceStore:
         self.assessments_path = self.directory / "assessments.jsonl"
         self.debates_path = self.directory / "debates.jsonl"
         self.graph_edges_path = self.directory / "graph_edges.jsonl"
+        # Cumulative skipped-line counts from the last load of each file
+        # (review M1 — silent drops must be observable).
+        self._skipped_lines: dict[str, int] = {}
 
     def _append(self, path: Path, record: dict[str, Any]) -> None:
         self.directory.mkdir(parents=True, exist_ok=True)
         with path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
 
-    @staticmethod
-    def _load(path: Path) -> list[dict[str, Any]]:
+    def _load(self, path: Path) -> list[dict[str, Any]]:
         if not path.exists():
+            self._skipped_lines[path.name] = 0
             return []
         records: list[dict[str, Any]] = []
+        skipped = 0
+        # Full-file read: acceptable while the store stays small (review M2).
         for line in path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line:
@@ -42,9 +55,13 @@ class SliceStore:
             try:
                 record = json.loads(line)
             except json.JSONDecodeError:
+                skipped += 1
                 continue
             if isinstance(record, dict):
                 records.append(record)
+            else:
+                skipped += 1
+        self._skipped_lines[path.name] = skipped
         return records
 
     # --- write ---------------------------------------------------------
@@ -97,6 +114,10 @@ class SliceStore:
             robustness[tier] = robustness.get(tier, 0) + 1
             if record.get("layer2") is not None:
                 admissible += 1
+        # Touch remaining files so skipped_lines covers the whole store.
+        debate_count = len(self.debates())
+        graph_edge_count = len(self.graph_edges())
+        skipped_lines = sum(self._skipped_lines.values())
         return {
             "store_dir": str(self.directory),
             "article_count": len(articles),
@@ -104,6 +125,8 @@ class SliceStore:
             "admissible_atoms": admissible,
             "robustness": robustness,
             "sources": sorted({a.get("source_id", "?") for a in articles}),
-            "debate_count": len(self.debates()),
-            "graph_edge_count": len(self.graph_edges()),
+            "debate_count": debate_count,
+            "graph_edge_count": graph_edge_count,
+            "skipped_lines": skipped_lines,
+            "skipped_by_file": dict(self._skipped_lines),
         }

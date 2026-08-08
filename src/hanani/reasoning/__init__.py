@@ -31,7 +31,9 @@ class RhetoricAssessment:
     robustness: str  # Strong | Moderate | Weak
     fallacy_hits: list[str] = field(default_factory=list)
     enthymeme_hits: list[str] = field(default_factory=list)
-    audit_scores: dict[str, bool] = field(default_factory=dict)
+    # bool when a criterion was actually evaluated; None = unassessed
+    # (scaffold must not write fabricated True passes — review H2).
+    audit_scores: dict[str, bool | None] = field(default_factory=dict)
     sensemaking_signals: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
@@ -122,7 +124,9 @@ class ReasoningEngine:
             robustness=robustness,
             fallacy_hits=[h for h in valid_hits if h.startswith("fallacy.")],
             enthymeme_hits=[h for h in valid_hits if h.startswith("enthymeme.")],
-            audit_scores={c: True for c in AUDIT_CRITERIA},
+            # Unassessed, not a free pass — same idiom as speed_differential's
+            # none_evident (review H2).
+            audit_scores={c: None for c in AUDIT_CRITERIA},
             sensemaking_signals=signals,
             notes=["Layer 1 scaffold — replace with graph traversal + LLM audit"],
         )
@@ -173,6 +177,9 @@ class ReasoningEngine:
             "rhetoric_graph_version": RHETORIC_GRAPH_VERSION,
             "mechanism_layers": list_layers(),
             "audit_criteria_count": len(AUDIT_CRITERIA),
+            # Criteria are declared; Layer-1 scaffold does not evaluate them yet
+            # (audit_scores are None/unassessed — review H2).
+            "audit_criteria_evaluated": False,
             "fallacy_pattern_count": len(FALLACIES),
             "cross_cutting_dynamics": list(CROSS_CUTTING_DYNAMICS.keys()),
         }

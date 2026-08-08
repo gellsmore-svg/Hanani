@@ -29,20 +29,46 @@ def _cmd_factors(_: argparse.Namespace) -> int:
 
 
 def _cmd_reasoning(_: argparse.Namespace) -> int:
+    from hanani.pipeline import rhetoric_floor_coverage
+
     engine = default_engine()
     summary = engine.registry_summary()
+    floor = rhetoric_floor_coverage()
     print(f"reasoning engine: {REASONING_VERSION}")
     print(f"  rhetoric graph: {summary['rhetoric_graph_version']}")
-    print(f"  fallacy patterns: {summary['fallacy_pattern_count']}")
+    print(
+        f"  fallacy patterns: {summary['fallacy_pattern_count']} declared / "
+        f"{floor['detectable_offline']} detectable offline "
+        f"({floor['coverage_rate']:.0%})"
+    )
     print(f"  mechanism layers: {len(summary['mechanism_layers'])}")
-    print(f"  audit criteria: {summary['audit_criteria_count']}")
+    print(
+        f"  audit criteria: {summary['audit_criteria_count']} declared "
+        f"(scaffold — not evaluated yet; scores stored as null/unassessed)"
+    )
     print("  pipeline: Layer 1 rhetoric → Layer 2 mechanisms → [summary] → [narrative]")
     return 0
 
 
 def _cmd_rhetoric(_: argparse.Namespace) -> int:
+    from hanani.pipeline import rhetoric_floor_coverage
+
+    floor = rhetoric_floor_coverage()
     print(f"rhetoric graph version: {RHETORIC_GRAPH_VERSION}")
-    print(f"fallacy patterns: {len(list_fallacies())}")
+    print(
+        f"fallacy patterns: {len(list_fallacies())} declared / "
+        f"{floor['detectable_offline']} detectable offline "
+        f"({floor['coverage_rate']:.0%})"
+    )
+    print(
+        "  offline floor keys: " + ", ".join(floor["offline_keys"])
+        if floor["offline_keys"]
+        else "  offline floor keys: (none)"
+    )
+    print(
+        "  note: without --hoglah-model, only the offline floor applies; "
+        "see `hanani gaps` for corpus coverage"
+    )
     return 0
 
 
@@ -72,11 +98,18 @@ def _cmd_sources(_: argparse.Namespace) -> int:
 
 def _cmd_asssib(_: argparse.Namespace) -> int:
     info = readiness()
-    print(f"ASSSIB readiness: {info['ready']}")
+    print(f"ASSSIB schema ready: {info['schema_ready']}")
+    print(f"  operationally wired into ingest: {info['operationally_wired']}")
     print(f"  dynamic: {info['dynamic']}")
     print(f"  mandatory per-atom speed_differential: {info['mandatory_per_atom']}")
-    print(f"  coherence profiles: {info['coherence_profiles']}")
-    print(f"  collective LCD: {info['collective_lcd']}")
+    print(
+        f"  coherence profiles: schema={info['coherence_profiles']} "
+        f"auto-wired={info['coherence_auto_wired_in_ingest']}"
+    )
+    print(
+        f"  collective LCD: schema={info['collective_lcd']} "
+        f"auto-wired={info['collective_lcd_auto_wired_in_ingest']}"
+    )
     print(info["message"])
     return 0
 
@@ -120,9 +153,18 @@ def _cmd_ingest(args: argparse.Namespace) -> int:
     except ValueError as error:
         print(f"hanani ingest: {error}", file=sys.stderr)
         return 2
+    from hanani.pipeline import rhetoric_floor_coverage
+
+    floor = rhetoric_floor_coverage()
     print(f"article: {summary['article_id']}  ({summary['source_id']}: {summary['title']})")
     print(f"  atoms: {summary['atom_count']}  admissible→Layer2: {summary['admissible_atoms']}")
     print(f"  robustness: {summary['robustness']}")
+    if not summary["model_tier"]:
+        print(
+            f"  rhetoric floor: {floor['detectable_offline']}/{floor['declared']} "
+            f"vocabulary keys detectable offline — Weak only when a floor cue "
+            f"or model hit fires; Strong is not a full audit"
+        )
     print(f"  model tier: {'on' if summary['model_tier'] else 'off (deterministic floor)'}")
     print(f"  stored: {summary['store_dir']}")
     return 0
@@ -232,6 +274,9 @@ def _cmd_corpus(args: argparse.Namespace) -> int:
     print(f"  sources: {', '.join(summary['sources']) or '(none)'}")
     print(f"  debates: {summary['debate_count']}")
     print(f"  graph edges: {summary['graph_edge_count']}")
+    skipped = summary.get("skipped_lines", 0)
+    if skipped:
+        print(f"  skipped unreadable lines: {skipped}  ({summary.get('skipped_by_file')})")
     print(f"  store: {summary['store_dir']}")
     return 0
 

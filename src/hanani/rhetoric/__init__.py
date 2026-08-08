@@ -59,6 +59,7 @@ FALLACIES: dict[str, str] = {
     "fallacy.false_balance": "False equivalence of evidence weight",
     "fallacy.teleology": "Outcome assumed inevitable from narrative arc",
     "fallacy.appeal_to_authority_in_text": "Conclusion rests on cited authority in argument",
+    "fallacy.appeal_to_common_belief": "Consensus or 'everyone knows' substitutes for evidence",
     "fallacy.ad_hominem_in_text": "Attacks actor not claim as stated in text",
     "fallacy.genetic": "Dismisses claim by origin alone in text",
     "fallacy.motivated_skepticism": "Asymmetric standards for confirming vs. disconfirming",

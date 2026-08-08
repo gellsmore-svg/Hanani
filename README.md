@@ -8,7 +8,10 @@ graphs + a layered assessment engine, not a one-off crisis briefing or news read
 **Requirements (web):** run `hanani docs serve` → http://127.0.0.1:8805/
 
 Architecture: [`docs/reasoning-system.md`](docs/reasoning-system.md) ·
-[`docs/requirements.md`](docs/requirements.md)
+[`docs/requirements.md`](docs/requirements.md) ·
+[`docs/review-2026-08-08.md`](docs/review-2026-08-08.md) (functional + code
+review of 0.8.0; findings actioned in **0.9.0** — expanded offline floor,
+unassessed audit scores, declared-vs-detectable coverage on status commands)
 
 Initial focus: Russia–Ukraine, Hormuz Strait / US–Iran–Gulf states.
 

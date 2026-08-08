@@ -63,6 +63,37 @@ def test_detect_rhetoric_hits_cues_and_model_validation() -> None:
     assert hits == ["fallacy.mirror_imaging"]
 
 
+def test_offline_floor_catches_common_analytic_fallacies() -> None:
+    """Review H1: textbook fallacies must hit the deterministic floor."""
+    cases = [
+        ("Everyone knows Moscow will escalate before winter.",
+         "fallacy.appeal_to_common_belief"),
+        ("Anyone who doubts this has not been paying attention.",
+         "fallacy.ad_hominem_in_text"),
+        ("Analysts who disagree are simply Kremlin apologists.",
+         "fallacy.ad_hominem_in_text"),
+        ("Either we act now or we lose the war entirely.",
+         "fallacy.false_dilemma"),
+        ("This is true because the ministry said it is true.",
+         "fallacy.appeal_to_authority_in_text"),
+        ("The strike proves the theory, and the theory explains the strike.",
+         "fallacy.circular_reasoning"),
+    ]
+    for text, key in cases:
+        hits = detect_rhetoric_hits(text)
+        assert key in hits, f"{text!r} → {hits} (expected {key})"
+
+
+def test_rhetoric_floor_coverage_reports_declared_vs_offline() -> None:
+    from hanani.pipeline import rhetoric_floor_coverage
+
+    floor = rhetoric_floor_coverage()
+    assert floor["declared"] >= 26
+    assert floor["detectable_offline"] >= 7
+    assert floor["detectable_offline"] <= floor["declared"]
+    assert "fallacy.ad_hominem_in_text" in floor["offline_keys"]
+
+
 def test_ingest_and_assess_end_to_end(tmp_path) -> None:
     store = SliceStore(tmp_path)
     summary = ingest_and_assess(
@@ -102,6 +133,10 @@ def test_store_tolerates_garbage_lines(tmp_path) -> None:
     store.save_article({"article_id": "a1", "source_id": "s"})
     (tmp_path / "articles.jsonl").open("a").write("{broken json\n")
     assert [a["article_id"] for a in store.articles()] == ["a1"]
+    # Review M1: skipped lines are counted and surface in corpus summary.
+    summary = store.summary()
+    assert summary["skipped_lines"] >= 1
+    assert summary["skipped_by_file"].get("articles.jsonl", 0) >= 1
 
 
 def test_cli_ingest_and_corpus(tmp_path, capsys) -> None:
