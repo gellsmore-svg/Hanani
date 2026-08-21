@@ -49,10 +49,19 @@ Graphs: [`living-semantic-model.md`](docs/ontology/living-semantic-model.md) ·
 | Galeed | process trace |
 | Keturah | capability manifest |
 
+## Install
+
+```bash
+pipx install hanani
+hanani --help
+```
+
+Optional extras: `pipx inject hanani 'hanani[milcah]'`, `hanani[tirzah]`, `hanani[family]`.
+`hanani docs serve` needs a git checkout (docs are not in the wheel).
+
 ## Develop
 
 ```bash
-pip install -e "../Keturah"
 pip install -e ".[dev]"
 pytest
 ```

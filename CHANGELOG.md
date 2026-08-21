@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] — 2026-08-21
+
+### Changed
+- Replace the ``keturah @ git+…`` runtime pin with ``keturah>=0.4.0`` so the
+  wheel is index-legal and aligns with Tirzah.
+
 ## [0.9.0] — 2026-08-08
 
 Review action for `docs/review-2026-08-08.md` (0.8.0 baseline).

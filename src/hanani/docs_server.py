@@ -8,12 +8,28 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+def _checkout_root() -> Path | None:
+    """Repo root when running from a git checkout; None in a wheel/pipx install."""
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "docs" / "web").is_dir() and (parent / "pyproject.toml").is_file():
+            return parent
+    return None
+
+
+ROOT = _checkout_root() or Path(__file__).resolve().parents[2]
 WEB = ROOT / "docs" / "web"
 BUILD = ROOT / "scripts" / "build_docs.py"
 
 
 def build_docs() -> int:
+    if not BUILD.is_file():
+        print(
+            "hanani docs serve is a checkout tool (docs/ are not in the wheel). "
+            "Clone https://github.com/gellsmore-svg/Hanani and run from the repo.",
+            file=sys.stderr,
+        )
+        return 2
     return subprocess.call([sys.executable, str(BUILD)], cwd=ROOT)
 
 
